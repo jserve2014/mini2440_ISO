@@ -1,0 +1,6960 @@
+/* bnx2.h: Broadcom NX2 network driver.
+ *
+ * Copyright (c) 2004-2009 Broadcom Corporation
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation.
+ *
+ * Written by: Michael Chan  (mchan@broadcom.com)
+ */
+
+
+#ifndef BNX2_H
+#define BNX2_H
+
+/* Hardware data structures and register definitions automatically
+ * generated from RTL code. Do not modify.
+ */
+
+/*
+ *  tx_bd definition
+ */
+struct tx_bd {
+	u32 tx_bd_haddr_hi;
+	u32 tx_bd_haddr_lo;
+	u32 tx_bd_mss_nbytes;
+		#define TX_BD_TCP6_OFF2_SHL		(14)
+	u32 tx_bd_vlan_tag_flags;
+		#define TX_BD_FLAGS_CONN_FAULT		(1<<0)
+		#define TX_BD_FLAGS_TCP6_OFF0_MSK	(3<<1)
+		#define TX_BD_FLAGS_TCP6_OFF0_SHL	(1)
+		#define TX_BD_FLAGS_TCP_UDP_CKSUM	(1<<1)
+		#define TX_BD_FLAGS_IP_CKSUM		(1<<2)
+		#define TX_BD_FLAGS_VLAN_TAG		(1<<3)
+		#define TX_BD_FLAGS_COAL_NOW		(1<<4)
+		#define TX_BD_FLAGS_DONT_GEN_CRC	(1<<5)
+		#define TX_BD_FLAGS_END			(1<<6)
+		#define TX_BD_FLAGS_START		(1<<7)
+		#define TX_BD_FLAGS_SW_OPTION_WORD	(0x1f<<8)
+		#define TX_BD_FLAGS_TCP6_OFF4_SHL	(12)
+		#define TX_BD_FLAGS_SW_FLAGS		(1<<13)
+		#define TX_BD_FLAGS_SW_SNAP		(1<<14)
+		#define TX_BD_FLAGS_SW_LSO		(1<<15)
+
+};
+
+
+/*
+ *  rx_bd definition
+ */
+struct rx_bd {
+	u32 rx_bd_haddr_hi;
+	u32 rx_bd_haddr_lo;
+	u32 rx_bd_len;
+	u32 rx_bd_flags;
+		#define RX_BD_FLAGS_NOPUSH		(1<<0)
+		#define RX_BD_FLAGS_DUMMY		(1<<1)
+		#define RX_BD_FLAGS_END			(1<<2)
+		#define RX_BD_FLAGS_START		(1<<3)
+
+};
+
+#define BNX2_RX_ALIGN			16
+
+/*
+ *  status_block definition
+ */
+struct status_block {
+	u32 status_attn_bits;
+		#define STATUS_ATTN_BITS_LINK_STATE		(1L<<0)
+		#define STATUS_ATTN_BITS_TX_SCHEDULER_ABORT	(1L<<1)
+		#define STATUS_ATTN_BITS_TX_BD_READ_ABORT	(1L<<2)
+		#define STATUS_ATTN_BITS_TX_BD_CACHE_ABORT	(1L<<3)
+		#define STATUS_ATTN_BITS_TX_PROCESSOR_ABORT	(1L<<4)
+		#define STATUS_ATTN_BITS_TX_DMA_ABORT		(1L<<5)
+		#define STATUS_ATTN_BITS_TX_PATCHUP_ABORT	(1L<<6)
+		#define STATUS_ATTN_BITS_TX_ASSEMBLER_ABORT	(1L<<7)
+		#define STATUS_ATTN_BITS_RX_PARSER_MAC_ABORT	(1L<<8)
+		#define STATUS_ATTN_BITS_RX_PARSER_CATCHUP_ABORT	(1L<<9)
+		#define STATUS_ATTN_BITS_RX_MBUF_ABORT		(1L<<10)
+		#define STATUS_ATTN_BITS_RX_LOOKUP_ABORT	(1L<<11)
+		#define STATUS_ATTN_BITS_RX_PROCESSOR_ABORT	(1L<<12)
+		#define STATUS_ATTN_BITS_RX_V2P_ABORT		(1L<<13)
+		#define STATUS_ATTN_BITS_RX_BD_CACHE_ABORT	(1L<<14)
+		#define STATUS_ATTN_BITS_RX_DMA_ABORT		(1L<<15)
+		#define STATUS_ATTN_BITS_COMPLETION_ABORT	(1L<<16)
+		#define STATUS_ATTN_BITS_HOST_COALESCE_ABORT	(1L<<17)
+		#define STATUS_ATTN_BITS_MAILBOX_QUEUE_ABORT	(1L<<18)
+		#define STATUS_ATTN_BITS_CONTEXT_ABORT		(1L<<19)
+		#define STATUS_ATTN_BITS_CMD_SCHEDULER_ABORT	(1L<<20)
+		#define STATUS_ATTN_BITS_CMD_PROCESSOR_ABORT	(1L<<21)
+		#define STATUS_ATTN_BITS_MGMT_PROCESSOR_ABORT	(1L<<22)
+		#define STATUS_ATTN_BITS_MAC_ABORT		(1L<<23)
+		#define STATUS_ATTN_BITS_TIMER_ABORT		(1L<<24)
+		#define STATUS_ATTN_BITS_DMAE_ABORT		(1L<<25)
+		#define STATUS_ATTN_BITS_FLSH_ABORT		(1L<<26)
+		#define STATUS_ATTN_BITS_GRC_ABORT		(1L<<27)
+		#define STATUS_ATTN_BITS_EPB_ERROR		(1L<<30)
+		#define STATUS_ATTN_BITS_PARITY_ERROR		(1L<<31)
+
+	u32 status_attn_bits_ack;
+#if defined(__BIG_ENDIAN)
+	u16 status_tx_quick_consumer_index0;
+	u16 status_tx_quick_consumer_index1;
+	u16 status_tx_quick_consumer_index2;
+	u16 status_tx_quick_consumer_index3;
+	u16 status_rx_quick_consumer_index0;
+	u16 status_rx_quick_consumer_index1;
+	u16 status_rx_quick_consumer_index2;
+	u16 status_rx_quick_consumer_index3;
+	u16 status_rx_quick_consumer_index4;
+	u16 status_rx_quick_consumer_index5;
+	u16 status_rx_quick_consumer_index6;
+	u16 status_rx_quick_consumer_index7;
+	u16 status_rx_quick_consumer_index8;
+	u16 status_rx_quick_consumer_index9;
+	u16 status_rx_quick_consumer_index10;
+	u16 status_rx_quick_consumer_index11;
+	u16 status_rx_quick_consumer_index12;
+	u16 status_rx_quick_consumer_index13;
+	u16 status_rx_quick_consumer_index14;
+	u16 status_rx_quick_consumer_index15;
+	u16 status_completion_producer_index;
+	u16 status_cmd_consumer_index;
+	u16 status_idx;
+	u8 status_unused;
+	u8 status_blk_num;
+#elif defined(__LITTLE_ENDIAN)
+	u16 status_tx_quick_consumer_index1;
+	u16 status_tx_quick_consumer_index0;
+	u16 status_tx_quick_consumer_index3;
+	u16 status_tx_quick_consumer_index2;
+	u16 status_rx_quick_consumer_index1;
+	u16 status_rx_quick_consumer_index0;
+	u16 status_rx_quick_consumer_index3;
+	u16 status_rx_quick_consumer_index2;
+	u16 status_rx_quick_consumer_index5;
+	u16 status_rx_quick_consumer_index4;
+	u16 status_rx_quick_consumer_index7;
+	u16 status_rx_quick_consumer_index6;
+	u16 status_rx_quick_consumer_index9;
+	u16 status_rx_quick_consumer_index8;
+	u16 status_rx_quick_consumer_index11;
+	u16 status_rx_quick_consumer_index10;
+	u16 status_rx_quick_consumer_index13;
+	u16 status_rx_quick_consumer_index12;
+	u16 status_rx_quick_consumer_index15;
+	u16 status_rx_quick_consumer_index14;
+	u16 status_cmd_consumer_index;
+	u16 status_completion_producer_index;
+	u8 status_blk_num;
+	u8 status_unused;
+	u16 status_idx;
+#endif
+};
+
+/*
+ *  status_block definition
+ */
+struct status_block_msix {
+#if defined(__BIG_ENDIAN)
+	u16 status_tx_quick_consumer_index;
+	u16 status_rx_quick_consumer_index;
+	u16 status_completion_producer_index;
+	u16 status_cmd_consumer_index;
+	u32 status_unused;
+	u16 status_idx;
+	u8 status_unused2;
+	u8 status_blk_num;
+#elif defined(__LITTLE_ENDIAN)
+	u16 status_rx_quick_consumer_index;
+	u16 status_tx_quick_consumer_index;
+	u16 status_cmd_consumer_index;
+	u16 status_completion_producer_index;
+	u32 status_unused;
+	u8 status_blk_num;
+	u8 status_unused2;
+	u16 status_idx;
+#endif
+};
+
+#define BNX2_SBLK_MSIX_ALIGN_SIZE	128
+
+
+/*
+ *  statistics_block definition
+ */
+struct statistics_block {
+	u32 stat_IfHCInOctets_hi;
+	u32 stat_IfHCInOctets_lo;
+	u32 stat_IfHCInBadOctets_hi;
+	u32 stat_IfHCInBadOctets_lo;
+	u32 stat_IfHCOutOctets_hi;
+	u32 stat_IfHCOutOctets_lo;
+	u32 stat_IfHCOutBadOctets_hi;
+	u32 stat_IfHCOutBadOctets_lo;
+	u32 stat_IfHCInUcastPkts_hi;
+	u32 stat_IfHCInUcastPkts_lo;
+	u32 stat_IfHCInMulticastPkts_hi;
+	u32 stat_IfHCInMulticastPkts_lo;
+	u32 stat_IfHCInBroadcastPkts_hi;
+	u32 stat_IfHCInBroadcastPkts_lo;
+	u32 stat_IfHCOutUcastPkts_hi;
+	u32 stat_IfHCOutUcastPkts_lo;
+	u32 stat_IfHCOutMulticastPkts_hi;
+	u32 stat_IfHCOutMulticastPkts_lo;
+	u32 stat_IfHCOutBroadcastPkts_hi;
+	u32 stat_IfHCOutBroadcastPkts_lo;
+	u32 stat_emac_tx_stat_dot3statsinternalmactransmiterrors;
+	u32 stat_Dot3StatsCarrierSenseErrors;
+	u32 stat_Dot3StatsFCSErrors;
+	u32 stat_Dot3StatsAlignmentErrors;
+	u32 stat_Dot3StatsSingleCollisionFrames;
+	u32 stat_Dot3StatsMultipleCollisionFrames;
+	u32 stat_Dot3StatsDeferredTransmissions;
+	u32 stat_Dot3StatsExcessiveCollisions;
+	u32 stat_Dot3StatsLateCollisions;
+	u32 stat_EtherStatsCollisions;
+	u32 stat_EtherStatsFragments;
+	u32 stat_EtherStatsJabbers;
+	u32 stat_EtherStatsUndersizePkts;
+	u32 stat_EtherStatsOverrsizePkts;
+	u32 stat_EtherStatsPktsRx64Octets;
+	u32 stat_EtherStatsPktsRx65Octetsto127Octets;
+	u32 stat_EtherStatsPktsRx128Octetsto255Octets;
+	u32 stat_EtherStatsPktsRx256Octetsto511Octets;
+	u32 stat_EtherStatsPktsRx512Octetsto1023Octets;
+	u32 stat_EtherStatsPktsRx1024Octetsto1522Octets;
+	u32 stat_EtherStatsPktsRx1523Octetsto9022Octets;
+	u32 stat_EtherStatsPktsTx64Octets;
+	u32 stat_EtherStatsPktsTx65Octetsto127Octets;
+	u32 stat_EtherStatsPktsTx128Octetsto255Octets;
+	u32 stat_EtherStatsPktsTx256Octetsto511Octets;
+	u32 stat_EtherStatsPktsTx512Octetsto1023Octets;
+	u32 stat_EtherStatsPktsTx1024Octetsto1522Octets;
+	u32 stat_EtherStatsPktsTx1523Octetsto9022Octets;
+	u32 stat_XonPauseFramesReceived;
+	u32 stat_XoffPauseFramesReceived;
+	u32 stat_OutXonSent;
+	u32 stat_OutXoffSent;
+	u32 stat_FlowControlDone;
+	u32 stat_MacControlFramesReceived;
+	u32 stat_XoffStateEntered;
+	u32 stat_IfInFramesL2FilterDiscards;
+	u32 stat_IfInRuleCheckerDiscards;
+	u32 stat_IfInFTQDiscards;
+	u32 stat_IfInMBUFDiscards;
+	u32 stat_IfInRuleCheckerP4Hit;
+	u32 stat_CatchupInRuleCheckerDiscards;
+	u32 stat_CatchupInFTQDiscards;
+	u32 stat_CatchupInMBUFDiscards;
+	u32 stat_CatchupInRuleCheckerP4Hit;
+	u32 stat_GenStat00;
+	u32 stat_GenStat01;
+	u32 stat_GenStat02;
+	u32 stat_GenStat03;
+	u32 stat_GenStat04;
+	u32 stat_GenStat05;
+	u32 stat_GenStat06;
+	u32 stat_GenStat07;
+	u32 stat_GenStat08;
+	u32 stat_GenStat09;
+	u32 stat_GenStat10;
+	u32 stat_GenStat11;
+	u32 stat_GenStat12;
+	u32 stat_GenStat13;
+	u32 stat_GenStat14;
+	u32 stat_GenStat15;
+	u32 stat_FwRxDrop;
+};
+
+
+/*
+ *  l2_fhdr definition
+ */
+struct l2_fhdr {
+	u32 l2_fhdr_status;
+		#define L2_FHDR_STATUS_RULE_CLASS	(0x7<<0)
+		#define L2_FHDR_STATUS_RULE_P2		(1<<3)
+		#define L2_FHDR_STATUS_RULE_P3		(1<<4)
+		#define L2_FHDR_STATUS_RULE_P4		(1<<5)
+		#define L2_FHDR_STATUS_L2_VLAN_TAG	(1<<6)
+		#define L2_FHDR_STATUS_L2_LLC_SNAP	(1<<7)
+		#define L2_FHDR_STATUS_RSS_HASH		(1<<8)
+		#define L2_FHDR_STATUS_IP_DATAGRAM	(1<<13)
+		#define L2_FHDR_STATUS_TCP_SEGMENT	(1<<14)
+		#define L2_FHDR_STATUS_UDP_DATAGRAM	(1<<15)
+
+		#define L2_FHDR_STATUS_SPLIT		(1<<16)
+		#define L2_FHDR_ERRORS_BAD_CRC		(1<<17)
+		#define L2_FHDR_ERRORS_PHY_DECODE	(1<<18)
+		#define L2_FHDR_ERRORS_ALIGNMENT	(1<<19)
+		#define L2_FHDR_ERRORS_TOO_SHORT	(1<<20)
+		#define L2_FHDR_ERRORS_GIANT_FRAME	(1<<21)
+		#define L2_FHDR_ERRORS_TCP_XSUM		(1<<28)
+		#define L2_FHDR_ERRORS_UDP_XSUM		(1<<31)
+
+	u32 l2_fhdr_hash;
+#if defined(__BIG_ENDIAN)
+	u16 l2_fhdr_pkt_len;
+	u16 l2_fhdr_vlan_tag;
+	u16 l2_fhdr_ip_xsum;
+	u16 l2_fhdr_tcp_udp_xsum;
+#elif defined(__LITTLE_ENDIAN)
+	u16 l2_fhdr_vlan_tag;
+	u16 l2_fhdr_pkt_len;
+	u16 l2_fhdr_tcp_udp_xsum;
+	u16 l2_fhdr_ip_xsum;
+#endif
+};
+
+#define BNX2_RX_OFFSET		(sizeof(struct l2_fhdr) + 2)
+
+/*
+ *  l2_context definition
+ */
+#define BNX2_L2CTX_TYPE					0x00000000
+#define BNX2_L2CTX_TYPE_SIZE_L2				 ((0xc0/0x20)<<16)
+#define BNX2_L2CTX_TYPE_TYPE				 (0xf<<28)
+#define BNX2_L2CTX_TYPE_TYPE_EMPTY			 (0<<28)
+#define BNX2_L2CTX_TYPE_TYPE_L2				 (1<<28)
+
+#define BNX2_L2CTX_TX_HOST_BIDX				0x00000088
+#define BNX2_L2CTX_EST_NBD				0x00000088
+#define BNX2_L2CTX_CMD_TYPE				0x00000088
+#define BNX2_L2CTX_CMD_TYPE_TYPE			 (0xf<<24)
+#define BNX2_L2CTX_CMD_TYPE_TYPE_L2			 (0<<24)
+#define BNX2_L2CTX_CMD_TYPE_TYPE_TCP			 (1<<24)
+
+#define BNX2_L2CTX_TX_HOST_BSEQ				0x00000090
+#define BNX2_L2CTX_TSCH_BSEQ				0x00000094
+#define BNX2_L2CTX_TBDR_BSEQ				0x00000098
+#define BNX2_L2CTX_TBDR_BOFF				0x0000009c
+#define BNX2_L2CTX_TBDR_BIDX				0x0000009c
+#define BNX2_L2CTX_TBDR_BHADDR_HI			0x000000a0
+#define BNX2_L2CTX_TBDR_BHADDR_LO			0x000000a4
+#define BNX2_L2CTX_TXP_BOFF				0x000000a8
+#define BNX2_L2CTX_TXP_BIDX				0x000000a8
+#define BNX2_L2CTX_TXP_BSEQ				0x000000ac
+
+#define BNX2_L2CTX_TYPE_XI				0x00000080
+#define BNX2_L2CTX_CMD_TYPE_XI				0x00000240
+#define BNX2_L2CTX_TBDR_BHADDR_HI_XI			0x00000258
+#define BNX2_L2CTX_TBDR_BHADDR_LO_XI			0x0000025c
+
+/*
+ *  l2_bd_chain_context definition
+ */
+#define BNX2_L2CTX_BD_PRE_READ				0x00000000
+#define BNX2_L2CTX_CTX_SIZE				0x00000000
+#define BNX2_L2CTX_CTX_TYPE				0x00000000
+#define BNX2_L2CTX_LO_WATER_MARK_DEFAULT		 32
+#define BNX2_L2CTX_LO_WATER_MARK_SCALE			 4
+#define BNX2_L2CTX_LO_WATER_MARK_DIS			 0
+#define BNX2_L2CTX_HI_WATER_MARK_SHIFT			 4
+#define BNX2_L2CTX_HI_WATER_MARK_SCALE			 16
+#define BNX2_L2CTX_WATER_MARKS_MSK			 0x000000ff
+#define BNX2_L2CTX_CTX_TYPE_SIZE_L2			 ((0x20/20)<<16)
+#define BNX2_L2CTX_CTX_TYPE_CTX_BD_CHN_TYPE		 (0xf<<28)
+#define BNX2_L2CTX_CTX_TYPE_CTX_BD_CHN_TYPE_UNDEFINED	 (0<<28)
+#define BNX2_L2CTX_CTX_TYPE_CTX_BD_CHN_TYPE_VALUE	 (1<<28)
+
+#define BNX2_L2CTX_HOST_BDIDX				0x00000004
+#define BNX2_L2CTX_L5_STATUSB_NUM_SHIFT			 16
+#define BNX2_L2CTX_L2_STATUSB_NUM_SHIFT			 24
+#define BNX2_L2CTX_L5_STATUSB_NUM(sb_id)		\
+	(((sb_id) > 0) ? (((sb_id) + 7) << BNX2_L2CTX_L5_STATUSB_NUM_SHIFT) : 0)
+#define BNX2_L2CTX_L2_STATUSB_NUM(sb_id)		\
+	(((sb_id) > 0) ? (((sb_id) + 7) << BNX2_L2CTX_L2_STATUSB_NUM_SHIFT) : 0)
+#define BNX2_L2CTX_HOST_BSEQ				0x00000008
+#define BNX2_L2CTX_NX_BSEQ				0x0000000c
+#define BNX2_L2CTX_NX_BDHADDR_HI			0x00000010
+#define BNX2_L2CTX_NX_BDHADDR_LO			0x00000014
+#define BNX2_L2CTX_NX_BDIDX				0x00000018
+
+#define BNX2_L2CTX_HOST_PG_BDIDX			0x00000044
+#define BNX2_L2CTX_PG_BUF_SIZE				0x00000048
+#define BNX2_L2CTX_RBDC_KEY				0x0000004c
+#define BNX2_L2CTX_RBDC_JUMBO_KEY			 0x3ffe
+#define BNX2_L2CTX_NX_PG_BDHADDR_HI			0x00000050
+#define BNX2_L2CTX_NX_PG_BDHADDR_LO			0x00000054
+
+/*
+ *  pci_config_l definition
+ *  offset: 0000
+ */
+#define BNX2_PCICFG_MSI_CONTROL				0x00000058
+#define BNX2_PCICFG_MSI_CONTROL_ENABLE			 (1L<<16)
+
+#define BNX2_PCICFG_MISC_CONFIG				0x00000068
+#define BNX2_PCICFG_MISC_CONFIG_TARGET_BYTE_SWAP	 (1L<<2)
+#define BNX2_PCICFG_MISC_CONFIG_TARGET_MB_WORD_SWAP	 (1L<<3)
+#define BNX2_PCICFG_MISC_CONFIG_RESERVED1		 (1L<<4)
+#define BNX2_PCICFG_MISC_CONFIG_CLOCK_CTL_ENA		 (1L<<5)
+#define BNX2_PCICFG_MISC_CONFIG_TARGET_GRC_WORD_SWAP	 (1L<<6)
+#define BNX2_PCICFG_MISC_CONFIG_REG_WINDOW_ENA		 (1L<<7)
+#define BNX2_PCICFG_MISC_CONFIG_CORE_RST_REQ		 (1L<<8)
+#define BNX2_PCICFG_MISC_CONFIG_CORE_RST_BSY		 (1L<<9)
+#define BNX2_PCICFG_MISC_CONFIG_GRC_WIN1_SWAP_EN	 (1L<<10)
+#define BNX2_PCICFG_MISC_CONFIG_GRC_WIN2_SWAP_EN	 (1L<<11)
+#define BNX2_PCICFG_MISC_CONFIG_GRC_WIN3_SWAP_EN	 (1L<<12)
+#define BNX2_PCICFG_MISC_CONFIG_ASIC_METAL_REV		 (0xffL<<16)
+#define BNX2_PCICFG_MISC_CONFIG_ASIC_BASE_REV		 (0xfL<<24)
+#define BNX2_PCICFG_MISC_CONFIG_ASIC_ID			 (0xfL<<28)
+
+#define BNX2_PCICFG_MISC_STATUS				0x0000006c
+#define BNX2_PCICFG_MISC_STATUS_INTA_VALUE		 (1L<<0)
+#define BNX2_PCICFG_MISC_STATUS_32BIT_DET		 (1L<<1)
+#define BNX2_PCICFG_MISC_STATUS_M66EN			 (1L<<2)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_DET		 (1L<<3)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_SPEED		 (0x3L<<4)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_SPEED_66		 (0L<<4)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_SPEED_100		 (1L<<4)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_SPEED_133		 (2L<<4)
+#define BNX2_PCICFG_MISC_STATUS_PCIX_SPEED_PCI_MODE	 (3L<<4)
+#define BNX2_PCICFG_MISC_STATUS_BAD_MEM_WRITE_BE	 (1L<<8)
+
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS		0x00000070
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET	 (0xfL<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_32MHZ	 (0L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_38MHZ	 (1L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_48MHZ	 (2L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_55MHZ	 (3L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_66MHZ	 (4L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_80MHZ	 (5L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_95MHZ	 (6L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_133MHZ	 (7L<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_LOW	 (0xfL<<0)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_DISABLE	 (1L<<6)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT	 (1L<<7)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC	 (0x7L<<8)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_UNDEF	 (0L<<8)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_12	 (1L<<8)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_6	 (2L<<8)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_62	 (4L<<8)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_MIN_POWER	 (1L<<11)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED	 (0xfL<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_100	 (0L<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_80	 (1L<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_50	 (2L<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_40	 (4L<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_25	 (8L<<12)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_STOP	 (1L<<16)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_RESERVED_17	 (1L<<17)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_RESERVED_18	 (1L<<18)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_RESERVED_19	 (1L<<19)
+#define BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_RESERVED	 (0xfffL<<20)
+
+#define BNX2_PCICFG_REG_WINDOW_ADDRESS			0x00000078
+#define BNX2_PCICFG_REG_WINDOW_ADDRESS_VAL		 (0xfffffL<<2)
+
+#define BNX2_PCICFG_REG_WINDOW				0x00000080
+#define BNX2_PCICFG_INT_ACK_CMD				0x00000084
+#define BNX2_PCICFG_INT_ACK_CMD_INDEX			 (0xffffL<<0)
+#define BNX2_PCICFG_INT_ACK_CMD_INDEX_VALID		 (1L<<16)
+#define BNX2_PCICFG_INT_ACK_CMD_USE_INT_HC_PARAM	 (1L<<17)
+#define BNX2_PCICFG_INT_ACK_CMD_MASK_INT		 (1L<<18)
+#define BNX2_PCICFG_INT_ACK_CMD_INTERRUPT_NUM		 (0xfL<<24)
+#define BNX2_PCICFG_INT_ACK_CMD_INT_NUM_SHIFT		 24
+
+#define BNX2_PCICFG_STATUS_BIT_SET_CMD			0x00000088
+#define BNX2_PCICFG_STATUS_BIT_CLEAR_CMD		0x0000008c
+#define BNX2_PCICFG_MAILBOX_QUEUE_ADDR			0x00000090
+#define BNX2_PCICFG_MAILBOX_QUEUE_DATA			0x00000094
+
+
+/*
+ *  pci_reg definition
+ *  offset: 0x400
+ */
+#define BNX2_PCI_GRC_WINDOW_ADDR			0x00000400
+#define BNX2_PCI_GRC_WINDOW_ADDR_VALUE			 (0x1ffL<<13)
+#define BNX2_PCI_GRC_WINDOW_ADDR_SEP_WIN		 (1L<<31)
+
+#define BNX2_PCI_GRC_WINDOW2_BASE		 	 0xc000
+#define BNX2_PCI_GRC_WINDOW3_BASE		 	 0xe000
+
+#define BNX2_PCI_CONFIG_1				0x00000404
+#define BNX2_PCI_CONFIG_1_RESERVED0			 (0xffL<<0)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY			 (0x7L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_OFF		 (0L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_16		 (1L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_32		 (2L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_64		 (3L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_128		 (4L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_256		 (5L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_512		 (6L<<8)
+#define BNX2_PCI_CONFIG_1_READ_BOUNDARY_1024		 (7L<<8)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY		 (0x7L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_OFF		 (0L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_16		 (1L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_32		 (2L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_64		 (3L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_128		 (4L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_256		 (5L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_512		 (6L<<11)
+#define BNX2_PCI_CONFIG_1_WRITE_BOUNDARY_1024		 (7L<<11)
+#define BNX2_PCI_CONFIG_1_RESERVED1			 (0x3ffffL<<14)
+
+#define BNX2_PCI_CONFIG_2				0x00000408
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE			 (0xfL<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_DISABLED		 (0L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_64K			 (1L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_128K		 (2L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_256K		 (3L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_512K		 (4L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_1M			 (5L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_2M			 (6L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_4M			 (7L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_8M			 (8L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_16M			 (9L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_32M			 (10L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_64M			 (11L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_128M		 (12L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_256M		 (13L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_512M		 (14L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_SIZE_1G			 (15L<<0)
+#define BNX2_PCI_CONFIG_2_BAR1_64ENA			 (1L<<4)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_RETRY			 (1L<<5)
+#define BNX2_PCI_CONFIG_2_CFG_CYCLE_RETRY		 (1L<<6)
+#define BNX2_PCI_CONFIG_2_FIRST_CFG_DONE		 (1L<<7)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE			 (0xffL<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_DISABLED		 (0L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_1K		 (1L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_2K		 (2L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_4K		 (3L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_8K		 (4L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_16K		 (5L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_32K		 (6L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_64K		 (7L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_128K		 (8L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_256K		 (9L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_512K		 (10L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_1M		 (11L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_2M		 (12L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_4M		 (13L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_8M		 (14L<<8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SIZE_16M		 (15L<<8)
+#define BNX2_PCI_CONFIG_2_MAX_SPLIT_LIMIT		 (0x1fL<<16)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMIT		 (0x3L<<21)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMIT_512		 (0L<<21)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMIT_1K		 (1L<<21)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMIT_2K		 (2L<<21)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMIT_4K		 (3L<<21)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L<<23)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_TGT		 (1L<<24)
+#define BNX2_PCI_CONFIG_2_KEEP_REQ_ASSERT		 (1L<<25)
+#define BNX2_PCI_CONFIG_2_RESERVED0			 (0x3fL<<26)
+#define BNX2_PCI_CONFIG_2_BAR_PREFETCH_XI		 (1L<<16)
+#define BNX2_PCI_CONFIG_2_RESERVED0_XI			 (0x7fffL<<17)
+
+#define BNX2_PCI_CONFIG_3				0x0000040c
+#define BNX2_PCI_CONFIG_3_STICKY_BYTE			 (0xffL<<0)
+#define BNX2_PCI_CONFIG_3_REG_STICKY_BYTE		 (0xffL<<8)
+#define BNX2_PCI_CONFIG_3_FORCE_PME			 (1L<<24)
+#define BNX2_PCI_CONFIG_3_PME_STATUS			 (1L<<25)
+#define BNX2_PCI_CONFIG_3_PME_ENABLE			 (1L<<26)
+#define BNX2_PCI_CONFIG_3_PM_STATE			 (0x3L<<27)
+#define BNX2_PCI_CONFIG_3_VAUX_PRESET			 (1L<<30)
+#define BNX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#define BNX2_PCI_PM_DATA_A				0x00000410
+#define BNX2_PCI_PM_DATA_A_PM_DATA_0_PRG		 (0xffL<<0)
+#define BNX2_PCI_PM_DATA_A_PM_DATA_1_PRG		 (0xffL<<8)
+#define BNX2_PCI_PM_DATA_A_PM_DATA_2_PRG		 (0xffL<<16)
+#define BNX2_PCI_PM_DATA_A_PM_DATA_3_PRG		 (0xffL<<24)
+
+#define BNX2_PCI_PM_DATA_B				0x00000414
+#define BNX2_PCI_PM_DATA_B_PM_DATA_4_PRG		 (0xffL<<0)
+#define BNX2_PCI_PM_DATA_B_PM_DATA_5_PRG		 (0xffL<<8)
+#define BNX2_PCI_PM_DATA_B_PM_DATA_6_PRG		 (0xffL<<16)
+#define BNX2_PCI_PM_DATA_B_PM_DATA_7_PRG		 (0xffL<<24)
+
+#define BNX2_PCI_SWAP_DIAG0				0x00000418
+#define BNX2_PCI_SWAP_DIAG1				0x0000041c
+#define BNX2_PCI_EXP_ROM_ADDR				0x00000420
+#define BNX2_PCI_EXP_ROM_ADDR_ADDRESS			 (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_REQ			 (1L<<31)
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#define BNX2_PCI_VPD_INTF				0x00000428
+#define BNX2_PCI_VPD_INTF_INTF_REQ			 (1L<<0)
+
+#define BNX2_PCI_VPD_ADDR_FLAG				0x0000042c
+#define BNX2_PCI_VPD_ADDR_FLAG_MSK			0x0000ffff
+#define BNX2_PCI_VPD_ADDR_FLAG_SL			0L
+#define BNX2_PCI_VPD_ADDR_FLAG_ADDRESS			 (0x1fffL<<2)
+#define BNX2_PCI_VPD_ADDR_FLAG_WR			 (1L<<15)
+
+#define BNX2_PCI_VPD_DATA				0x00000430
+#define BNX2_PCI_ID_VAL1				0x00000434
+#define BNX2_PCI_ID_VAL1_DEVICE_ID			 (0xffffL<<0)
+#define BNX2_PCI_ID_VAL1_VENDOR_ID			 (0xffffL<<16)
+
+#define BNX2_PCI_ID_VAL2				0x00000438
+#define BNX2_PCI_ID_VAL2_SUBSYSTEM_VENDOR_ID		 (0xffffL<<0)
+#define BNX2_PCI_ID_VAL2_SUBSYSTEM_ID			 (0xffffL<<16)
+
+#define BNX2_PCI_ID_VAL3				0x0000043c
+#define BNX2_PCI_ID_VAL3_CLASS_CODE			 (0xffffffL<<0)
+#define BNX2_PCI_ID_VAL3_REVISION_ID			 (0xffL<<24)
+
+#define BNX2_PCI_ID_VAL4				0x00000440
+#define BNX2_PCI_ID_VAL4_CAP_ENA			 (0xfL<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_0			 (0L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_1			 (1L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_2			 (2L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_3			 (3L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_4			 (4L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_5			 (5L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_6			 (6L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_7			 (7L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_8			 (8L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_9			 (9L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_10			 (10L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_11			 (11L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_12			 (12L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_13			 (13L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_14			 (14L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_15			 (15L<<0)
+#define BNX2_PCI_ID_VAL4_RESERVED0			 (0x3L<<4)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG			 (0x3L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG_0			 (0L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG_1			 (1L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG_2			 (2L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG_3			 (3L<<6)
+#define BNX2_PCI_ID_VAL4_MSI_PV_MASK_CAP		 (1L<<8)
+#define BNX2_PCI_ID_VAL4_MSI_LIMIT			 (0x7L<<9)
+#define BNX2_PCI_ID_VAL4_MULTI_MSG_CAP			 (0x7L<<12)
+#define BNX2_PCI_ID_VAL4_MSI_ENABLE			 (1L<<15)
+#define BNX2_PCI_ID_VAL4_MAX_64_ADVERTIZE		 (1L<<16)
+#define BNX2_PCI_ID_VAL4_MAX_133_ADVERTIZE		 (1L<<17)
+#define BNX2_PCI_ID_VAL4_RESERVED2			 (0x7L<<18)
+#define BNX2_PCI_ID_VAL4_MAX_CUMULATIVE_SIZE_B21	 (0x3L<<21)
+#define BNX2_PCI_ID_VAL4_MAX_SPLIT_SIZE_B21		 (0x3L<<23)
+#define BNX2_PCI_ID_VAL4_MAX_CUMULATIVE_SIZE_B0		 (1L<<25)
+#define BNX2_PCI_ID_VAL4_MAX_MEM_READ_SIZE_B10		 (0x3L<<26)
+#define BNX2_PCI_ID_VAL4_MAX_SPLIT_SIZE_B0		 (1L<<28)
+#define BNX2_PCI_ID_VAL4_RESERVED3			 (0x7L<<29)
+#define BNX2_PCI_ID_VAL4_RESERVED3_XI			 (0xffffL<<16)
+
+#define BNX2_PCI_ID_VAL5				0x00000444
+#define BNX2_PCI_ID_VAL5_D1_SUPPORT			 (1L<<0)
+#define BNX2_PCI_ID_VAL5_D2_SUPPORT			 (1L<<1)
+#define BNX2_PCI_ID_VAL5_PME_IN_D0			 (1L<<2)
+#define BNX2_PCI_ID_VAL5_PME_IN_D1			 (1L<<3)
+#define BNX2_PCI_ID_VAL5_PME_IN_D2			 (1L<<4)
+#define BNX2_PCI_ID_VAL5_PME_IN_D3_HOT			 (1L<<5)
+#define BNX2_PCI_ID_VAL5_RESERVED0_TE			 (0x3ffffffL<<6)
+#define BNX2_PCI_ID_VAL5_PM_VERSION_XI			 (0x7L<<6)
+#define BNX2_PCI_ID_VAL5_NO_SOFT_RESET_XI		 (1L<<9)
+#define BNX2_PCI_ID_VAL5_RESERVED0_XI			 (0x3fffffL<<10)
+
+#define BNX2_PCI_PCIX_EXTENDED_STATUS			0x00000448
+#define BNX2_PCI_PCIX_EXTENDED_STATUS_NO_SNOOP		 (1L<<8)
+#define BNX2_PCI_PCIX_EXTENDED_STATUS_LONG_BURST	 (1L<<9)
+#define BNX2_PCI_PCIX_EXTENDED_STATUS_SPLIT_COMP_MSG_CLASS	 (0xfL<<16)
+#define BNX2_PCI_PCIX_EXTENDED_STATUS_SPLIT_COMP_MSG_IDX	 (0xffL<<24)
+
+#define BNX2_PCI_ID_VAL6				0x0000044c
+#define BNX2_PCI_ID_VAL6_MAX_LAT			 (0xffL<<0)
+#define BNX2_PCI_ID_VAL6_MIN_GNT			 (0xffL<<8)
+#define BNX2_PCI_ID_VAL6_BIST				 (0xffL<<16)
+#define BNX2_PCI_ID_VAL6_RESERVED0			 (0xffL<<24)
+
+#define BNX2_PCI_MSI_DATA				0x00000450
+#define BNX2_PCI_MSI_DATA_MSI_DATA			 (0xffffL<<0)
+
+#define BNX2_PCI_MSI_ADDR_H				0x00000454
+#define BNX2_PCI_MSI_ADDR_L				0x00000458
+#define BNX2_PCI_MSI_ADDR_L_VAL				 (0x3fffffffL<<2)
+
+#define BNX2_PCI_CFG_ACCESS_CMD				0x0000045c
+#define BNX2_PCI_CFG_ACCESS_CMD_ADR			 (0x3fL<<2)
+#define BNX2_PCI_CFG_ACCESS_CMD_RD_REQ			 (1L<<27)
+#define BNX2_PCI_CFG_ACCESS_CMD_WR_REQ			 (0xfL<<28)
+
+#define BNX2_PCI_CFG_ACCESS_DATA			0x00000460
+#define BNX2_PCI_MSI_MASK				0x00000464
+#define BNX2_PCI_MSI_MASK_MSI_MASK			 (0xffffffffL<<0)
+
+#define BNX2_PCI_MSI_PEND				0x00000468
+#define BNX2_PCI_MSI_PEND_MSI_PEND			 (0xffffffffL<<0)
+
+#define BNX2_PCI_PM_DATA_C				0x0000046c
+#define BNX2_PCI_PM_DATA_C_PM_DATA_8_PRG		 (0xffL<<0)
+#define BNX2_PCI_PM_DATA_C_RESERVED0			 (0xffffffL<<8)
+
+#define BNX2_PCI_MSIX_CONTROL				0x000004c0
+#define BNX2_PCI_MSIX_CONTROL_MSIX_TBL_SIZ		 (0x7ffL<<0)
+#define BNX2_PCI_MSIX_CONTROL_RESERVED0			 (0x1fffffL<<11)
+
+#define BNX2_PCI_MSIX_TBL_OFF_BIR			0x000004c4
+#define BNX2_PCI_MSIX_TBL_OFF_BIR_MSIX_TBL_BIR		 (0x7L<<0)
+#define BNX2_PCI_MSIX_TBL_OFF_BIR_MSIX_TBL_OFF		 (0x1fffffffL<<3)
+
+#define BNX2_PCI_MSIX_PBA_OFF_BIT			0x000004c8
+#define BNX2_PCI_MSIX_PBA_OFF_BIT_MSIX_PBA_BIR		 (0x7L<<0)
+#define BNX2_PCI_MSIX_PBA_OFF_BIT_MSIX_PBA_OFF		 (0x1fffffffL<<3)
+
+#define BNX2_PCI_PCIE_CAPABILITY			0x000004d0
+#define BNX2_PCI_PCIE_CAPABILITY_INTERRUPT_MSG_NUM	 (0x1fL<<0)
+#define BNX2_PCI_PCIE_CAPABILITY_COMPLY_PCIE_1_1	 (1L<<5)
+
+#define BNX2_PCI_DEVICE_CAPABILITY			0x000004d4
+#define BNX2_PCI_DEVICE_CAPABILITY_MAX_PL_SIZ_SUPPORTED	 (0x7L<<0)
+#define BNX2_PCI_DEVICE_CAPABILITY_EXTENDED_TAG_SUPPORT	 (1L<<5)
+#define BNX2_PCI_DEVICE_CAPABILITY_L0S_ACCEPTABLE_LATENCY	 (0x7L<<6)
+#define BNX2_PCI_DEVICE_CAPABILITY_L1_ACCEPTABLE_LATENCY	 (0x7L<<9)
+#define BNX2_PCI_DEVICE_CAPABILITY_ROLE_BASED_ERR_RPT	 (1L<<15)
+
+#define BNX2_PCI_LINK_CAPABILITY			0x000004dc
+#define BNX2_PCI_LINK_CAPABILITY_MAX_LINK_SPEED		 (0xfL<<0)
+#define BNX2_PCI_LINK_CAPABILITY_MAX_LINK_SPEED_0001	 (1L<<0)
+#define BNX2_PCI_LINK_CAPABILITY_MAX_LINK_SPEED_0010	 (1L<<0)
+#define BNX2_PCI_LINK_CAPABILITY_MAX_LINK_WIDTH		 (0x1fL<<4)
+#define BNX2_PCI_LINK_CAPABILITY_CLK_POWER_MGMT		 (1L<<9)
+#define BNX2_PCI_LINK_CAPABILITY_ASPM_SUPPORT		 (0x3L<<10)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_LAT		 (0x7L<<12)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_LAT_101	 (5L<<12)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_LAT_110	 (6L<<12)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_LAT		 (0x7L<<15)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_LAT_001	 (1L<<15)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_LAT_010	 (2L<<15)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_COMM_LAT	 (0x7L<<18)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_COMM_LAT_101	 (5L<<18)
+#define BNX2_PCI_LINK_CAPABILITY_L0S_EXIT_COMM_LAT_110	 (6L<<18)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_COMM_LAT	 (0x7L<<21)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_COMM_LAT_001	 (1L<<21)
+#define BNX2_PCI_LINK_CAPABILITY_L1_EXIT_COMM_LAT_010	 (2L<<21)
+#define BNX2_PCI_LINK_CAPABILITY_PORT_NUM		 (0xffL<<24)
+
+#define BNX2_PCI_PCIE_DEVICE_CAPABILITY_2		0x000004e4
+#define BNX2_PCI_PCIE_DEVICE_CAPABILITY_2_CMPL_TO_RANGE_SUPP	 (0xfL<<0)
+#define BNX2_PCI_PCIE_DEVICE_CAPABILITY_2_CMPL_TO_DISABL_SUPP	 (1L<<4)
+#define BNX2_PCI_PCIE_DEVICE_CAPABILITY_2_RESERVED	 (0x7ffffffL<<5)
+
+#define BNX2_PCI_PCIE_LINK_CAPABILITY_2			0x000004e8
+#define BNX2_PCI_PCIE_LINK_CAPABILITY_2_RESERVED	 (0xffffffffL<<0)
+
+#define BNX2_PCI_GRC_WINDOW1_ADDR			0x00000610
+#define BNX2_PCI_GRC_WINDOW1_ADDR_VALUE			 (0x1ffL<<13)
+
+#define BNX2_PCI_GRC_WINDOW2_ADDR			0x00000614
+#define BNX2_PCI_GRC_WINDOW2_ADDR_VALUE			 (0x1ffL<<13)
+
+#define BNX2_PCI_GRC_WINDOW3_ADDR			0x00000618
+#define BNX2_PCI_GRC_WINDOW3_ADDR_VALUE			 (0x1ffL<<13)
+
+#define BNX2_MSIX_TABLE_ADDR				 0x318000
+#define BNX2_MSIX_PBA_ADDR				 0x31c000
+
+/*
+ *  misc_reg definition
+ *  offset: 0x800
+ */
+#define BNX2_MISC_COMMAND				0x00000800
+#define BNX2_MISC_COMMAND_ENABLE_ALL			 (1L<<0)
+#define BNX2_MISC_COMMAND_DISABLE_ALL			 (1L<<1)
+#define BNX2_MISC_COMMAND_SW_RESET			 (1L<<4)
+#define BNX2_MISC_COMMAND_POR_RESET			 (1L<<5)
+#define BNX2_MISC_COMMAND_HD_RESET			 (1L<<6)
+#define BNX2_MISC_COMMAND_CMN_SW_RESET			 (1L<<7)
+#define BNX2_MISC_COMMAND_PAR_ERROR			 (1L<<8)
+#define BNX2_MISC_COMMAND_CS16_ERR			 (1L<<9)
+#define BNX2_MISC_COMMAND_CS16_ERR_LOC			 (0xfL<<12)
+#define BNX2_MISC_COMMAND_PAR_ERR_RAM			 (0x7fL<<16)
+#define BNX2_MISC_COMMAND_POWERDOWN_EVENT		 (1L<<23)
+#define BNX2_MISC_COMMAND_SW_SHUTDOWN			 (1L<<24)
+#define BNX2_MISC_COMMAND_SHUTDOWN_EN			 (1L<<25)
+#define BNX2_MISC_COMMAND_DINTEG_ATTN_EN		 (1L<<26)
+#define BNX2_MISC_COMMAND_PCIE_LINK_IN_L23		 (1L<<27)
+#define BNX2_MISC_COMMAND_PCIE_DIS			 (1L<<28)
+
+#define BNX2_MISC_CFG					0x00000804
+#define BNX2_MISC_CFG_GRC_TMOUT				 (1L<<0)
+#define BNX2_MISC_CFG_NVM_WR_EN				 (0x3L<<1)
+#define BNX2_MISC_CFG_NVM_WR_EN_PROTECT			 (0L<<1)
+#define BNX2_MISC_CFG_NVM_WR_EN_PCI			 (1L<<1)
+#define BNX2_MISC_CFG_NVM_WR_EN_ALLOW			 (2L<<1)
+#define BNX2_MISC_CFG_NVM_WR_EN_ALLOW2			 (3L<<1)
+#define BNX2_MISC_CFG_BIST_EN				 (1L<<3)
+#define BNX2_MISC_CFG_CK25_OUT_ALT_SRC			 (1L<<4)
+#define BNX2_MISC_CFG_RESERVED5_TE			 (1L<<5)
+#define BNX2_MISC_CFG_RESERVED6_TE			 (1L<<6)
+#define BNX2_MISC_CFG_CLK_CTL_OVERRIDE			 (1L<<7)
+#define BNX2_MISC_CFG_LEDMODE				 (0x7L<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC			 (0L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY1_TE			 (1L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY2_TE			 (2L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY3_TE			 (3L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY4_TE			 (4L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY5_TE			 (5L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY6_TE			 (6L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY7_TE			 (7L<<8)
+#define BNX2_MISC_CFG_MCP_GRC_TMOUT_TE			 (1L<<11)
+#define BNX2_MISC_CFG_DBU_GRC_TMOUT_TE			 (1L<<12)
+#define BNX2_MISC_CFG_LEDMODE_XI			 (0xfL<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC_XI			 (0L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY1_XI			 (1L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY2_XI			 (2L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY3_XI			 (3L<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC2_XI			 (4L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY4_XI			 (5L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY5_XI			 (6L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY6_XI			 (7L<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC3_XI			 (8L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY7_XI			 (9L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY8_XI			 (10L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY9_XI			 (11L<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC4_XI			 (12L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY10_XI			 (13L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY11_XI			 (14L<<8)
+#define BNX2_MISC_CFG_LEDMODE_UNUSED_XI			 (15L<<8)
+#define BNX2_MISC_CFG_PORT_SELECT_XI			 (1L<<13)
+#define BNX2_MISC_CFG_PARITY_MODE_XI			 (1L<<14)
+
+#define BNX2_MISC_ID					0x00000808
+#define BNX2_MISC_ID_BOND_ID				 (0xfL<<0)
+#define BNX2_MISC_ID_BOND_ID_X				 (0L<<0)
+#define BNX2_MISC_ID_BOND_ID_C				 (3L<<0)
+#define BNX2_MISC_ID_BOND_ID_S				 (12L<<0)
+#define BNX2_MISC_ID_CHIP_METAL				 (0xffL<<4)
+#define BNX2_MISC_ID_CHIP_REV				 (0xfL<<12)
+#define BNX2_MISC_ID_CHIP_NUM				 (0xffffL<<16)
+
+#define BNX2_MISC_ENABLE_STATUS_BITS			0x0000080c
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_SCHEDULER_ENABLE	 (1L<<0)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_BD_READ_ENABLE	 (1L<<1)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_BD_CACHE_ENABLE	 (1L<<2)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_PROCESSOR_ENABLE	 (1L<<3)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_DMA_ENABLE	 (1L<<4)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_PATCHUP_ENABLE	 (1L<<5)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_PAYLOAD_Q_ENABLE	 (1L<<6)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_HEADER_Q_ENABLE	 (1L<<7)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TX_ASSEMBLER_ENABLE	 (1L<<8)
+#define BNX2_MISC_ENABLE_STATUS_BITS_EMAC_ENABLE	 (1L<<9)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_PARSER_MAC_ENABLE	 (1L<<10)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_MBUF_ENABLE	 (1L<<12)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_LOOKUP_ENABLE	 (1L<<13)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_PROCESSOR_ENABLE	 (1L<<14)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_V2P_ENABLE	 (1L<<15)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_DMA_ENABLE	 (1L<<17)
+#define BNX2_MISC_ENABLE_STATUS_BITS_COMPLETION_ENABLE	 (1L<<18)
+#define BNX2_MISC_ENABLE_STATUS_BITS_HOST_COALESCE_ENABLE	 (1L<<19)
+#define BNX2_MISC_ENABLE_STATUS_BITS_MAILBOX_QUEUE_ENABLE	 (1L<<20)
+#define BNX2_MISC_ENABLE_STATUS_BITS_CONTEXT_ENABLE	 (1L<<21)
+#define BNX2_MISC_ENABLE_STATUS_BITS_CMD_SCHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_ENABLE_STATUS_BITS_CMD_PROCESSOR_ENABLE	 (1L<<23)
+#define BNX2_MISC_ENABLE_STATUS_BITS_MGMT_PROCESSOR_ENABLE	 (1L<<24)
+#define BNX2_MISC_ENABLE_STATUS_BITS_TIMER_ENABLE	 (1L<<25)
+#define BNX2_MISC_ENABLE_STATUS_BITS_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_ENABLE_STATUS_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RV2P_CMD_SCHEDULER_ENABLE	 (1L<<28)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RSVD_FUTURE_ENABLE	 (0x7L<<29)
+
+#define BNX2_MISC_ENABLE_SET_BITS			0x00000810
+#define BNX2_MISC_ENABLE_SET_BITS_TX_SCHEDULER_ENABLE	 (1L<<0)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_BD_READ_ENABLE	 (1L<<1)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_BD_CACHE_ENABLE	 (1L<<2)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_PROCESSOR_ENABLE	 (1L<<3)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_DMA_ENABLE		 (1L<<4)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_PATCHUP_ENABLE	 (1L<<5)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_PAYLOAD_Q_ENABLE	 (1L<<6)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_HEADER_Q_ENABLE	 (1L<<7)
+#define BNX2_MISC_ENABLE_SET_BITS_TX_ASSEMBLER_ENABLE	 (1L<<8)
+#define BNX2_MISC_ENABLE_SET_BITS_EMAC_ENABLE		 (1L<<9)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_PARSER_MAC_ENABLE	 (1L<<10)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_MBUF_ENABLE	 (1L<<12)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_LOOKUP_ENABLE	 (1L<<13)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_PROCESSOR_ENABLE	 (1L<<14)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX2_MISC_ENABLE_SET_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_ENABLE_SET_BITS_COMPLETION_ENABLE	 (1L<<18)
+#define BNX2_MISC_ENABLE_SET_BITS_HOST_COALESCE_ENABLE	 (1L<<19)
+#define BNX2_MISC_ENABLE_SET_BITS_MAILBOX_QUEUE_ENABLE	 (1L<<20)
+#define BNX2_MISC_ENABLE_SET_BITS_CONTEXT_ENABLE	 (1L<<21)
+#define BNX2_MISC_ENABLE_SET_BITS_CMD_SCHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_ENABLE_SET_BITS_CMD_PROCESSOR_ENABLE	 (1L<<23)
+#define BNX2_MISC_ENABLE_SET_BITS_MGMT_PROCESSOR_ENABLE	 (1L<<24)
+#define BNX2_MISC_ENABLE_SET_BITS_TIMER_ENABLE		 (1L<<25)
+#define BNX2_MISC_ENABLE_SET_BITS_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_ENABLE_SET_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2_MISC_ENABLE_SET_BITS_RV2P_CMD_SCHEDULER_ENABLE	 (1L<<28)
+#define BNX2_MISC_ENABLE_SET_BITS_RSVD_FUTURE_ENABLE	 (0x7L<<29)
+
+#define BNX2_MISC_ENABLE_CLR_BITS			0x00000814
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_SCHEDULER_ENABLE	 (1L<<0)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_BD_READ_ENABLE	 (1L<<1)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_BD_CACHE_ENABLE	 (1L<<2)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_PROCESSOR_ENABLE	 (1L<<3)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_DMA_ENABLE		 (1L<<4)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_PATCHUP_ENABLE	 (1L<<5)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_PAYLOAD_Q_ENABLE	 (1L<<6)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_HEADER_Q_ENABLE	 (1L<<7)
+#define BNX2_MISC_ENABLE_CLR_BITS_TX_ASSEMBLER_ENABLE	 (1L<<8)
+#define BNX2_MISC_ENABLE_CLR_BITS_EMAC_ENABLE		 (1L<<9)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_PARSER_MAC_ENABLE	 (1L<<10)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_MBUF_ENABLE	 (1L<<12)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_LOOKUP_ENABLE	 (1L<<13)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_PROCESSOR_ENABLE	 (1L<<14)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX2_MISC_ENABLE_CLR_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_ENABLE_CLR_BITS_COMPLETION_ENABLE	 (1L<<18)
+#define BNX2_MISC_ENABLE_CLR_BITS_HOST_COALESCE_ENABLE	 (1L<<19)
+#define BNX2_MISC_ENABLE_CLR_BITS_MAILBOX_QUEUE_ENABLE	 (1L<<20)
+#define BNX2_MISC_ENABLE_CLR_BITS_CONTEXT_ENABLE	 (1L<<21)
+#define BNX2_MISC_ENABLE_CLR_BITS_CMD_SCHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_ENABLE_CLR_BITS_CMD_PROCESSOR_ENABLE	 (1L<<23)
+#define BNX2_MISC_ENABLE_CLR_BITS_MGMT_PROCESSOR_ENABLE	 (1L<<24)
+#define BNX2_MISC_ENABLE_CLR_BITS_TIMER_ENABLE		 (1L<<25)
+#define BNX2_MISC_ENABLE_CLR_BITS_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_ENABLE_CLR_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2_MISC_ENABLE_CLR_BITS_RV2P_CMD_SCHEDULER_ENABLE	 (1L<<28)
+#define BNX2_MISC_ENABLE_CLR_BITS_RSVD_FUTURE_ENABLE	 (0x7L<<29)
+
+#define BNX2_MISC_CLOCK_CONTROL_BITS			0x00000818
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET	 (0xfL<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_32MHZ	 (0L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_38MHZ	 (1L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_48MHZ	 (2L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_55MHZ	 (3L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_66MHZ	 (4L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_80MHZ	 (5L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_95MHZ	 (6L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_133MHZ	 (7L<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET_LOW	 (0xfL<<0)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_DISABLE	 (1L<<6)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT	 (1L<<7)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC	 (0x7L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_UNDEF	 (0L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_12	 (1L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_6	 (2L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_SRC_62	 (4L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED0_XI	 (0x7L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_MIN_POWER		 (1L<<11)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED	 (0xfL<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_100	 (0L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_80	 (1L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_50	 (2L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_40	 (4L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_25	 (8L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED1_XI	 (0xfL<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_STOP	 (1L<<16)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED_17_TE	 (1L<<17)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED_18_TE	 (1L<<18)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED_19_TE	 (1L<<19)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED_TE	 (0xfffL<<20)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_ALT_MGMT_XI	 (1L<<17)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED2_XI	 (0x3fL<<18)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_VCO_XI	 (0x7L<<24)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_RESERVED3_XI	 (1L<<27)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_XI	 (0xfL<<28)
+
+#define BNX2_MISC_SPIO					0x0000081c
+#define BNX2_MISC_SPIO_VALUE				 (0xffL<<0)
+#define BNX2_MISC_SPIO_SET				 (0xffL<<8)
+#define BNX2_MISC_SPIO_CLR				 (0xffL<<16)
+#define BNX2_MISC_SPIO_FLOAT				 (0xffL<<24)
+
+#define BNX2_MISC_SPIO_INT				0x00000820
+#define BNX2_MISC_SPIO_INT_INT_STATE_TE			 (0xfL<<0)
+#define BNX2_MISC_SPIO_INT_OLD_VALUE_TE			 (0xfL<<8)
+#define BNX2_MISC_SPIO_INT_OLD_SET_TE			 (0xfL<<16)
+#define BNX2_MISC_SPIO_INT_OLD_CLR_TE			 (0xfL<<24)
+#define BNX2_MISC_SPIO_INT_INT_STATE_XI			 (0xffL<<0)
+#define BNX2_MISC_SPIO_INT_OLD_VALUE_XI			 (0xffL<<8)
+#define BNX2_MISC_SPIO_INT_OLD_SET_XI			 (0xffL<<16)
+#define BNX2_MISC_SPIO_INT_OLD_CLR_XI			 (0xffL<<24)
+
+#define BNX2_MISC_CONFIG_LFSR				0x00000824
+#define BNX2_MISC_CONFIG_LFSR_DIV			 (0xffffL<<0)
+
+#define BNX2_MISC_LFSR_MASK_BITS			0x00000828
+#define BNX2_MISC_LFSR_MASK_BITS_TX_SCHEDULER_ENABLE	 (1L<<0)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_BD_READ_ENABLE	 (1L<<1)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_BD_CACHE_ENABLE	 (1L<<2)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_PROCESSOR_ENABLE	 (1L<<3)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_DMA_ENABLE		 (1L<<4)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_PATCHUP_ENABLE	 (1L<<5)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_PAYLOAD_Q_ENABLE	 (1L<<6)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_HEADER_Q_ENABLE	 (1L<<7)
+#define BNX2_MISC_LFSR_MASK_BITS_TX_ASSEMBLER_ENABLE	 (1L<<8)
+#define BNX2_MISC_LFSR_MASK_BITS_EMAC_ENABLE		 (1L<<9)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PARSER_MAC_ENABLE	 (1L<<10)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_LOOKUP_ENABLE	 (1L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESSOR_ENABLE	 (1L<<14)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSR_MASK_BITS_COMPLETION_ENABLE	 (1L<<18)
+#define BNX2_MISC_LFSR_MASK_BITS_HOST_COALESCE_ENABLE	 (1L<<19)
+#define BNX2_MISC_LFSR_MASK_BITS_MAILBOX_QUEUE_ENABLE	 (1L<<20)
+#define BNX2_MISC_LFSR_MASK_BITS_CONTEXT_ENABLE		 (1L<<21)
+#define BNX2_MISC_LFSR_MASK_BITS_CMD_SCHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_LFSR_MASK_BITS_CMD_PROCESSOR_ENABLE	 (1L<<23)
+#define BNX2_MISC_LFSR_MASK_BITS_MGMT_PROCESSOR_ENABLE	 (1L<<24)
+#define BNX2_MISC_LFSR_MASK_BITS_TIMER_ENABLE		 (1L<<25)
+#define BNX2_MISC_LFSR_MASK_BITS_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_LFSR_MASK_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2_MISC_LFSR_MASK_BITS_RV2P_CMD_SCHEDULER_ENABLE	 (1L<<28)
+#define BNX2_MISC_LFSR_MASK_BITS_RSVD_FUTURE_ENABLE	 (0x7L<<29)
+
+#define BNX2_MISC_ARB_REQ0				0x0000082c
+#define BNX2_MISC_ARB_REQ1				0x00000830
+#define BNX2_MISC_ARB_REQ2				0x00000834
+#define BNX2_MISC_ARB_REQ3				0x00000838
+#define BNX2_MISC_ARB_REQ4				0x0000083c
+#define BNX2_MISC_ARB_FREE0				0x00000840
+#define BNX2_MISC_ARB_FREE1				0x00000844
+#define BNX2_MISC_ARB_FREE2				0x00000848
+#define BNX2_MISC_ARB_FREE3				0x0000084c
+#define BNX2_MISC_ARB_FREE4				0x00000850
+#define BNX2_MISC_ARB_REQ_STATUS0			0x00000854
+#define BNX2_MISC_ARB_REQ_STATUS1			0x00000858
+#define BNX2_MISC_ARB_REQ_STATUS2			0x0000085c
+#define BNX2_MISC_ARB_REQ_STATUS3			0x00000860
+#define BNX2_MISC_ARB_REQ_STATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT0				0x00000868
+#define BNX2_MISC_ARB_GNT0_0				 (0x7L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)
+#define BNX2_MISC_ARB_GNT0_2				 (0x7L<<8)
+#define BNX2_MISC_ARB_GNT0_3				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT0_4				 (0x7L<<16)
+#define BNX2_MISC_ARB_GNT0_5				 (0x7L<<20)
+#define BNX2_MISC_ARB_GNT0_6				 (0x7L<<24)
+#define BNX2_MISC_ARB_GNT0_7				 (0x7L<<28)
+
+#define BNX2_MISC_ARB_GNT1				0x0000086c
+#define BNX2_MISC_ARB_GNT1_8				 (0x7L<<0)
+#define BNX2_MISC_ARB_GNT1_9				 (0x7L<<4)
+#define BNX2_MISC_ARB_GNT1_10				 (0x7L<<8)
+#define BNX2_MISC_ARB_GNT1_11				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT1_12				 (0x7L<<16)
+#define BNX2_MISC_ARB_GNT1_13				 (0x7L<<20)
+#define BNX2_MISC_ARB_GNT1_14				 (0x7L<<24)
+#define BNX2_MISC_ARB_GNT1_15				 (0x7L<<28)
+
+#define BNX2_MISC_ARB_GNT2				0x00000870
+#define BNX2_MISC_ARB_GNT2_16				 (0x7L<<0)
+#define BNX2_MISC_ARB_GNT2_17				 (0x7L<<4)
+#define BNX2_MISC_ARB_GNT2_18				 (0x7L<<8)
+#define BNX2_MISC_ARB_GNT2_19				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT2_20				 (0x7L<<16)
+#define BNX2_MISC_ARB_GNT2_21				 (0x7L<<20)
+#define BNX2_MISC_ARB_GNT2_22				 (0x7L<<24)
+#define BNX2_MISC_ARB_GNT2_23				 (0x7L<<28)
+
+#define BNX2_MISC_ARB_GNT3				0x00000874
+#define BNX2_MISC_ARB_GNT3_24				 (0x7L<<0)
+#define BNX2_MISC_ARB_GNT3_25				 (0x7L<<4)
+#define BNX2_MISC_ARB_GNT3_26				 (0x7L<<8)
+#define BNX2_MISC_ARB_GNT3_27				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT3_28				 (0x7L<<16)
+#define BNX2_MISC_ARB_GNT3_29				 (0x7L<<20)
+#define BNX2_MISC_ARB_GNT3_30				 (0x7L<<24)
+#define BNX2_MISC_ARB_GNT3_31				 (0x7L<<28)
+
+#define BNX2_MISC_RESERVED1				0x00000878
+#define BNX2_MISC_RESERVED1_MISC_RESERVED1_VALUE	 (0x3fL<<0)
+
+#define BNX2_MISC_RESERVED2				0x0000087c
+#define BNX2_MISC_RESERVED2_PCIE_DIS			 (1L<<0)
+#define BNX2_MISC_RESERVED2_LINK_IN_L23			 (1L<<1)
+
+#define BNX2_MISC_SM_ASF_CONTROL			0x00000880
+#define BNX2_MISC_SM_ASF_CONTROL_ASF_RST		 (1L<<0)
+#define BNX2_MISC_SM_ASF_CONTROL_TSC_EN			 (1L<<1)
+#define BNX2_MISC_SM_ASF_CONTROL_WG_TO			 (1L<<2)
+#define BNX2_MISC_SM_ASF_CONTROL_HB_TO			 (1L<<3)
+#define BNX2_MISC_SM_ASF_CONTROL_PA_TO			 (1L<<4)
+#define BNX2_MISC_SM_ASF_CONTROL_PL_TO			 (1L<<5)
+#define BNX2_MISC_SM_ASF_CONTROL_RT_TO			 (1L<<6)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EVENT		 (1L<<7)
+#define BNX2_MISC_SM_ASF_CONTROL_STRETCH_EN		 (1L<<8)
+#define BNX2_MISC_SM_ASF_CONTROL_STRETCH_PULSE		 (1L<<9)
+#define BNX2_MISC_SM_ASF_CONTROL_RES			 (0x3L<<10)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_BB_EN		 (1L<<13)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_NO_ADDR_FILT	 (1L<<14)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_AUTOREAD		 (1L<<15)
+#define BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)
+#define BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR2		 (0x7fL<<23)
+#define BNX2_MISC_SM_ASF_CONTROL_EN_NIC_SMB_ADDR_0	 (1L<<30)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EARLY_ATTN		 (1L<<31)
+
+#define BNX2_MISC_SMB_IN				0x00000884
+#define BNX2_MISC_SMB_IN_DAT_IN				 (0xffL<<0)
+#define BNX2_MISC_SMB_IN_RDY				 (1L<<8)
+#define BNX2_MISC_SMB_IN_DONE				 (1L<<9)
+#define BNX2_MISC_SMB_IN_FIRSTBYTE			 (1L<<10)
+#define BNX2_MISC_SMB_IN_STATUS				 (0x7L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_OK			 (0x0L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_PEC			 (0x1L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_OFLOW			 (0x2L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_STOP			 (0x3L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_TIMEOUT			 (0x4L<<11)
+
+#define BNX2_MISC_SMB_OUT				0x00000888
+#define BNX2_MISC_SMB_OUT_DAT_OUT			 (0xffL<<0)
+#define BNX2_MISC_SMB_OUT_RDY				 (1L<<8)
+#define BNX2_MISC_SMB_OUT_START				 (1L<<9)
+#define BNX2_MISC_SMB_OUT_LAST				 (1L<<10)
+#define BNX2_MISC_SMB_OUT_ACC_TYPE			 (1L<<11)
+#define BNX2_MISC_SMB_OUT_ENB_PEC			 (1L<<12)
+#define BNX2_MISC_SMB_OUT_GET_RX_LEN			 (1L<<13)
+#define BNX2_MISC_SMB_OUT_SMB_READ_LEN			 (0x3fL<<14)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS		 (0xfL<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_OK		 (0L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_FIRST_NACK	 (1L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_UFLOW		 (2L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_STOP		 (3L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_TIMEOUT	 (4L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_FIRST_LOST	 (5L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_BADACK		 (6L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_SUB_NACK	 (9L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_SUB_LOST	 (0xdL<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_SLAVEMODE		 (1L<<24)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_DAT_EN		 (1L<<25)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_DAT_IN		 (1L<<26)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_CLK_EN		 (1L<<27)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_CLK_IN		 (1L<<28)
+
+#define BNX2_MISC_SMB_WATCHDOG				0x0000088c
+#define BNX2_MISC_SMB_WATCHDOG_WATCHDOG			 (0xffffL<<0)
+
+#define BNX2_MISC_SMB_HEARTBEAT				0x00000890
+#define BNX2_MISC_SMB_HEARTBEAT_HEARTBEAT		 (0xffffL<<0)
+
+#define BNX2_MISC_SMB_POLL_ASF				0x00000894
+#define BNX2_MISC_SMB_POLL_ASF_POLL_ASF			 (0xffffL<<0)
+
+#define BNX2_MISC_SMB_POLL_LEGACY			0x00000898
+#define BNX2_MISC_SMB_POLL_LEGACY_POLL_LEGACY		 (0xffffL<<0)
+
+#define BNX2_MISC_SMB_RETRAN				0x0000089c
+#define BNX2_MISC_SMB_RETRAN_RETRAN			 (0xffL<<0)
+
+#define BNX2_MISC_SMB_TIMESTAMP				0x000008a0
+#define BNX2_MISC_SMB_TIMESTAMP_TIMESTAMP		 (0xffffffffL<<0)
+
+#define BNX2_MISC_PERR_ENA0				0x000008a4
+#define BNX2_MISC_PERR_ENA0_COM_MISC_CTXC		 (1L<<0)
+#define BNX2_MISC_PERR_ENA0_COM_MISC_REGF		 (1L<<1)
+#define BNX2_MISC_PERR_ENA0_COM_MISC_SCPAD		 (1L<<2)
+#define BNX2_MISC_PERR_ENA0_CP_MISC_CTXC		 (1L<<3)
+#define BNX2_MISC_PERR_ENA0_CP_MISC_REGF		 (1L<<4)
+#define BNX2_MISC_PERR_ENA0_CP_MISC_SCPAD		 (1L<<5)
+#define BNX2_MISC_PERR_ENA0_CS_MISC_TMEM		 (1L<<6)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM0		 (1L<<7)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM1		 (1L<<8)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM2		 (1L<<9)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM3		 (1L<<10)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM4		 (1L<<11)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCM5		 (1L<<12)
+#define BNX2_MISC_PERR_ENA0_CTX_MISC_PGTBL		 (1L<<13)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DR0		 (1L<<14)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DR1		 (1L<<15)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DR2		 (1L<<16)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DR3		 (1L<<17)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DR4		 (1L<<18)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW0		 (1L<<19)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW1		 (1L<<20)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW2		 (1L<<21)
+#define BNX2_MISC_PERR_ENA0_HC_MISC_DMA			 (1L<<22)
+#define BNX2_MISC_PERR_ENA0_MCP_MISC_REGF		 (1L<<23)
+#define BNX2_MISC_PERR_ENA0_MCP_MISC_SCPAD		 (1L<<24)
+#define BNX2_MISC_PERR_ENA0_MQ_MISC_CTX			 (1L<<25)
+#define BNX2_MISC_PERR_ENA0_RBDC_MISC			 (1L<<26)
+#define BNX2_MISC_PERR_ENA0_RBUF_MISC_MB		 (1L<<27)
+#define BNX2_MISC_PERR_ENA0_RBUF_MISC_PTR		 (1L<<28)
+#define BNX2_MISC_PERR_ENA0_RDE_MISC_RPC		 (1L<<29)
+#define BNX2_MISC_PERR_ENA0_RDE_MISC_RPM		 (1L<<30)
+#define BNX2_MISC_PERR_ENA0_RV2P_MISC_CB0REGS		 (1L<<31)
+#define BNX2_MISC_PERR_ENA0_COM_DMAE_PERR_EN_XI		 (1L<<0)
+#define BNX2_MISC_PERR_ENA0_CP_DMAE_PERR_EN_XI		 (1L<<1)
+#define BNX2_MISC_PERR_ENA0_RPM_ACPIBEMEM_PERR_EN_XI	 (1L<<2)
+#define BNX2_MISC_PERR_ENA0_CTX_USAGE_CNT_PERR_EN_XI	 (1L<<3)
+#define BNX2_MISC_PERR_ENA0_CTX_PGTBL_PERR_EN_XI	 (1L<<4)
+#define BNX2_MISC_PERR_ENA0_CTX_CACHE_PERR_EN_XI	 (1L<<5)
+#define BNX2_MISC_PERR_ENA0_CTX_MIRROR_PERR_EN_XI	 (1L<<6)
+#define BNX2_MISC_PERR_ENA0_COM_CTXC_PERR_EN_XI		 (1L<<7)
+#define BNX2_MISC_PERR_ENA0_COM_SCPAD_PERR_EN_XI	 (1L<<8)
+#define BNX2_MISC_PERR_ENA0_CP_CTXC_PERR_EN_XI		 (1L<<9)
+#define BNX2_MISC_PERR_ENA0_CP_SCPAD_PERR_EN_XI		 (1L<<10)
+#define BNX2_MISC_PERR_ENA0_RXP_RBUFC_PERR_EN_XI	 (1L<<11)
+#define BNX2_MISC_PERR_ENA0_RXP_CTXC_PERR_EN_XI		 (1L<<12)
+#define BNX2_MISC_PERR_ENA0_RXP_SCPAD_PERR_EN_XI	 (1L<<13)
+#define BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+#define BNX2_MISC_PERR_ENA0_TXP_CTXC_PERR_EN_XI		 (1L<<15)
+#define BNX2_MISC_PERR_ENA0_TXP_SCPAD_PERR_EN_XI	 (1L<<16)
+#define BNX2_MISC_PERR_ENA0_CS_TMEM_PERR_EN_XI		 (1L<<17)
+#define BNX2_MISC_PERR_ENA0_MQ_CTX_PERR_EN_XI		 (1L<<18)
+#define BNX2_MISC_PERR_ENA0_RPM_DFIFOMEM_PERR_EN_XI	 (1L<<19)
+#define BNX2_MISC_PERR_ENA0_RPC_DFIFOMEM_PERR_EN_XI	 (1L<<20)
+#define BNX2_MISC_PERR_ENA0_RBUF_PTRMEM_PERR_EN_XI	 (1L<<21)
+#define BNX2_MISC_PERR_ENA0_RBUF_DATAMEM_PERR_EN_XI	 (1L<<22)
+#define BNX2_MISC_PERR_ENA0_RV2P_P2IRAM_PERR_EN_XI	 (1L<<23)
+#define BNX2_MISC_PERR_ENA0_RV2P_P1IRAM_PERR_EN_XI	 (1L<<24)
+#define BNX2_MISC_PERR_ENA0_RV2P_CB1REGS_PERR_EN_XI	 (1L<<25)
+#define BNX2_MISC_PERR_ENA0_RV2P_CB0REGS_PERR_EN_XI	 (1L<<26)
+#define BNX2_MISC_PERR_ENA0_TPBUF_PERR_EN_XI		 (1L<<27)
+#define BNX2_MISC_PERR_ENA0_THBUF_PERR_EN_XI		 (1L<<28)
+#define BNX2_MISC_PERR_ENA0_TDMA_PERR_EN_XI		 (1L<<29)
+#define BNX2_MISC_PERR_ENA0_TBDC_PERR_EN_XI		 (1L<<30)
+#define BNX2_MISC_PERR_ENA0_TSCH_LR_PERR_EN_XI		 (1L<<31)
+
+#define BNX2_MISC_PERR_ENA1				0x000008a8
+#define BNX2_MISC_PERR_ENA1_RV2P_MISC_CB1REGS		 (1L<<0)
+#define BNX2_MISC_PERR_ENA1_RV2P_MISC_P1IRAM		 (1L<<1)
+#define BNX2_MISC_PERR_ENA1_RV2P_MISC_P2IRAM		 (1L<<2)
+#define BNX2_MISC_PERR_ENA1_RXP_MISC_CTXC		 (1L<<3)
+#define BNX2_MISC_PERR_ENA1_RXP_MISC_REGF		 (1L<<4)
+#define BNX2_MISC_PERR_ENA1_RXP_MISC_SCPAD		 (1L<<5)
+#define BNX2_MISC_PERR_ENA1_RXP_MISC_RBUFC		 (1L<<6)
+#define BNX2_MISC_PERR_ENA1_TBDC_MISC			 (1L<<7)
+#define BNX2_MISC_PERR_ENA1_TDMA_MISC			 (1L<<8)
+#define BNX2_MISC_PERR_ENA1_THBUF_MISC_MB0		 (1L<<9)
+#define BNX2_MISC_PERR_ENA1_THBUF_MISC_MB1		 (1L<<10)
+#define BNX2_MISC_PERR_ENA1_TPAT_MISC_REGF		 (1L<<11)
+#define BNX2_MISC_PERR_ENA1_TPAT_MISC_SCPAD		 (1L<<12)
+#define BNX2_MISC_PERR_ENA1_TPBUF_MISC_MB		 (1L<<13)
+#define BNX2_MISC_PERR_ENA1_TSCH_MISC_LR		 (1L<<14)
+#define BNX2_MISC_PERR_ENA1_TXP_MISC_CTXC		 (1L<<15)
+#define BNX2_MISC_PERR_ENA1_TXP_MISC_REGF		 (1L<<16)
+#define BNX2_MISC_PERR_ENA1_TXP_MISC_SCPAD		 (1L<<17)
+#define BNX2_MISC_PERR_ENA1_UMP_MISC_FIORX		 (1L<<18)
+#define BNX2_MISC_PERR_ENA1_UMP_MISC_FIOTX		 (1L<<19)
+#define BNX2_MISC_PERR_ENA1_UMP_MISC_RX			 (1L<<20)
+#define BNX2_MISC_PERR_ENA1_UMP_MISC_TX			 (1L<<21)
+#define BNX2_MISC_PERR_ENA1_RDMAQ_MISC			 (1L<<22)
+#define BNX2_MISC_PERR_ENA1_CSQ_MISC			 (1L<<23)
+#define BNX2_MISC_PERR_ENA1_CPQ_MISC			 (1L<<24)
+#define BNX2_MISC_PERR_ENA1_MCPQ_MISC			 (1L<<25)
+#define BNX2_MISC_PERR_ENA1_RV2PMQ_MISC			 (1L<<26)
+#define BNX2_MISC_PERR_ENA1_RV2PPQ_MISC			 (1L<<27)
+#define BNX2_MISC_PERR_ENA1_RV2PTQ_MISC			 (1L<<28)
+#define BNX2_MISC_PERR_ENA1_RXPQ_MISC			 (1L<<29)
+#define BNX2_MISC_PERR_ENA1_RXPCQ_MISC			 (1L<<30)
+#define BNX2_MISC_PERR_ENA1_RLUPQ_MISC			 (1L<<31)
+#define BNX2_MISC_PERR_ENA1_RBDC_PERR_EN_XI		 (1L<<0)
+#define BNX2_MISC_PERR_ENA1_RDMA_DFIFO_PERR_EN_XI	 (1L<<2)
+#define BNX2_MISC_PERR_ENA1_HC_STATS_PERR_EN_XI		 (1L<<3)
+#define BNX2_MISC_PERR_ENA1_HC_MSIX_PERR_EN_XI		 (1L<<4)
+#define BNX2_MISC_PERR_ENA1_HC_PRODUCSTB_PERR_EN_XI	 (1L<<5)
+#define BNX2_MISC_PERR_ENA1_HC_CONSUMSTB_PERR_EN_XI	 (1L<<6)
+#define BNX2_MISC_PERR_ENA1_TPATQ_PERR_EN_XI		 (1L<<7)
+#define BNX2_MISC_PERR_ENA1_MCPQ_PERR_EN_XI		 (1L<<8)
+#define BNX2_MISC_PERR_ENA1_TDMAQ_PERR_EN_XI		 (1L<<9)
+#define BNX2_MISC_PERR_ENA1_TXPQ_PERR_EN_XI		 (1L<<10)
+#define BNX2_MISC_PERR_ENA1_COMTQ_PERR_EN_XI		 (1L<<11)
+#define BNX2_MISC_PERR_ENA1_COMQ_PERR_EN_XI		 (1L<<12)
+#define BNX2_MISC_PERR_ENA1_RLUPQ_PERR_EN_XI		 (1L<<13)
+#define BNX2_MISC_PERR_ENA1_RXPQ_PERR_EN_XI		 (1L<<14)
+#define BNX2_MISC_PERR_ENA1_RV2PPQ_PERR_EN_XI		 (1L<<15)
+#define BNX2_MISC_PERR_ENA1_RDMAQ_PERR_EN_XI		 (1L<<16)
+#define BNX2_MISC_PERR_ENA1_TASQ_PERR_EN_XI		 (1L<<17)
+#define BNX2_MISC_PERR_ENA1_TBDRQ_PERR_EN_XI		 (1L<<18)
+#define BNX2_MISC_PERR_ENA1_TSCHQ_PERR_EN_XI		 (1L<<19)
+#define BNX2_MISC_PERR_ENA1_COMXQ_PERR_EN_XI		 (1L<<20)
+#define BNX2_MISC_PERR_ENA1_RXPCQ_PERR_EN_XI		 (1L<<21)
+#define BNX2_MISC_PERR_ENA1_RV2PTQ_PERR_EN_XI		 (1L<<22)
+#define BNX2_MISC_PERR_ENA1_RV2PMQ_PERR_EN_XI		 (1L<<23)
+#define BNX2_MISC_PERR_ENA1_CPQ_PERR_EN_XI		 (1L<<24)
+#define BNX2_MISC_PERR_ENA1_CSQ_PERR_EN_XI		 (1L<<25)
+#define BNX2_MISC_PERR_ENA1_RLUP_CID_PERR_EN_XI		 (1L<<26)
+#define BNX2_MISC_PERR_ENA1_RV2PCS_TMEM_PERR_EN_XI	 (1L<<27)
+#define BNX2_MISC_PERR_ENA1_RV2PCSQ_PERR_EN_XI		 (1L<<28)
+#define BNX2_MISC_PERR_ENA1_MQ_IDX_PERR_EN_XI		 (1L<<29)
+
+#define BNX2_MISC_PERR_ENA2				0x000008ac
+#define BNX2_MISC_PERR_ENA2_COMQ_MISC			 (1L<<0)
+#define BNX2_MISC_PERR_ENA2_COMXQ_MISC			 (1L<<1)
+#define BNX2_MISC_PERR_ENA2_COMTQ_MISC			 (1L<<2)
+#define BNX2_MISC_PERR_ENA2_TSCHQ_MISC			 (1L<<3)
+#define BNX2_MISC_PERR_ENA2_TBDRQ_MISC			 (1L<<4)
+#define BNX2_MISC_PERR_ENA2_TXPQ_MISC			 (1L<<5)
+#define BNX2_MISC_PERR_ENA2_TDMAQ_MISC			 (1L<<6)
+#define BNX2_MISC_PERR_ENA2_TPATQ_MISC			 (1L<<7)
+#define BNX2_MISC_PERR_ENA2_TASQ_MISC			 (1L<<8)
+#define BNX2_MISC_PERR_ENA2_TGT_FIFO_PERR_EN_XI		 (1L<<0)
+#define BNX2_MISC_PERR_ENA2_UMP_TX_PERR_EN_XI		 (1L<<1)
+#define BNX2_MISC_PERR_ENA2_UMP_RX_PERR_EN_XI		 (1L<<2)
+#define BNX2_MISC_PERR_ENA2_MCP_ROM_PERR_EN_XI		 (1L<<3)
+#define BNX2_MISC_PERR_ENA2_MCP_SCPAD_PERR_EN_XI	 (1L<<4)
+#define BNX2_MISC_PERR_ENA2_HB_MEM_PERR_EN_XI		 (1L<<5)
+#define BNX2_MISC_PERR_ENA2_PCIE_REPLAY_PERR_EN_XI	 (1L<<6)
+
+#define BNX2_MISC_DEBUG_VECTOR_SEL			0x000008b0
+#define BNX2_MISC_DEBUG_VECTOR_SEL_0			 (0xfffL<<0)
+#define BNX2_MISC_DEBUG_VECTOR_SEL_1			 (0xfffL<<12)
+#define BNX2_MISC_DEBUG_VECTOR_SEL_1_XI			 (0xfffL<<15)
+
+#define BNX2_MISC_VREG_CONTROL				0x000008b4
+#define BNX2_MISC_VREG_CONTROL_1_2			 (0xfL<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_XI		 (0xfL<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS14_XI	 (0L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS10_XI	 (2L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS8_XI	 (3L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS6_XI	 (4L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS4_XI	 (5L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_PLUS2_XI	 (6L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_NOM_XI		 (7L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS2_XI	 (8L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS4_XI	 (9L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS6_XI	 (10L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	 (11L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS10_XI	 (12L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS12_XI	 (13L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS14_XI	 (14L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L<<0)
+#define BNX2_MISC_VREG_CONTROL_2_5			 (0xfL<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS14		 (0L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS12		 (1L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS10		 (2L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_PLUS2		 (6L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_NOM			 (7L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS6		 (10L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS8		 (11L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS12		 (13L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS14		 (14L<<4)
+#define BNX2_MISC_VREG_CONTROL_2_5_MINUS16		 (15L<<4)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (0xfL<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS12		 (1L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS10		 (2L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS6		 (4L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS4		 (5L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_PLUS2		 (6L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_NOM		 (7L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS2		 (8L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS4		 (9L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS6		 (10L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS8		 (11L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS10		 (12L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS12		 (13L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS14		 (14L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS16		 (15L<<8)
+
+#define BNX2_MISC_FINAL_CLK_CTL_VAL			0x000008b8
+#define BNX2_MISC_FINAL_CLK_CTL_VAL_MISC_FINAL_CLK_CTL_VAL	 (0x3ffffffL<<6)
+
+#define BNX2_MISC_GP_HW_CTL0				0x000008bc
+#define BNX2_MISC_GP_HW_CTL0_TX_DRIVE			 (1L<<0)
+#define BNX2_MISC_GP_HW_CTL0_RMII_MODE			 (1L<<1)
+#define BNX2_MISC_GP_HW_CTL0_RMII_CRSDV_SEL		 (1L<<2)
+#define BNX2_MISC_GP_HW_CTL0_RVMII_MODE			 (1L<<3)
+#define BNX2_MISC_GP_HW_CTL0_FLASH_SAMP_SCLK_NEGEDGE_TE	 (1L<<4)
+#define BNX2_MISC_GP_HW_CTL0_HIDDEN_REVISION_ID_TE	 (1L<<5)
+#define BNX2_MISC_GP_HW_CTL0_HC_CNTL_TMOUT_CTR_RST_TE	 (1L<<6)
+#define BNX2_MISC_GP_HW_CTL0_RESERVED1_XI		 (0x7L<<4)
+#define BNX2_MISC_GP_HW_CTL0_ENA_CORE_RST_ON_MAIN_PWR_GOING_AWAY	 (1L<<7)
+#define BNX2_MISC_GP_HW_CTL0_ENA_SEL_VAUX_B_IN_L2_TE	 (1L<<8)
+#define BNX2_MISC_GP_HW_CTL0_GRC_BNK_FREE_FIX_TE	 (1L<<9)
+#define BNX2_MISC_GP_HW_CTL0_LED_ACT_SEL_TE		 (1L<<10)
+#define BNX2_MISC_GP_HW_CTL0_RESERVED2_XI		 (0x7L<<8)
+#define BNX2_MISC_GP_HW_CTL0_UP1_DEF0			 (1L<<11)
+#define BNX2_MISC_GP_HW_CTL0_FIBER_MODE_DIS_DEF		 (1L<<12)
+#define BNX2_MISC_GP_HW_CTL0_FORCE2500_DEF		 (1L<<13)
+#define BNX2_MISC_GP_HW_CTL0_AUTODETECT_DIS_DEF		 (1L<<14)
+#define BNX2_MISC_GP_HW_CTL0_PARALLEL_DETECT_DEF	 (1L<<15)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI		 (0xfL<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_3MA		 (0L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_2P5MA		 (1L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_2P0MA		 (3L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_1P5MA		 (5L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_1P0MA		 (7L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_PWRDN		 (15L<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PRE2DIS		 (1L<<20)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PRE1DIS		 (1L<<21)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT		 (0x3L<<22)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT_M6P		 (0L<<22)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT_M0P		 (1L<<22)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT_P0P		 (2L<<22)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT_P6P		 (3L<<22)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PTAT		 (0x3L<<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PTAT_M6P		 (0L<<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PTAT_M0P		 (1L<<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PTAT_P0P		 (2L<<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_PTAT_P6P		 (3L<<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_IAMP_ADJ		 (0x3L<<26)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_IAMP_ADJ_240UA	 (0L<<26)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_IAMP_ADJ_160UA	 (1L<<26)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_IAMP_ADJ_400UA	 (2L<<26)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_IAMP_ADJ_320UA	 (3L<<26)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_ICBUF_ADJ		 (0x3L<<28)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_ICBUF_ADJ_240UA	 (0L<<28)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_ICBUF_ADJ_160UA	 (1L<<28)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_ICBUF_ADJ_400UA	 (2L<<28)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_ICBUF_ADJ_320UA	 (3L<<28)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_XTAL_ADJ		 (0x3L<<30)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_XTAL_ADJ_1P57	 (0L<<30)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_XTAL_ADJ_1P45	 (1L<<30)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_XTAL_ADJ_1P62	 (2L<<30)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_XTAL_ADJ_1P66	 (3L<<30)
+
+#define BNX2_MISC_GP_HW_CTL1				0x000008c0
+#define BNX2_MISC_GP_HW_CTL1_1_ATTN_BTN_PRSNT_TE	 (1L<<0)
+#define BNX2_MISC_GP_HW_CTL1_1_ATTN_IND_PRSNT_TE	 (1L<<1)
+#define BNX2_MISC_GP_HW_CTL1_1_PWR_IND_PRSNT_TE		 (1L<<2)
+#define BNX2_MISC_GP_HW_CTL1_0_PCIE_LOOPBACK_TE		 (1L<<3)
+#define BNX2_MISC_GP_HW_CTL1_RESERVED_SOFT_XI		 (0xffffL<<0)
+#define BNX2_MISC_GP_HW_CTL1_RESERVED_HARD_XI		 (0xffffL<<16)
+
+#define BNX2_MISC_NEW_HW_CTL				0x000008c4
+#define BNX2_MISC_NEW_HW_CTL_MAIN_POR_BYPASS		 (1L<<0)
+#define BNX2_MISC_NEW_HW_CTL_RINGOSC_ENABLE		 (1L<<1)
+#define BNX2_MISC_NEW_HW_CTL_RINGOSC_SEL0		 (1L<<2)
+#define BNX2_MISC_NEW_HW_CTL_RINGOSC_SEL1		 (1L<<3)
+#define BNX2_MISC_NEW_HW_CTL_RESERVED_SHARED		 (0xfffL<<4)
+#define BNX2_MISC_NEW_HW_CTL_RESERVED_SPLIT		 (0xffffL<<16)
+
+#define BNX2_MISC_NEW_CORE_CTL				0x000008c8
+#define BNX2_MISC_NEW_CORE_CTL_LINK_HOLDOFF_SUCCESS	 (1L<<0)
+#define BNX2_MISC_NEW_CORE_CTL_LINK_HOLDOFF_REQ		 (1L<<1)
+#define BNX2_MISC_NEW_CORE_CTL_DMA_ENABLE		 (1L<<16)
+#define BNX2_MISC_NEW_CORE_CTL_RESERVED_CMN		 (0x3fffL<<2)
+#define BNX2_MISC_NEW_CORE_CTL_RESERVED_TC		 (0xffffL<<16)
+
+#define BNX2_MISC_ECO_HW_CTL				0x000008cc
+#define BNX2_MISC_ECO_HW_CTL_LARGE_GRC_TMOUT_EN		 (1L<<0)
+#define BNX2_MISC_ECO_HW_CTL_RESERVED_SOFT		 (0x7fffL<<1)
+#define BNX2_MISC_ECO_HW_CTL_RESERVED_HARD		 (0xffffL<<16)
+
+#define BNX2_MISC_ECO_CORE_CTL				0x000008d0
+#define BNX2_MISC_ECO_CORE_CTL_RESERVED_SOFT		 (0xffffL<<0)
+#define BNX2_MISC_ECO_CORE_CTL_RESERVED_HARD		 (0xffffL<<16)
+
+#define BNX2_MISC_PPIO					0x000008d4
+#define BNX2_MISC_PPIO_VALUE				 (0xfL<<0)
+#define BNX2_MISC_PPIO_SET				 (0xfL<<8)
+#define BNX2_MISC_PPIO_CLR				 (0xfL<<16)
+#define BNX2_MISC_PPIO_FLOAT				 (0xfL<<24)
+
+#define BNX2_MISC_PPIO_INT				0x000008d8
+#define BNX2_MISC_PPIO_INT_INT_STATE			 (0xfL<<0)
+#define BNX2_MISC_PPIO_INT_OLD_VALUE			 (0xfL<<8)
+#define BNX2_MISC_PPIO_INT_OLD_SET			 (0xfL<<16)
+#define BNX2_MISC_PPIO_INT_OLD_CLR			 (0xfL<<24)
+
+#define BNX2_MISC_RESET_NUMS				0x000008dc
+#define BNX2_MISC_RESET_NUMS_NUM_HARD_RESETS		 (0x7L<<0)
+#define BNX2_MISC_RESET_NUMS_NUM_PCIE_RESETS		 (0x7L<<4)
+#define BNX2_MISC_RESET_NUMS_NUM_PERSTB_RESETS		 (0x7L<<8)
+#define BNX2_MISC_RESET_NUMS_NUM_CMN_RESETS		 (0x7L<<12)
+#define BNX2_MISC_RESET_NUMS_NUM_PORT_RESETS		 (0x7L<<16)
+
+#define BNX2_MISC_CS16_ERR				0x000008e0
+#define BNX2_MISC_CS16_ERR_ENA_PCI			 (1L<<0)
+#define BNX2_MISC_CS16_ERR_ENA_RDMA			 (1L<<1)
+#define BNX2_MISC_CS16_ERR_ENA_TDMA			 (1L<<2)
+#define BNX2_MISC_CS16_ERR_ENA_EMAC			 (1L<<3)
+#define BNX2_MISC_CS16_ERR_ENA_CTX			 (1L<<4)
+#define BNX2_MISC_CS16_ERR_ENA_TBDR			 (1L<<5)
+#define BNX2_MISC_CS16_ERR_ENA_RBDC			 (1L<<6)
+#define BNX2_MISC_CS16_ERR_ENA_COM			 (1L<<7)
+#define BNX2_MISC_CS16_ERR_ENA_CP			 (1L<<8)
+#define BNX2_MISC_CS16_ERR_STA_PCI			 (1L<<16)
+#define BNX2_MISC_CS16_ERR_STA_RDMA			 (1L<<17)
+#define BNX2_MISC_CS16_ERR_STA_TDMA			 (1L<<18)
+#define BNX2_MISC_CS16_ERR_STA_EMAC			 (1L<<19)
+#define BNX2_MISC_CS16_ERR_STA_CTX			 (1L<<20)
+#define BNX2_MISC_CS16_ERR_STA_TBDR			 (1L<<21)
+#define BNX2_MISC_CS16_ERR_STA_RBDC			 (1L<<22)
+#define BNX2_MISC_CS16_ERR_STA_COM			 (1L<<23)
+#define BNX2_MISC_CS16_ERR_STA_CP			 (1L<<24)
+
+#define BNX2_MISC_SPIO_EVENT				0x000008e4
+#define BNX2_MISC_SPIO_EVENT_ENABLE			 (0xffL<<0)
+
+#define BNX2_MISC_PPIO_EVENT				0x000008e8
+#define BNX2_MISC_PPIO_EVENT_ENABLE			 (0xfL<<0)
+
+#define BNX2_MISC_DUAL_MEDIA_CTRL			0x000008ec
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID		 (0xffL<<0)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_X		 (0L<<0)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_C		 (3L<<0)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_S		 (12L<<0)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_CTRL_STRAP	 (0x7L<<8)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PORT_SWAP_PIN		 (1L<<11)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_SERDES1_SIGDET	 (1L<<12)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_SERDES0_SIGDET	 (1L<<13)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY1_SIGDET		 (1L<<14)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY0_SIGDET		 (1L<<15)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_LCPLL_RST		 (1L<<16)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_SERDES1_RST		 (1L<<17)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_SERDES0_RST		 (1L<<18)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY1_RST		 (1L<<19)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY0_RST		 (1L<<20)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_CTRL		 (0x7L<<21)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PORT_SWAP		 (1L<<24)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_STRAP_OVERRIDE	 (1L<<25)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERDES_IDDQ	 (0xfL<<26)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERDES_IDDQ_SER1_IDDQ	 (1L<<26)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERDES_IDDQ_SER0_IDDQ	 (2L<<26)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERDES_IDDQ_PHY1_IDDQ	 (4L<<26)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERDES_IDDQ_PHY0_IDDQ	 (8L<<26)
+
+#define BNX2_MISC_OTP_CMD1				0x000008f0
+#define BNX2_MISC_OTP_CMD1_FMODE			 (0x7L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_IDLE			 (0L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_WRITE			 (1L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_INIT			 (2L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_SET			 (3L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_RST			 (4L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_VERIFY			 (5L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_RESERVED0		 (6L<<0)
+#define BNX2_MISC_OTP_CMD1_FMODE_RESERVED1		 (7L<<0)
+#define BNX2_MISC_OTP_CMD1_USEPINS			 (1L<<8)
+#define BNX2_MISC_OTP_CMD1_PROGSEL			 (1L<<9)
+#define BNX2_MISC_OTP_CMD1_PROGSTART			 (1L<<10)
+#define BNX2_MISC_OTP_CMD1_PCOUNT			 (0x7L<<16)
+#define BNX2_MISC_OTP_CMD1_PBYP				 (1L<<19)
+#define BNX2_MISC_OTP_CMD1_VSEL				 (0xfL<<20)
+#define BNX2_MISC_OTP_CMD1_TM				 (0x7L<<27)
+#define BNX2_MISC_OTP_CMD1_SADBYP			 (1L<<30)
+#define BNX2_MISC_OTP_CMD1_DEBUG			 (1L<<31)
+
+#define BNX2_MISC_OTP_CMD2				0x000008f4
+#define BNX2_MISC_OTP_CMD2_OTP_ROM_ADDR			 (0x3ffL<<0)
+#define BNX2_MISC_OTP_CMD2_DOSEL			 (0x7fL<<16)
+#define BNX2_MISC_OTP_CMD2_DOSEL_0			 (0L<<16)
+#define BNX2_MISC_OTP_CMD2_DOSEL_1			 (1L<<16)
+#define BNX2_MISC_OTP_CMD2_DOSEL_127			 (127L<<16)
+
+#define BNX2_MISC_OTP_STATUS				0x000008f8
+#define BNX2_MISC_OTP_STATUS_DATA			 (0xffL<<0)
+#define BNX2_MISC_OTP_STATUS_VALID			 (1L<<8)
+#define BNX2_MISC_OTP_STATUS_BUSY			 (1L<<9)
+#define BNX2_MISC_OTP_STATUS_BUSYSM			 (1L<<10)
+#define BNX2_MISC_OTP_STATUS_DONE			 (1L<<11)
+
+#define BNX2_MISC_OTP_SHIFT1_CMD			0x000008fc
+#define BNX2_MISC_OTP_SHIFT1_CMD_RESET_MODE_N		 (1L<<0)
+#define BNX2_MISC_OTP_SHIFT1_CMD_SHIFT_DONE		 (1L<<1)
+#define BNX2_MISC_OTP_SHIFT1_CMD_SHIFT_START		 (1L<<2)
+#define BNX2_MISC_OTP_SHIFT1_CMD_LOAD_DATA		 (1L<<3)
+#define BNX2_MISC_OTP_SHIFT1_CMD_SHIFT_SELECT		 (0x1fL<<8)
+
+#define BNX2_MISC_OTP_SHIFT1_DATA			0x00000900
+#define BNX2_MISC_OTP_SHIFT2_CMD			0x00000904
+#define BNX2_MISC_OTP_SHIFT2_CMD_RESET_MODE_N		 (1L<<0)
+#define BNX2_MISC_OTP_SHIFT2_CMD_SHIFT_DONE		 (1L<<1)
+#define BNX2_MISC_OTP_SHIFT2_CMD_SHIFT_START		 (1L<<2)
+#define BNX2_MISC_OTP_SHIFT2_CMD_LOAD_DATA		 (1L<<3)
+#define BNX2_MISC_OTP_SHIFT2_CMD_SHIFT_SELECT		 (0x1fL<<8)
+
+#define BNX2_MISC_OTP_SHIFT2_DATA			0x00000908
+#define BNX2_MISC_BIST_CS0				0x0000090c
+#define BNX2_MISC_BIST_CS0_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS0_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS0_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS0_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS0_MBIST_GO			 (1L<<9)
+#define BNX2_MISC_BIST_CS0_BIST_OVERRIDE		 (1L<<31)
+
+#define BNX2_MISC_BIST_MEMSTATUS0			0x00000910
+#define BNX2_MISC_BIST_CS1				0x00000914
+#define BNX2_MISC_BIST_CS1_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS1_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS1_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS1_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS1_MBIST_GO			 (1L<<9)
+
+#define BNX2_MISC_BIST_MEMSTATUS1			0x00000918
+#define BNX2_MISC_BIST_CS2				0x0000091c
+#define BNX2_MISC_BIST_CS2_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS2_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS2_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS2_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS2_MBIST_GO			 (1L<<9)
+
+#define BNX2_MISC_BIST_MEMSTATUS2			0x00000920
+#define BNX2_MISC_BIST_CS3				0x00000924
+#define BNX2_MISC_BIST_CS3_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS3_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS3_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS3_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS3_MBIST_GO			 (1L<<9)
+
+#define BNX2_MISC_BIST_MEMSTATUS3			0x00000928
+#define BNX2_MISC_BIST_CS4				0x0000092c
+#define BNX2_MISC_BIST_CS4_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS4_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS4_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS4_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS4_MBIST_GO			 (1L<<9)
+
+#define BNX2_MISC_BIST_MEMSTATUS4			0x00000930
+#define BNX2_MISC_BIST_CS5				0x00000934
+#define BNX2_MISC_BIST_CS5_MBIST_EN			 (1L<<0)
+#define BNX2_MISC_BIST_CS5_BIST_SETUP			 (0x3L<<1)
+#define BNX2_MISC_BIST_CS5_MBIST_ASYNC_RESET		 (1L<<3)
+#define BNX2_MISC_BIST_CS5_MBIST_DONE			 (1L<<8)
+#define BNX2_MISC_BIST_CS5_MBIST_GO			 (1L<<9)
+
+#define BNX2_MISC_BIST_MEMSTATUS5			0x00000938
+#define BNX2_MISC_MEM_TM0				0x0000093c
+#define BNX2_MISC_MEM_TM0_PCIE_REPLAY_TM		 (0xfL<<0)
+#define BNX2_MISC_MEM_TM0_MCP_SCPAD			 (0xfL<<8)
+#define BNX2_MISC_MEM_TM0_UMP_TM			 (0xffL<<16)
+#define BNX2_MISC_MEM_TM0_HB_MEM_TM			 (0xfL<<24)
+
+#define BNX2_MISC_USPLL_CTRL				0x00000940
+#define BNX2_MISC_USPLL_CTRL_PH_DET_DIS			 (1L<<0)
+#define BNX2_MISC_USPLL_CTRL_FREQ_DET_DIS		 (1L<<1)
+#define BNX2_MISC_USPLL_CTRL_LCPX			 (0x3fL<<2)
+#define BNX2_MISC_USPLL_CTRL_RX				 (0x3L<<8)
+#define BNX2_MISC_USPLL_CTRL_VC_EN			 (1L<<10)
+#define BNX2_MISC_USPLL_CTRL_VCO_MG			 (0x3L<<11)
+#define BNX2_MISC_USPLL_CTRL_KVCO_XF			 (0x7L<<13)
+#define BNX2_MISC_USPLL_CTRL_KVCO_XS			 (0x7L<<16)
+#define BNX2_MISC_USPLL_CTRL_TESTD_EN			 (1L<<19)
+#define BNX2_MISC_USPLL_CTRL_TESTD_SEL			 (0x7L<<20)
+#define BNX2_MISC_USPLL_CTRL_TESTA_EN			 (1L<<23)
+#define BNX2_MISC_USPLL_CTRL_TESTA_SEL			 (0x3L<<24)
+#define BNX2_MISC_USPLL_CTRL_ATTEN_FREF			 (1L<<26)
+#define BNX2_MISC_USPLL_CTRL_DIGITAL_RST		 (1L<<27)
+#define BNX2_MISC_USPLL_CTRL_ANALOG_RST			 (1L<<28)
+#define BNX2_MISC_USPLL_CTRL_LOCK			 (1L<<29)
+
+#define BNX2_MISC_PERR_STATUS0				0x00000944
+#define BNX2_MISC_PERR_STATUS0_COM_DMAE_PERR		 (1L<<0)
+#define BNX2_MISC_PERR_STATUS0_CP_DMAE_PERR		 (1L<<1)
+#define BNX2_MISC_PERR_STATUS0_RPM_ACPIBEMEM_PERR	 (1L<<2)
+#define BNX2_MISC_PERR_STATUS0_CTX_USAGE_CNT_PERR	 (1L<<3)
+#define BNX2_MISC_PERR_STATUS0_CTX_PGTBL_PERR		 (1L<<4)
+#define BNX2_MISC_PERR_STATUS0_CTX_CACHE_PERR		 (1L<<5)
+#define BNX2_MISC_PERR_STATUS0_CTX_MIRROR_PERR		 (1L<<6)
+#define BNX2_MISC_PERR_STATUS0_COM_CTXC_PERR		 (1L<<7)
+#define BNX2_MISC_PERR_STATUS0_COM_SCPAD_PERR		 (1L<<8)
+#define BNX2_MISC_PERR_STATUS0_CP_CTXC_PERR		 (1L<<9)
+#define BNX2_MISC_PERR_STATUS0_CP_SCPAD_PERR		 (1L<<10)
+#define BNX2_MISC_PERR_STATUS0_RXP_RBUFC_PERR		 (1L<<11)
+#define BNX2_MISC_PERR_STATUS0_RXP_CTXC_PERR		 (1L<<12)
+#define BNX2_MISC_PERR_STATUS0_RXP_SCPAD_PERR		 (1L<<13)
+#define BNX2_MISC_PERR_STATUS0_TPAT_SCPAD_PERR		 (1L<<14)
+#define BNX2_MISC_PERR_STATUS0_TXP_CTXC_PERR		 (1L<<15)
+#define BNX2_MISC_PERR_STATUS0_TXP_SCPAD_PERR		 (1L<<16)
+#define BNX2_MISC_PERR_STATUS0_CS_TMEM_PERR		 (1L<<17)
+#define BNX2_MISC_PERR_STATUS0_MQ_CTX_PERR		 (1L<<18)
+#define BNX2_MISC_PERR_STATUS0_RPM_DFIFOMEM_PERR	 (1L<<19)
+#define BNX2_MISC_PERR_STATUS0_RPC_DFIFOMEM_PERR	 (1L<<20)
+#define BNX2_MISC_PERR_STATUS0_RBUF_PTRMEM_PERR		 (1L<<21)
+#define BNX2_MISC_PERR_STATUS0_RBUF_DATAMEM_PERR	 (1L<<22)
+#define BNX2_MISC_PERR_STATUS0_RV2P_P2IRAM_PERR		 (1L<<23)
+#define BNX2_MISC_PERR_STATUS0_RV2P_P1IRAM_PERR		 (1L<<24)
+#define BNX2_MISC_PERR_STATUS0_RV2P_CB1REGS_PERR	 (1L<<25)
+#define BNX2_MISC_PERR_STATUS0_RV2P_CB0REGS_PERR	 (1L<<26)
+#define BNX2_MISC_PERR_STATUS0_TPBUF_PERR		 (1L<<27)
+#define BNX2_MISC_PERR_STATUS0_THBUF_PERR		 (1L<<28)
+#define BNX2_MISC_PERR_STATUS0_TDMA_PERR		 (1L<<29)
+#define BNX2_MISC_PERR_STATUS0_TBDC_PERR		 (1L<<30)
+#define BNX2_MISC_PERR_STATUS0_TSCH_LR_PERR		 (1L<<31)
+
+#define BNX2_MISC_PERR_STATUS1				0x00000948
+#define BNX2_MISC_PERR_STATUS1_RBDC_PERR		 (1L<<0)
+#define BNX2_MISC_PERR_STATUS1_RDMA_DFIFO_PERR		 (1L<<2)
+#define BNX2_MISC_PERR_STATUS1_HC_STATS_PERR		 (1L<<3)
+#define BNX2_MISC_PERR_STATUS1_HC_MSIX_PERR		 (1L<<4)
+#define BNX2_MISC_PERR_STATUS1_HC_PRODUCSTB_PERR	 (1L<<5)
+#define BNX2_MISC_PERR_STATUS1_HC_CONSUMSTB_PERR	 (1L<<6)
+#define BNX2_MISC_PERR_STATUS1_TPATQ_PERR		 (1L<<7)
+#define BNX2_MISC_PERR_STATUS1_MCPQ_PERR		 (1L<<8)
+#define BNX2_MISC_PERR_STATUS1_TDMAQ_PERR		 (1L<<9)
+#define BNX2_MISC_PERR_STATUS1_TXPQ_PERR		 (1L<<10)
+#define BNX2_MISC_PERR_STATUS1_COMTQ_PERR		 (1L<<11)
+#define BNX2_MISC_PERR_STATUS1_COMQ_PERR		 (1L<<12)
+#define BNX2_MISC_PERR_STATUS1_RLUPQ_PERR		 (1L<<13)
+#define BNX2_MISC_PERR_STATUS1_RXPQ_PERR		 (1L<<14)
+#define BNX2_MISC_PERR_STATUS1_RV2PPQ_PERR		 (1L<<15)
+#define BNX2_MISC_PERR_STATUS1_RDMAQ_PERR		 (1L<<16)
+#define BNX2_MISC_PERR_STATUS1_TASQ_PERR		 (1L<<17)
+#define BNX2_MISC_PERR_STATUS1_TBDRQ_PERR		 (1L<<18)
+#define BNX2_MISC_PERR_STATUS1_TSCHQ_PERR		 (1L<<19)
+#define BNX2_MISC_PERR_STATUS1_COMXQ_PERR		 (1L<<20)
+#define BNX2_MISC_PERR_STATUS1_RXPCQ_PERR		 (1L<<21)
+#define BNX2_MISC_PERR_STATUS1_RV2PTQ_PERR		 (1L<<22)
+#define BNX2_MISC_PERR_STATUS1_RV2PMQ_PERR		 (1L<<23)
+#define BNX2_MISC_PERR_STATUS1_CPQ_PERR			 (1L<<24)
+#define BNX2_MISC_PERR_STATUS1_CSQ_PERR			 (1L<<25)
+#define BNX2_MISC_PERR_STATUS1_RLUP_CID_PERR		 (1L<<26)
+#define BNX2_MISC_PERR_STATUS1_RV2PCS_TMEM_PERR		 (1L<<27)
+#define BNX2_MISC_PERR_STATUS1_RV2PCSQ_PERR		 (1L<<28)
+#define BNX2_MISC_PERR_STATUS1_MQ_IDX_PERR		 (1L<<29)
+
+#define BNX2_MISC_PERR_STATUS2				0x0000094c
+#define BNX2_MISC_PERR_STATUS2_TGT_FIFO_PERR		 (1L<<0)
+#define BNX2_MISC_PERR_STATUS2_UMP_TX_PERR		 (1L<<1)
+#define BNX2_MISC_PERR_STATUS2_UMP_RX_PERR		 (1L<<2)
+#define BNX2_MISC_PERR_STATUS2_MCP_ROM_PERR		 (1L<<3)
+#define BNX2_MISC_PERR_STATUS2_MCP_SCPAD_PERR		 (1L<<4)
+#define BNX2_MISC_PERR_STATUS2_HB_MEM_PERR		 (1L<<5)
+#define BNX2_MISC_PERR_STATUS2_PCIE_REPLAY_PERR		 (1L<<6)
+
+#define BNX2_MISC_LCPLL_CTRL0				0x00000950
+#define BNX2_MISC_LCPLL_CTRL0_OAC			 (0x7L<<0)
+#define BNX2_MISC_LCPLL_CTRL0_OAC_NEGTWENTY		 (0L<<0)
+#define BNX2_MISC_LCPLL_CTRL0_OAC_ZERO			 (1L<<0)
+#define BNX2_MISC_LCPLL_CTRL0_OAC_TWENTY		 (3L<<0)
+#define BNX2_MISC_LCPLL_CTRL0_OAC_FORTY			 (7L<<0)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL			 (0x7L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_360		 (0L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_480		 (1L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_600		 (3L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_720		 (7L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_BIAS_CTRL			 (0x3L<<6)
+#define BNX2_MISC_LCPLL_CTRL0_PLL_OBSERVE		 (0x7L<<8)
+#define BNX2_MISC_LCPLL_CTRL0_VTH_CTRL			 (0x3L<<11)
+#define BNX2_MISC_LCPLL_CTRL0_VTH_CTRL_0		 (0L<<11)
+#define BNX2_MISC_LCPLL_CTRL0_VTH_CTRL_1		 (1L<<11)
+#define BNX2_MISC_LCPLL_CTRL0_VTH_CTRL_2		 (2L<<11)
+#define BNX2_MISC_LCPLL_CTRL0_PLLSEQSTART		 (1L<<13)
+#define BNX2_MISC_LCPLL_CTRL0_RESERVED			 (1L<<14)
+#define BNX2_MISC_LCPLL_CTRL0_CAPRETRY_EN		 (1L<<15)
+#define BNX2_MISC_LCPLL_CTRL0_FREQMONITOR_EN		 (1L<<16)
+#define BNX2_MISC_LCPLL_CTRL0_FREQDETRESTART_EN		 (1L<<17)
+#define BNX2_MISC_LCPLL_CTRL0_FREQDETRETRY_EN		 (1L<<18)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCEFDONE_EN		 (1L<<19)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCEFDONE		 (1L<<20)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCEFPASS		 (1L<<21)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCECAPDONE_EN	 (1L<<22)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCECAPDONE		 (1L<<23)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCECAPPASS_EN	 (1L<<24)
+#define BNX2_MISC_LCPLL_CTRL0_PLLFORCECAPPASS		 (1L<<25)
+#define BNX2_MISC_LCPLL_CTRL0_CAPRESTART		 (1L<<26)
+#define BNX2_MISC_LCPLL_CTRL0_CAPSELECTM_EN		 (1L<<27)
+
+#define BNX2_MISC_LCPLL_CTRL1				0x00000954
+#define BNX2_MISC_LCPLL_CTRL1_CAPSELECTM		 (0x1fL<<0)
+#define BNX2_MISC_LCPLL_CTRL1_CAPFORCESLOWDOWN_EN	 (1L<<5)
+#define BNX2_MISC_LCPLL_CTRL1_CAPFORCESLOWDOWN		 (1L<<6)
+#define BNX2_MISC_LCPLL_CTRL1_SLOWDN_XOR		 (1L<<7)
+
+#define BNX2_MISC_LCPLL_STATUS				0x00000958
+#define BNX2_MISC_LCPLL_STATUS_FREQDONE_SM		 (1L<<0)
+#define BNX2_MISC_LCPLL_STATUS_FREQPASS_SM		 (1L<<1)
+#define BNX2_MISC_LCPLL_STATUS_PLLSEQDONE		 (1L<<2)
+#define BNX2_MISC_LCPLL_STATUS_PLLSEQPASS		 (1L<<3)
+#define BNX2_MISC_LCPLL_STATUS_PLLSTATE			 (0x7L<<4)
+#define BNX2_MISC_LCPLL_STATUS_CAPSTATE			 (0x7L<<7)
+#define BNX2_MISC_LCPLL_STATUS_CAPSELECT		 (0x1fL<<10)
+#define BNX2_MISC_LCPLL_STATUS_SLOWDN_INDICATOR		 (1L<<15)
+#define BNX2_MISC_LCPLL_STATUS_SLOWDN_INDICATOR_0	 (0L<<15)
+#define BNX2_MISC_LCPLL_STATUS_SLOWDN_INDICATOR_1	 (1L<<15)
+
+#define BNX2_MISC_OSCFUNDS_CTRL				0x0000095c
+#define BNX2_MISC_OSCFUNDS_CTRL_FREQ_MON		 (1L<<5)
+#define BNX2_MISC_OSCFUNDS_CTRL_FREQ_MON_OFF		 (0L<<5)
+#define BNX2_MISC_OSCFUNDS_CTRL_FREQ_MON_ON		 (1L<<5)
+#define BNX2_MISC_OSCFUNDS_CTRL_XTAL_ADJCM		 (0x3L<<6)
+#define BNX2_MISC_OSCFUNDS_CTRL_XTAL_ADJCM_0		 (0L<<6)
+#define BNX2_MISC_OSCFUNDS_CTRL_XTAL_ADJCM_1		 (1L<<6)
+#define BNX2_MISC_OSCFUNDS_CTRL_XTAL_ADJCM_2		 (2L<<6)
+#define BNX2_MISC_OSCFUNDS_CTRL_XTAL_ADJCM_3		 (3L<<6)
+#define BNX2_MISC_OSCFUNDS_CTRL_ICBUF_ADJ		 (0x3L<<8)
+#define BNX2_MISC_OSCFUNDS_CTRL_ICBUF_ADJ_0		 (0L<<8)
+#define BNX2_MISC_OSCFUNDS_CTRL_ICBUF_ADJ_1		 (1L<<8)
+#define BNX2_MISC_OSCFUNDS_CTRL_ICBUF_ADJ_2		 (2L<<8)
+#define BNX2_MISC_OSCFUNDS_CTRL_ICBUF_ADJ_3		 (3L<<8)
+#define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ		 (0x3L<<10)
+#define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_0		 (0L<<10)
+#define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_1		 (1L<<10)
+#define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_2		 (2L<<10)
+#define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_3		 (3L<<10)
+
+
+/*
+ *  nvm_reg definition
+ *  offset: 0x6400
+ */
+#define BNX2_NVM_COMMAND				0x00006400
+#define BNX2_NVM_COMMAND_RST				 (1L<<0)
+#define BNX2_NVM_COMMAND_DONE				 (1L<<3)
+#define BNX2_NVM_COMMAND_DOIT				 (1L<<4)
+#define BNX2_NVM_COMMAND_WR				 (1L<<5)
+#define BNX2_NVM_COMMAND_ERASE				 (1L<<6)
+#define BNX2_NVM_COMMAND_FIRST				 (1L<<7)
+#define BNX2_NVM_COMMAND_LAST				 (1L<<8)
+#define BNX2_NVM_COMMAND_WREN				 (1L<<16)
+#define BNX2_NVM_COMMAND_WRDI				 (1L<<17)
+#define BNX2_NVM_COMMAND_EWSR				 (1L<<18)
+#define BNX2_NVM_COMMAND_WRSR				 (1L<<19)
+#define BNX2_NVM_COMMAND_RD_ID				 (1L<<20)
+#define BNX2_NVM_COMMAND_RD_STATUS			 (1L<<21)
+#define BNX2_NVM_COMMAND_MODE_256			 (1L<<22)
+
+#define BNX2_NVM_STATUS					0x00006404
+#define BNX2_NVM_STATUS_PI_FSM_STATE			 (0xfL<<0)
+#define BNX2_NVM_STATUS_EE_FSM_STATE			 (0xfL<<4)
+#define BNX2_NVM_STATUS_EQ_FSM_STATE			 (0xfL<<8)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_XI		 (0x1fL<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_IDLE_XI	 (0L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_CMD0_XI	 (1L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_CMD1_XI	 (2L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_CMD_FINISH0_XI	 (3L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_CMD_FINISH1_XI	 (4L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_ADDR0_XI	 (5L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_WRITE_DATA0_XI	 (6L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_WRITE_DATA1_XI	 (7L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_WRITE_DATA2_XI	 (8L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_DATA0_XI	 (9L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_DATA1_XI	 (10L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_DATA2_XI	 (11L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_STATUS_RDID0_XI	 (12L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_STATUS_RDID1_XI	 (13L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_STATUS_RDID2_XI	 (14L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_STATUS_RDID3_XI	 (15L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_READ_STATUS_RDID4_XI	 (16L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_CHECK_BUSY0_XI	 (17L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_ST_WREN_XI	 (18L<<0)
+#define BNX2_NVM_STATUS_SPI_FSM_STATE_SPI_WAIT_XI	 (19L<<0)
+
+#define BNX2_NVM_WRITE					0x00006408
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE			 (0xffffffffL<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_BIT_BANG		 (0L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_EECLK		 (1L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_EEDATA		 (2L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SCLK		 (4L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_CS_B		 (8L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SO		 (16L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SI		 (32L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SI_XI		 (1L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SO_XI		 (2L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_CS_B_XI		 (4L<<0)
+#define BNX2_NVM_WRITE_NVM_WRITE_VALUE_SCLK_XI		 (8L<<0)
+
+#define BNX2_NVM_ADDR					0x0000640c
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE			 (0xffffffL<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_BIT_BANG		 (0L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_EECLK		 (1L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_EEDATA		 (2L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SCLK		 (4L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_CS_B		 (8L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SO			 (16L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SI			 (32L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SI_XI		 (1L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SO_XI		 (2L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_CS_B_XI		 (4L<<0)
+#define BNX2_NVM_ADDR_NVM_ADDR_VALUE_SCLK_XI		 (8L<<0)
+
+#define BNX2_NVM_READ					0x00006410
+#define BNX2_NVM_READ_NVM_READ_VALUE			 (0xffffffffL<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_BIT_BANG		 (0L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_EECLK		 (1L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_EEDATA		 (2L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SCLK		 (4L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_CS_B		 (8L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SO			 (16L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SI			 (32L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SI_XI		 (1L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SO_XI		 (2L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_CS_B_XI		 (4L<<0)
+#define BNX2_NVM_READ_NVM_READ_VALUE_SCLK_XI		 (8L<<0)
+
+#define BNX2_NVM_CFG1					0x00006414
+#define BNX2_NVM_CFG1_FLASH_MODE			 (1L<<0)
+#define BNX2_NVM_CFG1_BUFFER_MODE			 (1L<<1)
+#define BNX2_NVM_CFG1_PASS_MODE				 (1L<<2)
+#define BNX2_NVM_CFG1_BITBANG_MODE			 (1L<<3)
+#define BNX2_NVM_CFG1_STATUS_BIT			 (0x7L<<4)
+#define BNX2_NVM_CFG1_STATUS_BIT_FLASH_RDY		 (0L<<4)
+#define BNX2_NVM_CFG1_STATUS_BIT_BUFFER_RDY		 (7L<<4)
+#define BNX2_NVM_CFG1_SPI_CLK_DIV			 (0xfL<<7)
+#define BNX2_NVM_CFG1_SEE_CLK_DIV			 (0x7ffL<<11)
+#define BNX2_NVM_CFG1_STRAP_CONTROL_0			 (1L<<23)
+#define BNX2_NVM_CFG1_PROTECT_MODE			 (1L<<24)
+#define BNX2_NVM_CFG1_FLASH_SIZE			 (1L<<25)
+#define BNX2_NVM_CFG1_FW_USTRAP_1			 (1L<<26)
+#define BNX2_NVM_CFG1_FW_USTRAP_0			 (1L<<27)
+#define BNX2_NVM_CFG1_FW_USTRAP_2			 (1L<<28)
+#define BNX2_NVM_CFG1_FW_USTRAP_3			 (1L<<29)
+#define BNX2_NVM_CFG1_FW_FLASH_TYPE_EN			 (1L<<30)
+#define BNX2_NVM_CFG1_COMPAT_BYPASSS			 (1L<<31)
+
+#define BNX2_NVM_CFG2					0x00006418
+#define BNX2_NVM_CFG2_ERASE_CMD				 (0xffL<<0)
+#define BNX2_NVM_CFG2_DUMMY				 (0xffL<<8)
+#define BNX2_NVM_CFG2_STATUS_CMD			 (0xffL<<16)
+#define BNX2_NVM_CFG2_READ_ID				 (0xffL<<24)
+
+#define BNX2_NVM_CFG3					0x0000641c
+#define BNX2_NVM_CFG3_BUFFER_RD_CMD			 (0xffL<<0)
+#define BNX2_NVM_CFG3_WRITE_CMD				 (0xffL<<8)
+#define BNX2_NVM_CFG3_BUFFER_WRITE_CMD			 (0xffL<<16)
+#define BNX2_NVM_CFG3_READ_CMD				 (0xffL<<24)
+
+#define BNX2_NVM_SW_ARB					0x00006420
+#define BNX2_NVM_SW_ARB_ARB_REQ_SET0			 (1L<<0)
+#define BNX2_NVM_SW_ARB_ARB_REQ_SET1			 (1L<<1)
+#define BNX2_NVM_SW_ARB_ARB_REQ_SET2			 (1L<<2)
+#define BNX2_NVM_SW_ARB_ARB_REQ_SET3			 (1L<<3)
+#define BNX2_NVM_SW_ARB_ARB_REQ_CLR0			 (1L<<4)
+#define BNX2_NVM_SW_ARB_ARB_REQ_CLR1			 (1L<<5)
+#define BNX2_NVM_SW_ARB_ARB_REQ_CLR2			 (1L<<6)
+#define BNX2_NVM_SW_ARB_ARB_REQ_CLR3			 (1L<<7)
+#define BNX2_NVM_SW_ARB_ARB_ARB0			 (1L<<8)
+#define BNX2_NVM_SW_ARB_ARB_ARB1			 (1L<<9)
+#define BNX2_NVM_SW_ARB_ARB_ARB2			 (1L<<10)
+#define BNX2_NVM_SW_ARB_ARB_ARB3			 (1L<<11)
+#define BNX2_NVM_SW_ARB_REQ0				 (1L<<12)
+#define BNX2_NVM_SW_ARB_REQ1				 (1L<<13)
+#define BNX2_NVM_SW_ARB_REQ2				 (1L<<14)
+#define BNX2_NVM_SW_ARB_REQ3				 (1L<<15)
+
+#define BNX2_NVM_ACCESS_ENABLE				0x00006424
+#define BNX2_NVM_ACCESS_ENABLE_EN			 (1L<<0)
+#define BNX2_NVM_ACCESS_ENABLE_WR_EN			 (1L<<1)
+
+#define BNX2_NVM_WRITE1					0x00006428
+#define BNX2_NVM_WRITE1_WREN_CMD			 (0xffL<<0)
+#define BNX2_NVM_WRITE1_WRDI_CMD			 (0xffL<<8)
+#define BNX2_NVM_WRITE1_SR_DATA				 (0xffL<<16)
+
+#define BNX2_NVM_CFG4					0x0000642c
+#define BNX2_NVM_CFG4_FLASH_SIZE			 (0x7L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_1MBIT			 (0L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_2MBIT			 (1L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_4MBIT			 (2L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_8MBIT			 (3L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_16MBIT			 (4L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_32MBIT			 (5L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_64MBIT			 (6L<<0)
+#define BNX2_NVM_CFG4_FLASH_SIZE_128MBIT		 (7L<<0)
+#define BNX2_NVM_CFG4_FLASH_VENDOR			 (1L<<3)
+#define BNX2_NVM_CFG4_FLASH_VENDOR_ST			 (0L<<3)
+#define BNX2_NVM_CFG4_FLASH_VENDOR_ATMEL		 (1L<<3)
+#define BNX2_NVM_CFG4_MODE_256_EMPTY_BIT_LOC		 (0x3L<<4)
+#define BNX2_NVM_CFG4_MODE_256_EMPTY_BIT_LOC_BIT8	 (0L<<4)
+#define BNX2_NVM_CFG4_MODE_256_EMPTY_BIT_LOC_BIT9	 (1L<<4)
+#define BNX2_NVM_CFG4_MODE_256_EMPTY_BIT_LOC_BIT10	 (2L<<4)
+#define BNX2_NVM_CFG4_MODE_256_EMPTY_BIT_LOC_BIT11	 (3L<<4)
+#define BNX2_NVM_CFG4_STATUS_BIT_POLARITY		 (1L<<6)
+#define BNX2_NVM_CFG4_RESERVED				 (0x1ffffffL<<7)
+
+#define BNX2_NVM_RECONFIG				0x00006430
+#define BNX2_NVM_RECONFIG_ORIG_STRAP_VALUE		 (0xfL<<0)
+#define BNX2_NVM_RECONFIG_ORIG_STRAP_VALUE_ST		 (0L<<0)
+#define BNX2_NVM_RECONFIG_ORIG_STRAP_VALUE_ATMEL	 (1L<<0)
+#define BNX2_NVM_RECONFIG_RECONFIG_STRAP_VALUE		 (0xfL<<4)
+#define BNX2_NVM_RECONFIG_RESERVED			 (0x7fffffL<<8)
+#define BNX2_NVM_RECONFIG_RECONFIG_DONE			 (1L<<31)
+
+
+
+/*
+ *  dma_reg definition
+ *  offset: 0xc00
+ */
+#define BNX2_DMA_COMMAND				0x00000c00
+#define BNX2_DMA_COMMAND_ENABLE				 (1L<<0)
+
+#define BNX2_DMA_STATUS					0x00000c04
+#define BNX2_DMA_STATUS_PAR_ERROR_STATE			 (1L<<0)
+#define BNX2_DMA_STATUS_READ_TRANSFERS_STAT		 (1L<<16)
+#define BNX2_DMA_STATUS_READ_DELAY_PCI_CLKS_STAT	 (1L<<17)
+#define BNX2_DMA_STATUS_BIG_READ_TRANSFERS_STAT		 (1L<<18)
+#define BNX2_DMA_STATUS_BIG_READ_DELAY_PCI_CLKS_STAT	 (1L<<19)
+#define BNX2_DMA_STATUS_BIG_READ_RETRY_AFTER_DATA_STAT	 (1L<<20)
+#define BNX2_DMA_STATUS_WRITE_TRANSFERS_STAT		 (1L<<21)
+#define BNX2_DMA_STATUS_WRITE_DELAY_PCI_CLKS_STAT	 (1L<<22)
+#define BNX2_DMA_STATUS_BIG_WRITE_TRANSFERS_STAT	 (1L<<23)
+#define BNX2_DMA_STATUS_BIG_WRITE_DELAY_PCI_CLKS_STAT	 (1L<<24)
+#define BNX2_DMA_STATUS_BIG_WRITE_RETRY_AFTER_DATA_STAT	 (1L<<25)
+#define BNX2_DMA_STATUS_GLOBAL_ERR_XI			 (1L<<0)
+#define BNX2_DMA_STATUS_BME_XI				 (1L<<4)
+
+#define BNX2_DMA_CONFIG					0x00000c08
+#define BNX2_DMA_CONFIG_DATA_BYTE_SWAP			 (1L<<0)
+#define BNX2_DMA_CONFIG_DATA_WORD_SWAP			 (1L<<1)
+#define BNX2_DMA_CONFIG_CNTL_BYTE_SWAP			 (1L<<4)
+#define BNX2_DMA_CONFIG_CNTL_WORD_SWAP			 (1L<<5)
+#define BNX2_DMA_CONFIG_ONE_DMA				 (1L<<6)
+#define BNX2_DMA_CONFIG_CNTL_TWO_DMA			 (1L<<7)
+#define BNX2_DMA_CONFIG_CNTL_FPGA_MODE			 (1L<<8)
+#define BNX2_DMA_CONFIG_CNTL_PING_PONG_DMA		 (1L<<10)
+#define BNX2_DMA_CONFIG_CNTL_PCI_COMP_DLY		 (1L<<11)
+#define BNX2_DMA_CONFIG_NO_RCHANS_IN_USE		 (0xfL<<12)
+#define BNX2_DMA_CONFIG_NO_WCHANS_IN_USE		 (0xfL<<16)
+#define BNX2_DMA_CONFIG_PCI_CLK_CMP_BITS		 (0x7L<<20)
+#define BNX2_DMA_CONFIG_PCI_FAST_CLK_CMP		 (1L<<23)
+#define BNX2_DMA_CONFIG_BIG_SIZE			 (0xfL<<24)
+#define BNX2_DMA_CONFIG_BIG_SIZE_NONE			 (0x0L<<24)
+#define BNX2_DMA_CONFIG_BIG_SIZE_64			 (0x1L<<24)
+#define BNX2_DMA_CONFIG_BIG_SIZE_128			 (0x2L<<24)
+#define BNX2_DMA_CONFIG_BIG_SIZE_256			 (0x4L<<24)
+#define BNX2_DMA_CONFIG_BIG_SIZE_512			 (0x8L<<24)
+#define BNX2_DMA_CONFIG_DAT_WBSWAP_MODE_XI		 (0x3L<<0)
+#define BNX2_DMA_CONFIG_CTL_WBSWAP_MODE_XI		 (0x3L<<4)
+#define BNX2_DMA_CONFIG_MAX_PL_XI			 (0x7L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_128B_XI			 (0L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_256B_XI			 (1L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_512B_XI			 (2L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_EN_XI			 (1L<<15)
+#define BNX2_DMA_CONFIG_MAX_RRS_XI			 (0x7L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_128B_XI			 (0L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_256B_XI			 (1L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_512B_XI			 (2L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_1024B_XI		 (3L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_2048B_XI		 (4L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_4096B_XI		 (5L<<16)
+#define BNX2_DMA_CONFIG_MAX_RRS_EN_XI			 (1L<<19)
+#define BNX2_DMA_CONFIG_NO_64SWAP_EN_XI			 (1L<<31)
+
+#define BNX2_DMA_BLACKOUT				0x00000c0c
+#define BNX2_DMA_BLACKOUT_RD_RETRY_BLACKOUT		 (0xffL<<0)
+#define BNX2_DMA_BLACKOUT_2ND_RD_RETRY_BLACKOUT		 (0xffL<<8)
+#define BNX2_DMA_BLACKOUT_WR_RETRY_BLACKOUT		 (0xffL<<16)
+
+#define BNX2_DMA_READ_MASTER_SETTING_0			0x00000c10
+#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_NO_SNOOP	 (1L<<0)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_RELAX_ORDER	 (1L<<1)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_PRIORITY	 (1L<<2)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_TRAFFIC_CLASS	 (0x7L<<4)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_PARAM_EN	 (1L<<7)
+#define BNX2_DMA_READ_MASTER_SETTING_0_RBDC_NO_SNOOP	 (1L<<8)
+#define BNX2_DMA_READ_MASTER_SETTING_0_RBDC_RELAX_ORDER	 (1L<<9)
+#define BNX2_DMA_READ_MASTER_SETTING_0_RBDC_PRIORITY	 (1L<<10)
+#define BNX2_DMA_READ_MASTER_SETTING_0_RBDC_TRAFFIC_CLASS	 (0x7L<<12)
+#define BNX2_DMA_READ_MASTER_SETTING_0_RBDC_PARAM_EN	 (1L<<15)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TDMA_NO_SNOOP	 (1L<<16)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TDMA_RELAX_ORDER	 (1L<<17)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TDMA_PRIORITY	 (1L<<18)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TDMA_TRAFFIC_CLASS	 (0x7L<<20)
+#define BNX2_DMA_READ_MASTER_SETTING_0_TDMA_PARAM_EN	 (1L<<23)
+#define BNX2_DMA_READ_MASTER_SETTING_0_CTX_NO_SNOOP	 (1L<<24)
+#define BNX2_DMA_READ_MASTER_SETTING_0_CTX_RELAX_ORDER	 (1L<<25)
+#define BNX2_DMA_READ_MASTER_SETTING_0_CTX_PRIORITY	 (1L<<26)
+#define BNX2_DMA_READ_MASTER_SETTING_0_CTX_TRAFFIC_CLASS	 (0x7L<<28)
+#define BNX2_DMA_READ_MASTER_SETTING_0_CTX_PARAM_EN	 (1L<<31)
+
+#define BNX2_DMA_READ_MASTER_SETTING_1			0x00000c14
+#define BNX2_DMA_READ_MASTER_SETTING_1_COM_NO_SNOOP	 (1L<<0)
+#define BNX2_DMA_READ_MASTER_SETTING_1_COM_RELAX_ORDER	 (1L<<1)
+#define BNX2_DMA_READ_MASTER_SETTING_1_COM_PRIORITY	 (1L<<2)
+#define BNX2_DMA_READ_MASTER_SETTING_1_COM_TRAFFIC_CLASS	 (0x7L<<4)
+#define BNX2_DMA_READ_MASTER_SETTING_1_COM_PARAM_EN	 (1L<<7)
+#define BNX2_DMA_READ_MASTER_SETTING_1_CP_NO_SNOOP	 (1L<<8)
+#define BNX2_DMA_READ_MASTER_SETTING_1_CP_RELAX_ORDER	 (1L<<9)
+#define BNX2_DMA_READ_MASTER_SETTING_1_CP_PRIORITY	 (1L<<10)
+#define BNX2_DMA_READ_MASTER_SETTING_1_CP_TRAFFIC_CLASS	 (0x7L<<12)
+#define BNX2_DMA_READ_MASTER_SETTING_1_CP_PARAM_EN	 (1L<<15)
+
+#define BNX2_DMA_WRITE_MASTER_SETTING_0			0x00000c18
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_NO_SNOOP	 (1L<<0)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_RELAX_ORDER	 (1L<<1)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_PRIORITY	 (1L<<2)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_CS_VLD	 (1L<<3)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_TRAFFIC_CLASS	 (0x7L<<4)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_HC_PARAM_EN	 (1L<<7)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_NO_SNOOP	 (1L<<8)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_RELAX_ORDER	 (1L<<9)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_PRIORITY	 (1L<<10)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_CS_VLD	 (1L<<11)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_TRAFFIC_CLASS	 (0x7L<<12)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_RDMA_PARAM_EN	 (1L<<15)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_NO_SNOOP	 (1L<<24)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_RELAX_ORDER	 (1L<<25)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_PRIORITY	 (1L<<26)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_CS_VLD	 (1L<<27)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_TRAFFIC_CLASS	 (0x7L<<28)
+#define BNX2_DMA_WRITE_MASTER_SETTING_0_CTX_PARAM_EN	 (1L<<31)
+
+#define BNX2_DMA_WRITE_MASTER_SETTING_1			0x00000c1c
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_NO_SNOOP	 (1L<<0)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_RELAX_ORDER	 (1L<<1)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_PRIORITY	 (1L<<2)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_CS_VLD	 (1L<<3)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_TRAFFIC_CLASS	 (0x7L<<4)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_COM_PARAM_EN	 (1L<<7)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_NO_SNOOP	 (1L<<8)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_RELAX_ORDER	 (1L<<9)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_PRIORITY	 (1L<<10)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_CS_VLD	 (1L<<11)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_TRAFFIC_CLASS	 (0x7L<<12)
+#define BNX2_DMA_WRITE_MASTER_SETTING_1_CP_PARAM_EN	 (1L<<15)
+
+#define BNX2_DMA_ARBITER				0x00000c20
+#define BNX2_DMA_ARBITER_NUM_READS			 (0x7L<<0)
+#define BNX2_DMA_ARBITER_WR_ARB_MODE			 (1L<<4)
+#define BNX2_DMA_ARBITER_WR_ARB_MODE_STRICT		 (0L<<4)
+#define BNX2_DMA_ARBITER_WR_ARB_MODE_RND_RBN		 (1L<<4)
+#define BNX2_DMA_ARBITER_RD_ARB_MODE			 (0x3L<<5)
+#define BNX2_DMA_ARBITER_RD_ARB_MODE_STRICT		 (0L<<5)
+#define BNX2_DMA_ARBITER_RD_ARB_MODE_RND_RBN		 (1L<<5)
+#define BNX2_DMA_ARBITER_RD_ARB_MODE_WGT_RND_RBN	 (2L<<5)
+#define BNX2_DMA_ARBITER_ALT_MODE_EN			 (1L<<8)
+#define BNX2_DMA_ARBITER_RR_MODE			 (1L<<9)
+#define BNX2_DMA_ARBITER_TIMER_MODE			 (1L<<10)
+#define BNX2_DMA_ARBITER_OUSTD_READ_REQ			 (0xfL<<12)
+
+#define BNX2_DMA_ARB_TIMERS				0x00000c24
+#define BNX2_DMA_ARB_TIMERS_RD_DRR_WAIT_TIME		 (0xffL<<0)
+#define BNX2_DMA_ARB_TIMERS_TM_MIN_TIMEOUT		 (0xffL<<12)
+#define BNX2_DMA_ARB_TIMERS_TM_MAX_TIMEOUT		 (0xfffL<<20)
+
+#define BNX2_DMA_DEBUG_VECT_PEEK			0x00000c2c
+#define BNX2_DMA_DEBUG_VECT_PEEK_1_VALUE		 (0x7ffL<<0)
+#define BNX2_DMA_DEBUG_VECT_PEEK_1_PEEK_EN		 (1L<<11)
+#define BNX2_DMA_DEBUG_VECT_PEEK_1_SEL			 (0xfL<<12)
+#define BNX2_DMA_DEBUG_VECT_PEEK_2_VALUE		 (0x7ffL<<16)
+#define BNX2_DMA_DEBUG_VECT_PEEK_2_PEEK_EN		 (1L<<27)
+#define BNX2_DMA_DEBUG_VECT_PEEK_2_SEL			 (0xfL<<28)
+
+#define BNX2_DMA_TAG_RAM_00				0x00000c30
+#define BNX2_DMA_TAG_RAM_00_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_00_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_00_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_00_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_00_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_00_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_00_SWAP_CONTROL		 (2L<<7)
+#define BNX2_DMA_TAG_RAM_00_FUNCTION			 (1L<<9)
+#define BNX2_DMA_TAG_RAM_00_VALID			 (1L<<10)
+
+#define BNX2_DMA_TAG_RAM_01				0x00000c34
+#define BNX2_DMA_TAG_RAM_01_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_01_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_01_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_01_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_01_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_01_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_01_SWAP_CONTROL		 (2L<<7)
+#define BNX2_DMA_TAG_RAM_01_FUNCTION			 (1L<<9)
+#define BNX2_DMA_TAG_RAM_01_VALID			 (1L<<10)
+
+#define BNX2_DMA_TAG_RAM_02				0x00000c38
+#define BNX2_DMA_TAG_RAM_02_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_02_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_02_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_02_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_02_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_02_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_02_SWAP_CONTROL		 (2L<<7)
+#define BNX2_DMA_TAG_RAM_02_FUNCTION			 (1L<<9)
+#define BNX2_DMA_TAG_RAM_02_VALID			 (1L<<10)
+
+#define BNX2_DMA_TAG_RAM_03				0x00000c3c
+#define BNX2_DMA_TAG_RAM_03_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_03_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_03_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_03_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_03_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_03_SWAP_CONTROL		 (2L<<7)
+#define BNX2_DMA_TAG_RAM_03_FUNCTION			 (1L<<9)
+#define BNX2_DMA_TAG_RAM_03_VALID			 (1L<<10)
+
+#define BNX2_DMA_TAG_RAM_04				0x00000c40
+#define BNX2_DMA_TAG_RAM_04_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_04_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_04_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_04_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_04_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_04_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_04_SWAP_CONTROL		 (2L<<7)
+#define BNX2_DMA_TAG_RAM_04_FUNCTION			 (1L<<9)
+#define BNX2_DMA_TAG_RAM_04_VALID			 (1L<<10)
+
+#define BNX2_DMA_TAG_RAM_05				0x00000c44
+#define BNX2_DMA_TAG_RAM_05_CHANNEL			 (0xfL<<0)
+#define BNX2_DMA_TAG_RAM_05_MASTER			 (0x7L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_CTX			 (0L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_RBDC			 (1L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_COM			 (3L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_CP			 (4L<<4)
+#define BNX2_DMA_TAG_RAM_05_MASTER_TDMA			 (5L<<4)
+#define BNX2_DMA_TAG_RAM_05_SWAP			 (0x3L<<7)
+#define BNX2_DMA_TAG_RAM_05_SWAP_CONFIG			 (0L<<7)
+#define BNX2_DMA_TAG_RAM_05_SWAP_DATA			 (1L<<7)
+#define BNX2_DMA_TAG_RAM_0/* bnx2CONTROLroad2om NX2 network driver.
+ *
+ * CopyrFUNCTIONB4-20com 9oadcom Corporation
+ *
+ * This VALIDis free s10)
+adcom Corporation
+ *
+ * Thi6				0x0eralc48 it under the terms ofse asG_CHANNELis fr0xfL<<0oadcom Corporation
+ *
+ * Thi6_MASTERree Sof7L<<4 Foundationn
+ *
+ * Written by: Micha_CTXel Cha (mchan@bs free .com)
+ */
+
+
+#ifndefk drivRBDCis free sX2_H
+
+/* Hardware data structures and Tegister 09 BX2_H
+
+/* Hardware data structures and HOMis fr3. Do not modifyn
+ */
+
+/*
+ *  tx_bd netwoitPis fr4	u32 tions automatically
+ * generated fromDM is fr5struct tx_bd {
+	u32 tx_bd_haddr_hi;bnxel Chan
+strroadcom Corporation
+ *
+ * Thitag_fl (c)FIGnetwork dworkTX_BD_FLAGS_CONN_FAULT		(1<<0)
+	.h:BD_TCPee sroadcom Corporation
+ *
+ * Thi#define	#d 2004-20e. DD_FLAGS_Corporoadco
+ *
+ * Thi6 program is fel Csoftware; you can redistribute6it and/orx_bd {
+
+ * ic License as published by7NU G;
+		#l PucGS_TCP6_OFF0_MSAL_NOW
+		#de4 *se asFel Chan	#defhan@broadcom.com)
+ */
+
+
+#ifn7ef BNX2el Chan  BNX2_H
+
+/* Hardware data struct_TCP6_OF_H2 network drivHtx_b HardD_FLAdata structW_OPram _r RTL cod
+	u32 t;
+	u32 tx_bd_mss_nbytes;
+	_OFF4_SHLm RTL codestruct tx_bd {
+	u32 tx_bd_haddr__OFF4_SHLWine TX/#defuctddr_hi;{
+	u32ddr_hi_haddrne TX_BD_FL *  rx_bd dlo;;
+
+
+/*
+ *  rmss_nbytes;
+	13_FLAGSef_TCP6TCP6_OFF2_SHL
+		#4);
+
+
+/*
+ *  rvlan_7<<0)
+ag_hi; rx_bFLAGS_TCP6_OFF0_MSK	(3<<1)
+			#definne RX_BD_FLAGS_NOPUSHdr_lo;
+	0_MSK	(3<<1_FLARX_BD_R TX_BD_FLAGS_TCP6_OFF0_SHL	(1)
+		#define TGS_END	X_B_TCP_UDP_CKSUM	(1<<1)
+		#define TX_BD_FLA7S_IP_CKSUM		(1<<2)
+		#define TX_BD_FLAGS_VLAN_T7G		(1<<3)
+		#define TX_BD_FLAGS_COAL_NOW		(1<<8)
+		#define 50 RX_BD_STATUS_ATTN_BITS_LINK)
+		#define TX_BD_FLAGS_END			(1<<6)
+		#define T8_BD_FLAGS_START		(1<<7)
+		#define TX_BD_FLAGS_SS_ATTN_T_WORD	(0x1f<<8)
+		#define TX_BD_FLAGS_TCP6TATUS_ATT	(12)
+		#define TX_BD_FLAGS_SW_FLAGS		(1<<TATUS_ATTfine TX_BD_FLAGS_SW_SNAP		(1<<14)
+		#definTATUS_ATTNAGS_SW_LSO		(1<<15)
+
+};
+
+
+/*
+ *  rx_bd dTATUS_ATTN */
+struct rx_bd {
+	u32 rx_bd_haddr_hi;fine STATUd_haddr_lo;
+	u32 rx_bd_len;
+	u32 rx_bd_fl8gs;
+		#define RX_BD_FLAGS_NOPUSH		(1<<0)
+		#dne RX_RX_BD_FLAGS_DUMMY		(1<<1)
+		#define RX_BD_FLAORT	(1L TX_BD_FLAGS_TCP6_OFF0_SHL	(1)
+		#define TT		(1L<<<9_TCP_UDP_CKSUM	(1<<1)
+		#define TX_BD_FLA8S_IP_CKSUM		(1<<2)
+		#define TX_BD_FLAGS_VLAN_T8G		(1<<3)
+		#define TX_BD_FLAGS_COAL_NOW		(1<<9_fineE
+		# (mcfine RX_BD_fine STATUS_ATTN_)
+		#define TX_BD_FLAGS_END			(1<<6)
+		#define T9_BD_FLAGS_START		(1<<7)
+		#define TX_BD_FLAGS_Se STATUS_WORD	(0x1f<<8)
+		#define TX_BD_FLAGS_TCP614)
+		#de	(12)
+		#define TX_BD_FLAGS_SW_FLAGS		(1<<14)
+		#define TX_BD_FLAGS_SW_SNAP		(1<<14)
+		#defin14)
+		#defAGS_SW_LSO		(1<<15)
+
+};
+
+
+/*
+ *  rx_bd d14)
+		#def */
+struct rx_bd {
+	u32 rx_bd_haddr_hi;8u32 rx_bid_haddr_lo;
+	u32 rx_bd_len;
+	u32 rx_bd_fl9gs;
+		#define RX_BD_FLAGS_NOPUSH		(1<<0)
+		#dCESSORRX_BD_FLAGS_DUMMY		(1<<1)
+		#define RX_BD_FLATS_MAC_ TX_BD_FLAGS_TCP6_OFF0_SHL	(1)
+		#define TIMER_ABABO_TCP_UDP_CKSUM	(1<<1)
+		#define TX_BD_FLA9S_IP_CKSUM		(1<<2)
+		#define TX_BD_FLAGS_VLAN_T9G		(1<<3)
+		#define TX_BD_FLAGS_COAL_NOW		(1<10RX_BD_CACHE_Ablic License as published b10)
+		#define TX_BD_FLAGS_END			(1<<6)
+		#define 10_BD_FLAGS_START		(1<<7)
+		#define TX_BD_FLAGS_ck;truc d_ATTN_BITS_HOST_COALESCE_ABORT	(1L<<17)
+	ck_consume	(12)
+		#define TX_BD_FLAGS_SW_FLAGS		(1<index1;
+	ufine TX_BD_FLAGS_SW_SNAP		(1<<14)
+		#defiindex1;
+	u1AGS_SW_LSO		(1<<15)
+
+};
+
+
+/*
+ *  rx_bd index1;
+	u1 */
+struct rx_bd {
+	u32 rx_bd_haddr_histatus_tx_qd_haddr_lo;
+	u32 rx_bd_len;
+	u32 rx_bd_f10gs;
+		#define RX_BD_FLAGS_NOPUSH		(1<<0)
+		#uiindexRX_BD_FLAGS_DUMMY		(1<<1)
+		#define RX_BD_FL;
+	u1_in TX_BD_FLAGS_TCP6_OFF0_SHL	(1)
+		#define 
+	u16 stdex_TCP_UDP_CKSUM	(1<<1)
+		#define TX_BD_FL10S_IP_CKSUM		(1<<2)
+		#define TX_BD_FLAGS_VLAN_10BT		(ACHE_A27ABORT	(1L<14)
+		#define STATUEPB_1RX_BD_CACHE_A_TCP6_OFF0_DONT_GEN_CRC		#d11PARITY_ERRAC_ACHE_A31)
+;
+
+
+/*6 statuattn_bits_ac1_consumquickd(__BIG_ENDIANlen;1613;
+	u16s_rxuicsumer_inx_quick_0_bd tus_rx_quick_consndex1;
+	u1_i_rx_quickatus_completion_producer_indeick_26 statusx;
+	u16 ssumer_index;
+	u16 st36 status_complrk_consu;
+	u16 st15;
+	u16 status_complf definroducer_index;
+	u16 sx16 status_tx_quick_consumer_6 status_id
+	u813;
+	ux_quick_consumer_indes_blk_num;
+#elif def1ick_consumer_inde4N)
+	u16 status_tx_quick_consuick_;
+	u5N)
+	u16 status_tx_quick_consumer_;
+	u1;
+;
+	u8 status_rx_quick_consumer_inde76 status_comp;
+	u8 stat_consumer_inde8N)
+	u16 status_tx_quick_co1ed(__LITTL91;
+	u16 status_rx_quick_consumer_ind1G		(1<<3)
+		#define TX_BD_FLAGS_COAL_R
+		#RX_BD_22)
+		#define 6D_FLAGSquick_consumdex3;
+	u16 3_quick_consum610;
+	CHE_Ad_lenumeru16 status_t16 status_tx_6)
+		#define STATUS_u16 status_ttatus_tx_quickick_consumer_index1dex3;
+	u16 4_quick_consum7_consumer_index0;
+	u16 status_416 status_tx_7er_index5;
+	u16 status_rx_quic4tatus_tx_quic7x2;
+	u16 status_rx_quick_cosum5x116 status_co16 status_rx_quick_consumer_in516 status_tx_8us_rx_quick_consumer_index13;
+5tatus_tx_quic8er_index5;
+	u16 status_rx_quic6_quick_consum8consumer_index15;
+	u16 status_6s_rx_quick_;
+	16 status_rx_quick_consumer_in6tatus_tx_quic9us_rx_quick_consumer_index13;
+7_quick_consum9er_index5;
+	u16 status_rx_quic716 status_tx_9consumer_index15;
+	u16 status_7ck_consumer_inick_consumer_index1Wex3;
+	u16 0_quick_consumaconsumer_index6;
+	u16_bd {
+	6 st13;
+	u16un_HOST_ADDR_LOWe TX_Bnsumer_D_FLAGus_rx_quiidtatustatus_t stause16 status_tx_ar_index9;
+	u16 stattatus_tx_quicatus_status_rxblk_numHIGHel_consumer_indLITTLE4;
+	u16 status_rx_quif defintatus_tx_quica)
+		#define STATUS_n_produc16 st_LENGTHine TX_Bndex;
+	u1rx_quicd_index;
+	u16 status_;
+	WORDgs;
+		#x_bd {
+6tus_rx_qui)
+	u1#endif
+};
+2 networBYTE2_SBLK_MSIX_ALroadcom Corporation
+if
+};
+
+#definePRIOus_rxLVP_UDPbd {
+8u16 status_completion_producer_x_quick_consumaus_cmdk_consumer_indeatus_unusletion_producequick_consu)
+	u16 status_rx_qui1tatus_tx_quicb_IfHCIatus_completion_producer2_quick_consumbs_rx_quic_idx;
+#endif
+};
+
+#def2tets rx_bd {
+	ctets_hi;
+	u32 stat_IfHCInBadOstatus_tx_quiccstat_IfHCOutOctets_hi;
+	u32 sttx_quick_consucs_lo;
+	u32 stat_IfHCOutBadOctek_consumer_indct_IfHCOutBadOctets_lo;
+	u32 stmer_inde11sumecctets_hi;
+	u32 stat_IfHCInBadOex_quick_consudstat_IfHCOutOctets_hi;
+	u32 stmpletion_produt_IfHCIatus_completion_producerstatus_tx_quicdt_IfHCOutBadOctets_lo;
+	u32 st_tx_quick_consdctets_hi;
+	u32 stat_IfHCInBadO
+	u32 stat_IfHtus_rx_quic)
+	u16 status_rx_quistat_IfHCItatue
+	u32 stat_IfHCOutMulticastPktsumer_index13;et_IfHCOutBadOctets_lo;
+	u32 stlock#define TXectets_hi;
+	u32 stat_IfHCInBadO{ck_consumer_ifatsinternalmactransmiterrors;
+uick_consumer_f
+	u32 stat_IfHCOutMulticastPktu32 stat_IfHCIft_IfHCOutBadOctets_lo;
+	u32 stat_IfHCItus_rxbd_hadonsumer_index1ARBdex13;
+	u16HCOutBadd0consumer_index6;
+	un_hi;s_unus_BD_FLAGS_STARsedatus_idx;IZE	128
+
+
+/*
+ *at_EtherStatsFragm_ENTL codEthen
+ *IGN_SIZE	128
+tx_bd_h
+	u32 stat_ECUR_BINMSTRdersizePkts24u16 status_completioat_EtherStetion_producdx10;
+	ex9;
+	u16 stattherSu32 st_LPR_RPherSe TX_BD_FLAGS_END			(1<<6)
+		us_unusedu32 staWatsrStaRx128OcX2_H
+
+/* Hardware da2 stat_EtherStBat_EtsRx256Octet8to511Oct_Ifatus_unusedu32 stat_EtPkx512Oct256tets;12023Octets;
+	u32 stat_EtherStatsHStatsPktsx256Octet	u32 stat_EtherStatsPkOver_EtherStaRxRx1024Octetsto1at_Ifto255tets;
+	u32 stat_EtherStH3Octets512tets;
+toRx512rStatsPktstsTx6tatsPktto127tets;tets;
+	u32 stat_32 stat_EtIfHCIntets;FUSE_CTRL0_CM<<3)	#definefsCollis;
+	ufHCInBadOcctets;
+	u32 s_PWRUPer_iEnition
+  stat_IfHCO8
+
+
+/*
+ *o1023tets;
+	u32SHIFT_EtherStatsPk1128Oc1024tsto255Oc522 stat_	u32 stat_EtSUM	(1<<1ctets;
+	u32 stat_Xon22Octets;
+	u32 LOA<<3)
+		#de3Tx1523Octetsto9022Octets;
+	u32 statefine TX_BD_FtsTx128Occtetsto1s023Octets;
+	u3 TX_BD_EtherStatr_index9;
+	u16 statuctets;
+	132 stat_EtherStat)
+		#define STATUS__Xoffat_EeEnte2 stat_EtherStatsPktsx1523Octetsto9022Octets;
+	u_Etherat_IfInRuleCheckerDisc5ctets;
+	to90ctets;
+	u32 QDiscards;
+PauseFramesReceivtBadOc stat_EtDiscPastat_3232 stat_CatchupInRuleCOutXonSentatus_unuseRuleCheffcards;
+	u32 stt_FlowControlDoneatus_unuse1_Mac2 stat_;
+	u32ick_consumer_index1_XoffStat232 stat_EtherSta1heckerDisu32 stat_Et2Octets;nat_E2 stat_IfInRuleCheckerDiscards;
+	u32 stat_IfInFTt0s_blrds;
+	u32 stat_IfInMBUFDiscards;
+	u32 stat_IfInrds;Gat03;
+P4Hit;
+	u32 stat_CatchupInRuleCheckerDtat_Ges;
+	u32 stat_CatchupInFTQDiscards;
+	u32 st08;
+	u3hupInMBUFDiscards;
+	u32 stat_CatchupInRuleC2eckerP4Hit;
+	u3214therStat  contextSTATdcom Ce TX_tati
+offset: 0x1000_SW_eCheckerDisc28CTX16 sMANstat_EtherSl2_fhchupIn_FHDRdr_herStaefin_ENABLE<<3)
+		#dePktsTx1024OctetsCLASS	(0x7<<DIS6 st_USAGE_CNTstat_IfInMBUFDiscards;
+	_P2
+		#de	u32 rx_binPLRUP4Hit;
+	u32 stat_CatchupI		#define L2_FHDR_STCOMBINE_RE sta stat_CatchupInFTQDisc_P2		(1<<3)
+FLUSH_AH	#de6t_Eth1 stat_GenSta
+	u32 st_P2		(1<<3)
+MEM_INI08;
+	u32 s1quick_L2_FHDRRX_BDUS_L2_LLC_PTUS_2 stscards;
+	u32 stat_IfIn_unuseAGRAM		#de
+	u32 rx_bi_25GNU work dfine STTCP_SEGMENetst;
+	u16 statR_STATU5Tx256tion
+ *
+	u32 stat_Ether<15)
+
+		#define L2_FHD1K TX_BD_FL_UDP_DATAGRAM	(1<<15)
+
+		#define L2_FHD_2;
+	u	#defI)
+		#de16ORS_PHY_DECODE	_IP_D_quicS_BA4(1<<18_bd #define L2_FHDR_ERRORS_ALIGNMENT	(1<<198(1<<18lo;
+#define L2_FHDR_ERRORS_ALIGNMENT	(1<<19D6ine L2_IGNMENT	(1<<GIANT_FRAME15)
+
+2D_FLAine L2_F315)
+
+	8T		(#define L2_FHDR_ERRORS_ALIGNMENT	(1<<192_FHDR_E8RRORS_TCP_XSUM		(1<<28)
+		#define L2_FHDR_L2 l2_fhd9P_DATAGRAMdefine L2_FHDR_ERRORS_PHY_DECODE	FH(1<<181AGRAMUDx2.h: 	(1<<14)
+	5r_inDR_ERRORS_ALIGNMESp_xsum;_SPLR_ERRORS_GIANT_FRAME	(1<<21)
+		#define LGS_SW_15)
+
+	7)
+_DATAGRAMRULE__P2	 staUSat_Do_STATUS_IOctetsto127Octe*
+ *  stat_LOCK_WA_fhdr_tcp_u_IP_DATAGRAMsum;
+P2	SO		(1<15)
+ne TXTAGRAM
+	u16 l2_fhdr_pkt_len;
+	SO		(1<WRInmentwork drivL2Croadcom Corporat0c0/0x2 netAC_SIZ_L*/
+sYPE_TX_TYPE_US_IP_DATAGRAMRSS_HASO		(1<S_RULEetwork drivX2_L2CTX
+		#define TX_BD<<28X2 netwEXTSW_L network drivL2_IfInRuleCheckerD_TYPE_TYPE_L2		L2CTX_TYPE_TYPE_EPE2xt def3C	(1<<516 staSO		(1<MISST_BIDXNU Gene0015)
+
+5#define L2_FHDSO		(1<HITD				0x00000088DR_STATUS_IP_DATAGRASO		(1<DTX_T_FHD0000088
+#deleCheckerDisc28_CMDCTX_TYTRS_ALIGNMENT3Octet000885_L2CTX_TYPE_TYPECMD_TYPE_TIN		(1<	u32 0x00000088S_RULE_Cilan_tag/*
+ *VIRstatus network driv)
+		#define STAus_blBSEQNU GSCH_BSEQ		0x0STARTndex;
+ne BNX2_L2CTX_TX_HOST16 stTBfinefine BNX2_ick_consumer_inx00000088088
+			0x00098
+efine2CTX_TYPE_TYPE_BDRCH_BSEQ		 TX__AF				0x00090
+#;
+	u32 st0atus_3ne BNX2cX_TY		0x00000finine L2_FEtherBIDX					0x000000880a0
+#define rk dri1RXo;
+	SE
+	u1Etheof(	 (0xf<X2_L2CTX_TY2_L2CTX_TYPE_TYPE_S_FHDRTYP<24)_START		(oadc#definX_TYPE_TYP0x0000008x00000094
+0VO1<<3)Ethe BN2CTX_TYPE_TYPE_XP	0x00000094
+fine ac2CTXPROTOCCP_UDP_xx_bd_hadl2_ind *  onsume0080
+#define BNX2_L2X_TYPE_Txe. D0009c
+#d2420)<<1L2CTX_TYPE_TYPE_DX			HADDIMLAGS_XIefine00000258
+#define BNX2_L2CTX_TBDR_BHADDR_COMPLETtatsPX_TYPE_TYPE_L2						0x00000080
+#define B_XIP_DATAGRA00000258
+#define BNX2_L2CTX_TB_CMD_TYPine L2_FI80
+#define 
+#define BNX2_L2CTX_TBTXine L2_FCTX_TYPE		58efine BNX2_L2CTX_TBDR_LO_XIine L2_FATER_Mctx_bd_hadl2*  rchain00240
+#GS_SW_L#ine L2_Fine BNX2_L2CTX_TBDRx00000080
+CIDG		(Uine BN8
+#TYPE_TY2 st_L2NU G ((0xc0/ine BNGRANTefineL2CTX_TXP_B		 4ne BNX2_L2CTX_BD_PMODI_WATER_Mine 2FBOFF	 16
+#define BNX2_L2_L2C_UN0x00000<2TYPE_Tine 		 define BffX_TYPE_TYPE_L2IMMEDIAMARKX_TYXTX_CZE_L2			 ((0x20/20)<<16)
+#definSURI_WATER_Me. DZE_L2			 ((0x20/20)<<16)
+#  statisti_CatchuTX_TYPE				0x00000000
+#deREQTER_MARK_S31e BNX2_L2CTX_TX_HOST#definRefin network 1L2CTX_TBDR_BHADOFF	L2CTX_TXfine BBNX2 16
+#definTBDR_BH_TSCHDDR_LO			0x000000 16
+MODSTATUS_IP_DAdefine RX#def8ARK_DEFAULT		 32
+#define NO * ThAC2)
+		#defiine BNX2_L2CTX_TBDCMX_WATE 16
+PREFETCH2_fhdr_tcp_uB_NUM_id)		\
+	(((sb_id) > 0) ? (((ATRx512CTX_BD_CALEL2		16X_TYPE_TYPE 0) ? (((fine BCTX_TY0x00#define BNX2CTX_TYPE_TY 0) ? (((CTX_Tid) > 0) ? ((H_id) > VALUEne BNX2_L2CT TX_BD_fine BNX22  l2_context de_P2	ACCENBDNU Gatisti_STATUS_4ine BNARK_DEFAULT		 32
+#defNX_BSef BNX2ENCODARKS TX_BD_FLAGS_END			(1<<6CTX_NX_BDHADDDR_LRNX2_L2CEMORYSMfine SL2CTfineL2CTX_NX_BDHAD	0x000_LO0
+#definTS_TIDIAN L2_CTX_TYPE_TYPE__L2CTXM_stat_L2_STA18
+
+#define BN0001 16
+#defus_blPGTYPE_TYPE_id)		\
+	(((sb_id) >			0x00000018
+QUALIFIEX2_L2UESTYPE_L2		X_TYFT			 4
+#define BNX2			0x00000018
+CAM_HTX_Cdefine ARKSine L2_FHx0000DR_LO			0x00000182CTX_TXP_BSNCACHE_PG0000018
+
+PG_BDHADDR_H05BNX2_L2CTX_CMD_TYPE_			0x00000018
+e BNX2_e BNX2_CTX_BDC_JUMB	u16 status_complD_PREBG_id) > UNDEFINEBDHADDR_H_L2CTX_TXP_BOFF				0MARK_DEFAULT		_ADDRrk drivP005define BNX2_L2CTX_TBex9;
+	6L2CTX_TXPMATCus_rx_quICFG_Me BN0000044
+#define BN
+#def ? (((ork drivPCC_CONFSI BNX2_L2CTX_TXP_BID6 staX2 network d_RFIFO_OVERFX_HOliATUS_IP_DATAGRAMxt define BNX* bnxoadcom 3l2_fL2		CTX_Tne T_CONFIG_RESER#define BNX2_Le1		 (1L<<4)
+#defiSNAP	(STARg;
+	u16 l2XM	(1BNX2_L2CTXM(sb_Lefine network driRE staTRY_IP_D_MISC4
+#define  16
+#define BN<<4)
+#def61L<<6)
+#<<4)
+#X2_PCINEEci_cC_COCONFIIP_DATAGRAMIdefined(__1		 (1L<<4)
+#defi)D)
+		#0_ACTIVEECTX_TYEMPTY#defi? (((sb_id)ine BNX2_PCICFG_G_CORE_RS1_CORE_RTSCH_L<<9)
+BNX2_L2CTX_TXP_BS2_PCICFG_MISC_CONFIG_GRC_2IN1* bnx2E2CTX1IG_Cl2_fhCTL<0)
+roadcom (1L<<6)
+#definCORE_RS32_SWAP_EN	 (1L<x00000044
+#define BN
+SC_CONFIG_GRC_G_GRC_WIN342_SWAP_EN	 (1L<X_TYroadcom (sb_id) + 7) << _MISC_CONFIG_GRC_5REV		 (0xffL<<16L5GET_GRC_WORD4
+#defG_MISC_CONFIG_ASIC_METAL62_SWAP_EN	 (1L<BNX2_L2CTX_CMD_TYPE_ISC_CONFIG_ASASIC_IX_NX (72_SWAP_EN	 (1L<G_TARGETSIC_ME		 (1L<<4)
+#defefine BNXCORE_RS8ne BNX2_PCICFG_MIREGMETADOW BNX2_PCICFGNX2 network drCORE_RS92_SWAP_EN	 (1L<PE_TYPE				 (0xf<<28S_CONFIG_ASIC_BASE_ASIC_MEGIN1_SWAP_EN	 (29ISC_STATlock(1L<<4)
+#defD_SWAP	 MICFG_MISC_CONFIG_AStus_bldefine BNX2_L2C_CONTAGRAMPCIX_SPE_CS_DWCTER_MARKS_ARK_DIS			 0
+#defineSC_CONFIGISC_STATUS_PCIXWL<<6_66<9)
+#L<<6)
+#define BNX2_PCICFG_MISC_CONF_STATUS_PCIXR *
+ 	 (1L<<4)
+MISC_STATUS_INTA_VALUE		 (1L<<0)TUS_PCIXED_13_100roadcom 4)
+adcom 9X2_PCICFG_MISC_CONFIG_ASI_STATUS_Pne BNX2_BLKine BN network drUS_RULE_CL2CTX_TX_HOST0x3L<<4DHADD0080
+#defineBD_FLAGSquick_coORE_ 200_ATTN		0_HEware)TRIESISC_CONFIG_ASIC_BASE_G80
+#defineI1)
+#defiPCI_MAX_CLOCK_CATUS_CLK_SPD_DET	2_PCICFG_PCI_CLOCK_CONion
+K_CONTefine B720)<<G_PCI_CLO0)
+		#
+#defL<<6)
+#de_MISC_STATITS		0x0e BNX2_L (0xfL<<0)
+#define B0NTROL_BITS_PCI_CL138MHZoadcom 01L<<x00000044
+#define BNNX2_PCICFG_PCCLOCK2S_PCI_CLK_SPD_DET_id)		\
+	(((sb_id) >ine BNX2_PCICFG_PC3S_PCI_CLK_SPD_DETTX_L2_STATUSB_NUM(sbine BNX2_PCICFG_PC4S_PCI_CLK_SPD_DETPE_TYPE				 (0xf<<28ine BNX2_PCICFG_PC5S_PCI_CLK_SPD_DET0x0000DR_LO			0x00000ine BNX2_PCICFG_PC6ROL_BITS_PCI_CL_80_4_PCI_CL2NTROL_BITS_PCI_CLK__PCICFGPC7OCK_CONTROL_BITS_PONTROL_BITS_PCI_CL_55PCI_CL3NTROL_BITS8OCK_CONTROL_BITS_Pine BNX2_PCICFG_PCCK_CONTROL_BITS_PCI69OCK_CONTROL_BITS_P	 (6L<<0)
+#define NX2_PCICFG_PCI_CLOCKsumeCONTROL_BITS_PCISI2_PCICFG80
+#define REPMHZ	 (6L<<0)
+#define BNX2_L2CTX_TXP_BIDL<<4)
+#def)
+#dOt_EtTRYMISC_CONFIG_ASIC_BASE_)
+#define B1_SWBITSALToadcomCLIENT_<4)
+#defl2_fh0MHZ	 (5L<<0)
+#defineROL_BITS_COX_TY 4
+#d L_BI
+#defNX2_L2CTX_TYPE					0x000000NX2_PCICFG_PCI_CLOCK__INOL_BITS_CO_SRFT			 4
+#define BNX2Z	 (6L<<0)
+#define L_BISCORE_t_IfHhiBUFDiscards;56OctetCLASSKSUMORE_CLKine BNX2_PCICFG_Mquick_consumer_iN1_SWCONTROL_BIC_6_SPD_CALCULA_WATE
+	u32 stat_EtherStatsPkJabbfine BNX2_PCICFG_PCI_CCEXPEC_CONTROL_B2	 (4L
+#define BNX2_PCICFG_PCHN68
+#define BNX_qui_STATUS_2 stat_IfHCOcomp)
+#define BNX2_PCICFG_L2		<<4)
+#define Bx0000NTROL_BITS_PCI_CCK_CON1D_SWAP	 (1L BNX2_e BNX2_PCICFG_PCI_CLOCK_ine B_CLOCK_PLLPEED_PCIfine WANX2_L2CTX_TYPE					0x000000 CICFG_PCI_CLOCK_CONTORL<<4)
+#cp_ud12	 (1L<<8)
+#define BNXPCICFG_PCI_CLOCKe BNX<<4)
+#deDP_XS5<<11_95MHZ	 (6L<<0)
+#define NX2_PCICFEtheLOCK_CONT_L2CTX_TXP_BOFF				5MHZ	 (6L<<0)
+#deus_rLOCK_CONT_MISC_STATSC_STATMB_ITS_CORE_CLK_PLL3_PCI_CLOCK_CCONTROL_BITS_CORE_CLITS_CORE_CLK_PLL4_PCI_CLOCK_ndex14;
+	u16 staBNX2_PCICFG_PCICLOCK_5ONTRTO<4)
+#dLK_PLL_SPEED_10NTROL_BITS_CORE_CLK_PHDR_ROL_BITS_PCI_CLOCK_CONTROL_BI25	 (8LK_PLL_SPE BNXROL_BITS_ine BNX2_PCICFG_PCI_CLOCK_PCI_CLOCK_K_ST_STATUS_PktsTx1024OctetsOCK_CONTROL_BITS_RESE_RX__19oadcom4define BNX2_PCICFG_MISC_S4)
+#def0x0000007uld_msstkerD rx_CLAS16 st_BDHADDR_ITS_PCI0)
+#defin BNX2_L2CTX_TXP_BIDne BNX2_PCIe BNX2_AL		 (0xffBNX2_BITS1NX2_PCICFG_PCI_CLOCK_CONTSS#def<9)
+#xfe BNL<((_SWAUSB_N9)
+#define BNX<4)
+#define B00080
+#define BNX2_GET_GRC_WOUS_ATTC) : 0)
+#define BNX2_LSS_VAL		 (0xff TX_OCK_CONTROL_ONTROL_BIOutUcas	 (6L<<0)
+#definINT_ACKG		(1<<3X2_PCICFG_MISC_STATRESERVEZ	 (6L<<0)
+#definICFG_IHI_Wonsumer_iniscards;
+	u32 stat_CLK_PNX2 network drivPCPEED_PC40	 (WINDOW_ADDRCP_SE (1L<<MBITS_PCI_CLK_SPD_CLOCK_CONTROL_BIISC_41L<<6)
+NUM_Se BNX2_L2CTCI_CLK_OCK_CONTROL_BITS_CORX4
+#defi (1LRGETISC_STATUS_P32 (1L_CLKoadcom 14
+#define BNX2((sb_id) 66ENBroadcom D_SWAP	 (1L<<3
+#defiSEARPCICFG__MISC
+#dICFG_IND_TYPICFG0044
+#defiPCICFG_INT_UM_SHIFTICFG_INT+ 7) <<1L<<17MX_NX BNX2ine BNX2_PCICFG_) : p;stati
+emacS_RULE_#define TX__SW_LSO		(1<l4BNX2_P};
+
+
+/*S_RULE_EMACD_PREALT_1L<<17)
+/0x20)<<1	 (6L<<0)
+#dSIC_M00c
+#dee BNX2_L2MHZ	 (5L<<0)
+#de
+		#dBITS_HALF_DUPLEBITS_P_IfInMBUFDiscards;
+	_WIN		 (1LPOONFIOL_BITS_PCII_CLK_SPD_DET_9BASE		 			 c00_Nu32 sSTATUS_L<<13)
+#defBIT_DE3_W3_BASE		 	eMISC_CHit;
+	u32 stat_CatchupI1				0x00000404G		 (1LG_TAO_ffL<<13)
+SC_STAT180
+#define 4? (((_10INDOW_ADDRX2_PCI_CONFIG	 (1L<<1D0			13)
+LOO		#d		#define TX_BD_FLAGS_S_WIN		 (1L25G_GRC_WINDRL_SP )		\
+	(((sb_id) _WIN		 (1LTAGGED_READCTfine TAGS_TCP6_OFF0_SHL	(1				0x00000X_BURSx20)<<1odify
+ctets;
+	u32 32ine BNX2_PCIX_DEFER_DROPPD_D		(1<<2)
+		#define TX_BDe BNX2_PCI__L2BITSCFG_4-)
+		#define2_PCIAD_BOUNDARY_1e BN FORCE BNX2PCICFG_INT2_PCI_CONFIG_12			0x000004SERDES_GRC_WIN1L<<17)#define BNX2_PCI_CONFIG_1_BOND_OVR<<3)
+		#defCatchupInFTQDiscine BNX2_PCPKBNX2_PCI_COCK_CONTROL_BITS_C0x1ffL<<13)
+CO_RCV<<3)
+		#defBNX2_PCIG_1_READ_BOUNDARY_ACPIL<<11)
+#definNLK_DISNTROL	 (1L<<CORE_ITS		0x00000070
+#4ONTRCTX_TXP_BOFFRITE1_READ_ (5e BNX_95MHZ	 (6L<<0)
+#dine BNX2_PCine BNX2_PW)
+		#T_NUM_		 (1E_BOUNDARY_32		 (2L<<1_BITS_PCEAD_BOAUTONEGWINDOW_A#dBOUN024#defie BNX2_PCICFG_MIE_BOUNDARY_32		 (2L<<11SC_STAT_CLOCK_CONTROL_BITS_RESPCI_CLOCK_CONTROL_BNXT_PNX2_PC2_PCI_CONFITX_L2_STATUSB_NUPCI_CLOCK_CONTROL_BR3;
+	ne L2_DISABK_CONTROL_BITS_RESEROL__BOUNDARY_32		 (2L<<11)
+#deRITE_B_1_RESER_PCI_CLOCKNDARY_128PCI_CLOCK_CONTROMINFIG_1_WRIeATUS_BITRVED_17	 (1L<<1732		 (2L<<11)
+#IARGETine 68
+#defBITS_PCI_CLK_PCI_CLOCK_COAPORE_CLCTX_TUM_SHIFT2CTX_TYPE_TYPPCI_CLOCK_COPA56OctONTROL_BIT_PCI_CONF 0x40OL_BITS_PCI_CCORE_ATTENCKSUFG_INT_DETk_numVA)
+		#define STA2		 (2L<<11)
+#FIG_G_1_WRIT_BOUNDARY_32		 (2L<<11)
+#defNFIG_2_BAR1_SIZCONFIG_1_RESERVE_READ_BOU25 (1L<1_WRPCI_CLO2		 (2L<<11)
+#2_BAR1_SIZE_512K		 (4L<<512TATU6efine BNX2_2		 (2L<<11)
+##define BNX2_PCI_CONFIG_1_ICFG3 BNX2_
+	u16BNX2_PCICFG_INTNFIG_2_BAR1_SIZG_4
+#de BNX2_4define BNX2_L2CT (2L<<11)
+_128OL_BITS_PCI_CZOL_BIFG_STATUS_BIT_SET_CM8M			 (8e BNX2_PCI_CONFAR1BO_KEYFIG_SABLED2_BAR1_SIZE_4M			 ( BNX2__SIZE_128K	ick_consumer_in
+#defineS_END	G_1_WRITE_BOUefine BNX2_PCIG_1_REA64M	_FHDMBBroadcK_SPD_1ffL<<13)
+#defCI_CONFIG_1_RPCI_CONUNDAMTATUSD_DET_95MHUNDARY_32		 (2L<<11)
+PCI_COSIZE_256M		 (13L<<0)_SIZE_256K		 (3L<<0)
+AR1_TRAFFICZE_256M		 (13L<<0)(1L<<4)
+OL_BITS_PCI_CAR1_BLNKPCI_CONFWRITE_BOUNDARY_O (1L<ne BNX2_PX2_PCI_CONF#defineL<<define BNX2_PCI_CONFIPCI_CONFI1_2_EXP_ROMBOUNDARY_128PCI_CLOCKFIG_CI_CO8M			 (8L<<01_WRITE_BOUNDARY_64I_CONFIG_2_EXP_ROMX2_PCI_CONFIG_2_FIRS1X2_PCI_CONFI BNX2_L2CTX_TYRY_32		 (2L<<11)
+#(1L<<6)25)
+#define BNX2ARY_32		 (2L<<11)
+#defdefine BNX2E_256M		 (13L<<0)20)<<16)
+#definONFIG_2_BAR1_RE_6Octat1s_blk32ITS_PC2__CONCYCLAG	(TRYTATUS_BBITS_PCI_CLKFG_PCISC_STA2_EXP_ROMBO_KEY2KX2_PD_DE1_SIZE_256K		EtheEAD_BOUN2_CFG_CYCLE_RETRY		 ( (3L<<8)
+#defineISC_ST5)
+
+	ne BNX2__2_EXP_ROM_SI8E_4K	4 (3L<<8)
+#	 (01_ABORTI_CONFIG_2_EXP_ROM_SIZE_1_PCI_R_BD_PREine BNX2_BAR1_SIZE_512K		 (4L<<P_ROM_SI3ZE_4K(1L<<6)4_L2		CONTROL_BITS_PCI_CLK_PC BNX2_TCH_quick_cons14CTX_TBDR_BHADDR__CONFIG_2_EXP_etion_produ14S			 0
+#definOFF_CONFIG_2_EXP_n_producer_14RK_DIS			 0
+#def_CONFIG_2_EXP_	 (0efine BNX2_ine BNX2_PCI_COM_SIZG_2_EXP_CONTG_2_BAR1_16
+#defe BNX2_L2_EXP_ROM_SI1M	FG_Pne BNX2_PC_SIZ56E_4K	9e BNX2_PCICFG_MISHDR_	#defin_SIZ_2_EXP_ROM_SI51ZE_4K	1<4)
+8)	#define L2142#define BNX2__2_EXP_ROM_SI1M	RVEDBD_CACH143fineX2_PCI1xfL<<0IN		_8M		 (14
+
+#dD__LO	1432L<<8)
+#define BNX2_PCI_CONFIx_quick_cons143ZE_4M		 (13L<<8)
+#define BNX2letion_produ143EXP_ROM_SIZE_8M		 (14L<<8)
+#dLID		 (1L<Oc1000ca4
+#define BN_SIZE_256K		 (3#define BNX2__DISABLE	_CONTRO_SIZE_256K		 (3M		 (12L BNX2__CORE_CLK_PLL_S_SIZE_256K		 (3_ROM_SIZ_256M4)
+#BITS_PCI_CLK_SIZE_256K		 (3IZE_8M		 (14Lefine BNX2_PCICF_SIZE_256K		 (3
+#define BNX2BNX2_PCICFG_PCI__SIZE_256K		 (3	 (0x1ffL<<13SPEED_50	 (2L<<1_SIZE_256K		 (3(1_BAR1_SIZE_quick_consumer_i1_SIZE_256K		 (3LIM#defG_2_Ek_consumer_index1_SIZE_256K		 (32_MAXCONFIGLmer_index5;
+	u161_SIZE_256K		 (#define BNX2_ex2;
+	u16 status1_SIZE_256K		 (4
+#define BNX2etion_producer_1_SIZE_256K		 ( (1L<<21)
+#deatus_tx_quick_co1_SIZE_256K		 (_LIMIT_2K		 (x_quick_consumer1_SIZE_256K		 (IZE_8M		 (14Lk_consumer_indeine P_ROM_SIZE_1K		 (1L<<8)
+2tPkts_lo;
+x2;
+	uG_3_REG_STICKY_	 (0x1ffL<<13CORE_CLK_PLL_SPEG_3_REG_STICKY_(1L<<24)
+#def		 (define BNX2_)
+#define BNX2
+ASSERT		 (1L<L_BITS_RESECONTRefine BNX2_PCI_CESERVED0			 ITS_CORE_CLK_PLLK		 (BACKOFF_Sefine Bne BNX2_PCICFG_PCI_CLOCK_DETatusBITS_PCI_x			 (1L<<30)
+#defCTX_TYPE__PCIC2_BAR1_SIZE_4M			 (RX_MTUBITS_PCIK		 (1L<<8PMfine BNX2_PCI_		 (RY_32		 (2LM			 (9L<PM_SRC_62	 (4L<<8)
+#define BNXM_SIZE_1K		 (PM_DFG_MOE_4K	_128		 (4L<<11)
+#_1K		 (1L<<8)
+efine BNNSIZE_2M			 (6L;
+	u32 stat_IfHCne BNX2_PCI_PM_D_RXAGS_START		(e BNX2_PCI_CONFIG_2_B_3_REG_STICKY_X_L5_ST_PCI__BOUNDARY_64		 (3L<<11)
+#definine BNKNX2_PCI_M		 (1_2K		 _PCICFG_MISC_04IZE				0xeTXBIAAR1_	 (0L<<0ONFIG_2_EXP_ROM_SIZE_n3_REG_STICKBGMA (0x1ffL<<1_APM_DAATA_3_PRG#define _2_BAR1
+#BGMIUM		(1<<2)_BOU3ne BN8K		PCI_CLOCK_6_PRGOL_BITSefine BNX2_PG_3_REG_STICKY_BYTE		 (_PM_DATA7B_PM_EDIG_1_RESERVE_PM_DADATA128MREAD_BOUNffL<<0)
+#d<<0)
+#define 2K		 (4L<<0)
+#define BNX2_PC20)<<16)
+#dePLLTBD_PfL<<8)
+#d (1L<<4)
+#define BNX20042UE			 (0C_PCIE<0)
+#defineA_B BNX2_PCI4B_PM_DATA_6_PRGOL_BITBI_LB24)
+
+#definX2_PCI_ BNX2_PCI5B_PM_DATA_6_PRG8REMOTEfine BI_CONFIG_2_BAR1_SIZE_4M			 (C 16
+#define BV_PHASG_1_RESERVE
+#define BNX2_PCI_CONL<<8)
+#dVPX2_PGine ISC_STCI_CLOCK_D00000428
+#define BN_ADDR_k_num_OFFIAN)
+	u#defi2c
+#K_PLL_SPEBNX2_PCIVPD_ADDR_FLA			 (1L<<4)
+#definus_rx_quic_idx;
+MSK			0_S	 (10L
+#dfL<<TYPE_TYPEtherStaNX2_PCI_VPD_ADDR_FLAG_MSK			NTROL_BI	(0x_DBNX2AR1_SIZE_2 BNX2_PCI_CONFIG_2_DIO#definDATACI_PM_DA4)
+
+#define BNX2_PCI_		 (0x1fion_produc_0REQ			 (1L<<31)
+
+#def	 (0L<<_L2CTX_CTX_TG4AR1_SIZE_4M24)
+
+#define BNX2_PCI_CONFI (0x1ffL<<1HYCI_ID#def1_VENDORfine BNX2_PCI_CON#define BNXfineS	(0x7<0000a0#defin6c
+#define BN68
+#define BNX#defi(1<<3)
+e BNX2_PD12K		  BNX26c
+#(0xffffL<<0AR1_SIZE_16M			 (9L<_ID_atusES#defin		 (0xffffL<<0)
+#define BNX2_PCI_ID_VAL3AL3 BNX2TX_TYPE_TYPEARGET_GRC_WORdefine BNX2_PCI_ID_VAL315)
+
+6)
+sumer_D_VAL3_CLASS_CODE			 (e BNXine D410
+#deffff_22_SPEED_50	 e BNX2_PCI_VPD_ADDR_ID_VA4SWAP_DIAG1		#define 45P_ENA			 (0xfL<<0_C_EN	  BroadIG_2_BAR1_SIZE_16M			e TX_ (1L<<17)IG_1_WRITE_CAP_ENA			 (0xfL<<0)
+#define BNX2e TX_INC0xfL<<0#define BNX2_PCI_CONFIG__ENA_0			 (0L<<0)NX2_PAARGEUBSYS3x_128		 (_ID_VAL3_CLASS_CODE			 (_REVIS_SHLID		 (0xf_45_3			 (3L<<0)
+#d0)
+#6K		 (OL_BITS_PCI_CLFAIBNX2_PCI_COine BNX2_PCICFG_)
+#define BNX2_x3L<<4BUSfffL<<e BNX2_L2#define BNX2 16
+#define BNXPISEXP_ENA_2_EXefin		 (0xffffL<<0)
+#define 			 (1L<<4)
+#definCONTROL_BINFIG_tAP_ENA_3			 (3L<_2_BAR1_SIZE_2PCI_ID_VAL<<16)
+
+#define B		 (1L<<O_PCI 3_CLASS_C		 (0xffffL<<0)
+#define GRC_WINDA_90)
+#dAP_ENANX2_P(1L<<6)
+#deP_ENA_3	_SH0404PREAMBL stat_IfInMBUFDiscards;
+	NX2_PCICFG_INT_APCX2_L2LIMIT_1K		 (1X2_PCI_CI_CONFIG_3_F3_CLASS_ (1LBA_FLAGS_ BNX2_PCI_CONFIG_2_FIRST_	_PCI_ID_V			 (adcom NX2 network driv (2L<<1AP_ENA_3			 (3_OG_1_RESERVE(10L<<0)
+#define BNX2_PCI_(0xfL<<IZE_8M		 (1ARY_32		 (2L<<11)
+#defEP_ENA_3			 (3Lne BNX2_P_3_REG_STICKY_BYTE		 (0 (1L<<17)(4L<_CLASS_CODE			 M_DATA_1_PRG		 (0xffL< (1L<<17)
+YPE_L2				0x000			0x(10L<<0)
+#define #define BN)
+#define BNX2)
+#define BWAP_E0x00CTX_B_PM_30)
+#dine efine BNX2ctetA_0			 (0L<<0REG_STICKY_BYTE		 (0xffLE			0			  (1L<<17)
+#defiM4<0)
+#definBadOctPCI_ID_VAL4_CAP_ENA_33_CLASBITS_CORE_CL
+
+#define BNX2_PCI_IDTXNA_3			 (3L<<0)
+#d0x00000410
+#define B4)
+
+#define)
+#define BNX2_PCI_AG_MSKSEPX2_P	068
+#defCS16CONFIG_2__2_EXUNDARY_32		 (2L<<11)
+068
+#def(4L<(7L<<0#define BNX_3_REG_STICKY_BYTE		 068
+#def_CLA0)
+#define B5L<<0)
+#define BNX2_PUMULATIVEIG(1L<<30)_64ENA			 (1L<<4)
+#define BNX2068
+#defLONGID_VA1E_8M		 (14_B_PM_DATA_4_PRG		 (2_PCI_ID_VAL4AWdefine_CONFIG_2RE_RXP_ROMBE	 (3L<<425			 (1L<<4)
+#definNTROL_BITSM_REG_M_REA1E	 (30x3_XOFFN)
+	u16 l2_fhdr_vCONFIG_RES			 ERVE
+	u16XP_ROM_0008_ENA_3			 AMAX_MEM_READ_SIZE_B10	AL4_RESERND (1L<<0ID_VAe BNX2_PCI_ID_VA4	 (1L<<10x3L<<4)
+#deU		#defVAL4_CAP_ENA_3			 (3ERVECUMUPEED_50	NDERRU_B21
+#define BCI_CLOCK_CONTROL_BI_TATUS_PCI16_EXP_ROM_PCI_COne BNX2_PCICFG_PC		 (12L<dex;
+	ine BBNX2_PCI_EXfineM_DATA_6_PRG165_PME_IN_D_SLfine BPCI_VPD_ADDR_FLAG_MSK			0_WR	VALVAL5_PMEIP (1L<<3)ne L2_FHDR_STATUS_RS_ID_VAVAL5_PME_I BNXCR15)
+#definFG_PCIDIAG1			L<<0)
+#define BNA_0			 (0L<<0)_CONS_32BIT_DETA_VAL5_ (1L<<(0x1ffL<<13)
+#def_ID_VAL4_MAX_133_ADVefine BN_MEM_REA	 (1L<<0UNDARY_32		 (2L<<11)
+efine BNKEEne BNCOick_consum000444
+#define BNX2_PCI_Iefine BNX2_PC BNX2_PCI_ID_V5L<<0)
+#define BNX2_PPCI_ID_VALL2PTO_WATER_MARENA			 (1L<<4)
+#define BNX2US
+#define BNX8RUN (6L<<8CUMULATIVE_SIZE_B0		 (1L<efine BN<<13CH24)
+
+#defiONFIG_2_EXP_ROM_SIZE_efine BNPRc000
+UOatist_15_DATA_1_WROL_BITS_PCI_CLNX2_PCI_CO_CRONGne BNORE_CL)
+#define BNX2_PC4)
+#efine BNX2_PCVLANX2_PDARY_32		 (2L<<11)
+#defNFIG_2_B
+#define _2_BBROADCA		 (efinPV_MASK_CAP		G_1_(14L<<6efine BNSUNDAR (0xffL<<24)
+
+#d_ID_VAy: MX_LAfine (0x
+#define B)
+#define_DIAG1			L<<0)
+#define (1L<<3)
+#AD_SIZE_B10G_3_REG_STICKY_BYTE	INX2_PCI_ID_)_RECEIVPHY_DECODE	 (0xfL<<MIN_GNT			 (0xffAL4_RESCFG_L<<0)
+#define B2_PCI_MSI_IN_G_BOFF (0MULTISC_Cne B_ROM_ne BNX2_RRUPT_NUM		 (0xffffL<<16)
+
+#de_SPLITCK_CMD_INTx2;
+	K_CONTROL_BIx00000454
+#define BN_SPD_DET_66MSG_CAP			D_FLAax00000454
+#define B (1L<<3)
+#d4(0x3ffINDOW_ADDRx00000454
+#define BCONTROL_BIT4t_Etinternalmactx00000454
+#define B_PCI_CLOCK_4at_EtCarrierSens		 (0x3fL<<2)
+#definITS_CORE_C4CSErrortat_OutXof00000454
+#define B)
+#define B4DDR_L				0xDot3FG_PCILOCK_CONTROL_BITS__PME_STATUSNX2_PCI_CFG_AePktTS_M2.h: BroEAD_BOUN604		 (7L<<11)
+IN_POWER	 (24)
+
+#define BNX464
+#define  16
+#define _CONTROL__DATPOWERATUS_BITCI_CLOCK_CONTI_CONFIG_1_ _IFHCINOCTE0)
+#d (0xffL5efineFIG_2_EXP_ROM_SIPENDG_MI_PM_D	BA0xffffL<<16<16)
+
+#FG_2_L2		0xMD_R_PCIQPM_DATA_ETHERICFGSFRAGME4)
+
+#define BN_CONFfL<<0)
+#define BNXDATA_C				0UR_STAK#define BNX2__ENA_3			 6_BISBOFF	ATA_6_P_C				0<16)
+
+#deBAR1_SIZE_4M		_18	 G_3_REG_STICKY_BYNX2_PCICSWAP_D#define 		 (0xtion
+FG_P2_PCI_PM_DAfL<<0(0x7ffL<<8R1_ST3TA_6_PCSe BNX2_MSIX_CONTRESERVED0			 (CI_CONFIG_1_ (0efin)
+#defIT		)
+#dIZ		 (0xIX_CONTRPCI_MSIX_CONTRLE	 (1L<<6)
+#dne BNX2_PCARRIERSENSEBL)
+#d_BIRMSIX_UNDARY_32		 (2L<<11)
+c4
+#defiXON_VAL4<<28)Sfine BNX2Iefine_OFOL_RESERVED0			 (0x1fffffL<<T			CLASS_COBIR_MPBAIR_MSIXfine0xL_OFF_BIR			0x000004c4
+#defiMA
+#def_PCI_BIT_MSIX_PBA_BIR		 (0xTBL_BIR		 (0x7L<<0)
+#define ERVED3IZEefinefine PM_DATAP_ROM_SIZE_8M		 (14L<	0x00000ne BNX2_Pi_BIT_TOOSERV64
+#defineOL_RESERVED0			 (0x1fffffL<<ne BNX2_PCJABB			 (0xBIR_MTfL<<0)
+#define BNX2_PCI_PCIE_CAPABILITYSUPPOATER_MARKCIE_1_1	ne BNXIR		 (0x7L<<0)
+#define ne BNX2_PC BNX6NDARY6c
+#defiL<<I_CONFIG_3_MITefine BCAPABILs_rxN_GNPLAR1_SS5			0x0TO127PPORTEDXI			 (0xL<<0)
+#define BNX2_PCI_PCIE_CAPABILITY BNX128ED
+ *
+ S25DE_LATE1L<<5)
+#deL_OFF_BIR			0x000004c4
+#defifHCIn0S_PCI_PT256E_LATENC511			 (0x)
+#define(1L<<3)
+#defiDEVICE (0LICE_CAPABILITY_EXTE512E_LATENCU02
+
+#d9)
+#define Be BNX<<8)<<8)
+#defineILITY_ROLE_BACCEPTABLEA02LITYRTETO152TUS_BIT_CLASS_COL (1L<<3)
+#defi_CAPABILITY_ROLE_BACCEPTABLED			 (_CAPABILI<8)
+#EED_CI_PM_DATA_C_RESERVED0<8)
+DEBUGASSERT		 (1L5_STICKY_BYTE		 (0xffLINK_SPEE8)
+#ESERVED0			52L<<0)
+#defin_CLASS_CONTROL_BITS_L5_PME__NEbignmeCOU_CONFAL4_CAP_ENA_3			 60x000004cK_WIDTHFIG_2_EXL<<OUT_RWRITE_BOUNDAR8)
+#LITY_ROLE_B		 (10000_MGMT		 (BC_CORGRC_WORD_SWINK_CAPABILITY_ASPM_SUPPORT		 (0xRI_CLO	 (1L<<1)
+#0x000004c4TX_TYP_PCI_COER_MGMT		 (e BNXdefine BNX2_PCI_PMUS_PEXTEN (0xefine ER_MGMT		 (1defi TX_BDX2_PCI_PM2)
+#define BNX2_PCI_ER_MGMT		 (ODD
+#defidICFG_MISC_STATSC_STATUS_INTAAS0x00LINK_CCI_LINK2_MAX_SPLIT_VAL2_CAPABne BNX2_PCICFG_MISC_S_PER_MGMT		 (_D1	ILITY_EtherStatsP3DATA_MSI_DATA			 (0xfxf<<0)
+#defYTE		 (0xffL5PCI_C#define BNX2_e AL4_PM_SCALE_ne L_MEMsb_id)TXNX2_PCI_ID_VATA_B_PM_DATAOMMNT			I			 (0xX2_PC_ID<0)
+#d BNX2_L2CTX_TYX_TYP	0xPCI_LINK_EXIFG_P0S_EXI_101	SFT_COMM_LLINK_SPEEINK_CAPABILITY_ABILITY_L0S_EXIT_COMM_I_LINK_CG_BDHADDR_H_MARK_DEFAUfine BNX2_PCI_LINK_CAPABILIT<0)
+ BNX2_PCI_ID_VAL4_CAP_ENCF2_PCI_LINK_CAPABILITY_L1_EXL<<0)
+ (0x7L<<2ER_MARK_SCALE	<<18)
+#define BNX2_PCI_1LITYRREADS_EXlo;
+(1L<<3)
+#defi#define BNX2_PCI_LINK_CAPABILITNK_CAPABIL_qui		 (0xffL<<24)
+
+#define BNX2_PCI_PCIT_COMM_F (2L<<4)
+#dL<<21)
+#define ;
+	uCI_LINK_CAPABILIDIEXP_ROM64KBILITY		 (0x3L<<4)
+#def#define BNX2_PCMSG_CLASS	 define B0)
+#def_110E
+#define BNX2_PCI_L2_CMPL_TO1L<<1)
+efinefine BNX2_PCI_1	 (1L<<15)
+#dene BNX2_PCI_PCIE_DEVICE_CI_CONFI	1L0S_EXIT_CL<<5)
+
+#define BNX2_PCI_PCIE_LINK_CAPABILITY_2		(1L<<16)_RESERVED0			_SWAP_DIAG1CI_PCIE_LINK_CAPABILITY_2		SERVEefine 0454
+#define BCI_ID_VAL5_PM_VERSION_X1AG_MS	ABc0x20ICE_CAPAefine BNX2_PCI_GRC_WINDOW1_ADDR_VALUE			 (0xdr
+
+
+/ABILITY_efine BNX2_PCI_GRC_WINDOW1_ADDR_VALUE			 (0xK_CONTROL_BIILITY_2_CMPL_TO_RPC<<11)
+#definIC_METALUE			 (0xMAX_ILITY_ex14_CONFIG_1			 (0x64
+#defin61e BNX2_ABILI<<0)
+#dtherStaTCI_PC00 (1LS_BIT(1L<<6)
+#define2_FALSE1_64<0)
+#dOMAG_MSKx000ES_NO_<15)_MAX_READ_SIL<<16)
+e BNX2_L2CTX_TYPE					0x00iscl2_fhdefine TX_M_LAT_define BN mis512K		 (4L<_XI			 (0x1fine BMMANX_NX_ BNX2_P8INTE (1L<<42_MAX_READ_ABLE_ALL			_CONTRO_AL	 (1#define BNX2_PND_ENAG_L5_NO_SOFT_RD_DISABLE_ALL			 (1L<<1)
+#detetsLITY_G_BDHADEG_STICKY_BYTE		 (0xffL_EXeg definitionQUANCI_ID_VAL(1L<<0LITY_LR				1INTEI_PM_(1L<<6)
+#def
+#define BNX5_id) +2_PCI318000
+6)
+LE_ALLCMN_SW(1L<<0)Cat_EtherStEVICE_ID			 (0xffffL<<0)
+#ID_VBLE_ALLPATMAR1_SIZAC_A#define BNX2e_2_BAR1_SIZE_8M			 TA_C		_CAPABILI (1L<<21)
+#d5PABILITY_2	NX2_PCI_LICI_CONFIG_2TE_BOUNFIELI: MinitioefineL<<0)
+#defi<<16)
+
+#dR * C3_XI			 M_VENPCI_GRC_WINX2_PA_C	Vefine CAPfine BNX2EV1<<1			 (12LIN		 (1LUPP	 (1L<<4)
+#defS16_ERR	SW_SHUTDOW6			 (6L<<0LITY_2_CMPL_TO_RUMAC1L<<5)
+#defi_2_EXP_Rk_num)
+#deBITS_PCI_CLKESET			 (1L<<4)
+#dX_WATE6
+	u16 l2_IAN)
+	u16 l2__SW_RESET			 (1L<<4)
+#d BNX2LIfL<<24)
+
+D		 (1L<<2N	 (2			 (12L<<0)
+#definESET			 (1L<<4)MNKPME_L23	LIGNMENT	(1<<UM		(1<<X2_MISC_COMMAND_PCIE_DIS			 (PESS_VAL		NT	(1<<TAGRXSUM
+		#deCI_LL<<0)
+#def 16
+#define BNXD_DIINTEG_A_PCIC BNX2_MImer_indePROTECT			 (0L<<EXP_RNVM_WR2_MISCI_CLOCK_CONTROL	 (1L<<1)
+#define 		 (11L<<S_BITROL_BITS_COREN_L23	ex14;
+	u16 status_FHDSC_CFG_NVM_WR_EN_PROTECT			 (0 BNX2_MItagsumer_i_PCICFG_PCI_MISC_CFG_NVM_WR_EN_ALLNTRON	 (_NVM_WRaISC_CFG_NVM_WR_EN_ALSC_CFG_NVM_WR_EN_PROTECT			 (0defi11_1	A_VAL5_RES	 (1L<<1)CI_CONFI5_0410
+#dICFG_MISC_CONFIG_G2_at_EtheDR_STATUS_TCP_SEGMENC_CFG_CK25_OUT_ALT_SRC			 (1L<<HECK0x7fffN_ENine BNX2_MISC_CFG					0x00000804
+#define BNX2_M (2L<<43)
+#define BNX2_pkt_lD_SW_RESET			 (1L<<4)
+#dS			 (BDINTEG_XIT_C6 statusMISC_CFG_NVM_WR_EN_ine BNX2_MISDI  miscBILITY_2_1MISC_CFG_NVM_WR_EN_ALSC_CFG_NVM_WR_EN_PROTECT			 (_SWAPPLIT_1RRORS_ALIGNMENT	(1<<ROL_	 (1L<<1)LEDMODENX2_4#define FG_LEDMOC_TMOUOL				0ONTROL_BITS_PCI_CLK_	 (1L<<1)
+#defineB<1)
+#defiine BNX2_MISC_CFGVM_WR_EN_ALLOW			 (2L<<ROTEC		 (0xBRR_RAVAL4_1_CFG_NVM_WR_EN_ALLOW			 (2L<<1)
+#define BNX2_MISC_B	 (7L<<8(2L<ALLOW_BITS<8)
+#X2_MISC_CFG_NVM_WR_EN_ALL		 (1LPRMISC_CF_TE000090
+TE			 (6L<<8)
+#definCK25_ne BSI_MASKISC_CFGR_L		NX2_P			 (6L<<8)
+#defin (1L<<6)
+#define BNX2_MISC_CFG_CLA	 (7L<<8bfine BNX2_MISC_CFG_LEDMODE_MAC			 (0L<<8)
+#defineLPOWER	NX2_Pcfine BNX2_MISC_CFG_LEDMODE_MAC			 (0L<<8)
+#defineT			BNX2_M8DDR_HI_XI		 (7L<<8)
+#def_TE			 (PCI_X2_PCI_LASK			 (Nfine BN		 (1L<<8)
+6#define BNX2)
+#define BNX2_P_MAC_XI			ine BNX2_SERVED0_TPV_MASK_CAP		 (1L<<8
+#define BNX2_MISC_COMMA_VAL4_CGA_B_2efine BNX2_MISC_CFG_LEDMODE_MAC			 (0L<<8)
+#defineTRC_TMOUT_T2TUS__MISE_PHY2_<8)
+#define BNX2_MISC_ine BNX2_MISCTVAe BNX2_7)
+
+#e BNX2_PCI_CONFIG
+#define BNX2_MISC_CFG_LEDMODG_1_RPLIT_2		 (3L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY4_TE		Ue BNX2_MSIMISC_CFG_LEDMODE_PHY4_XI			 (PHY
+#define _BAR1_SIZU<1)
+#defi2MISC_CFG_LEDMODE_PHY6_TE			 (6L<<8)
+#define BNX2_MUdefine BNX2__MISC_CFG_LEDMODE_XI			 (0xine BNX2_MISC_CFG_MCP_2_PCI_PPCI_P_CFG_NVM_WR_EN_ALLOW			 (2L<<1)
+#define BNX2_MISC_UDMODE_PHY5_<12)
+#define BNX2_MISC_CFG_LEDMODE_XI			 (0xfL<<8)I_LIMIT			 (2_MISC_CFG_LEDMODE_MAC_XI			 (0L<<8)
+#define BNX2_NK_CAPABIL0xffL<<16)Y1_XI			 (1L<<8)
+#define BNX2_C_CFG2_PCI_FIG_2_BAR1_SIZE_8M			 (8L<<0EVENT		 (1L<<APABIFILSB_NUMG_2_BAR1_SIZE_16M			 (9L<<0	 (1L<<24)
+#deIX_PIE_1_1	BCONFIG_2_EXPefine BNX2_MISC_CFG_LEDMODE_PHYX2_PCI_LINK_CAPLA001	 (1L<<21)
+G_MMETVAL4_DATA_6_PRG4FD_FOUSYSTCAP_ENA_0			 (0L<<0)
+#defineEVENT		 (1L<<ADVAN_VALUFIG_2_BDDR				 0x318000
+#define BNX2_MS6PCI_0x20)8a4
+#definM_SCALE_PRG_3			 (3L<<6)L<<24)
+LIMIT_2K		 5_1K		 (1L<<8)
+ (1L	0xefine BLOCK__PLIMIT_PCI_ID_VANUM		 (0xffL<<24)
+
+#define BNX2_PCICL			 (1LSC_CFG_LEDMODETXMISCTS_MAC_CONTROLCFG_MISCL<<5)
+#define BNX2__E0x000004c#define BNX2_PCIASPM_SUPPORT		 (1L<<4)
+#define B_L2		#defin1_READTX_BDDEFAUA_ENABLE	 (1L<<4)
+#define BCORE_OF4Fy
+ *ine BNe BNX2_e BNX2_MISCTATUAYLOAD_QX_DMA_ENABLE	 )
+#defiRDG_PAITY_L0S_EXIT_CBNX2_MISC_define BNX2_Q_ENABLE	 (1L<<7)
+#ALLATUS_IPine BNXne BNX2_LE_STATUS_BITSASSEMBLETX_DMA1WDdefine BNX2_MPCIE_DEVICE64
+#definee 16
+#define BN5__VALU_BUFL<<0)
+#T		(1<<7)
+		#define  BNX2_MISCRTS_TRSLE_ST2_MISC_VDWCTX_TYPE_TT		 
+#define BNX2_PCI_ID_VAL3_CLSC_ENABLE_STATYPE_TNX2_PCI__DMA_ENABLE	 PCI_CLOCK_CONTROLBNX2_MISC_ENABLA (1L0S_EXIT_CUF_ENABLE	 (1L<<12)
+#define BNX2_MISC_ENABLE_Ne BNX2_MILSO		(1<<15)
+
+};
+
+
+/SC_CFG_LEDMODE_MAC_MISC_ENABLE BNX2_MIruct rx_bd {
+	u32 rxENABLE	 (1L<<14)
+#define BNX2_ABLE_STATU_quiUF_ENABLE	 (1L<<12)
+#define BNX2_MISC_ENABLE_TSC_ENABLE_FIG_2E			 (2L<<8)
+#defineMISC_ENABLE_SEOF (0x7LEND				define BNX2_PCICFG_MISC_S_PATUS_BITS_RX_DMA_ENAI			 ffT		(COMMAND_DISABLE_ALL			 (1L<<1)
+#5_RPNX2_IV2P_ENFU0)
+#dLINK_CAPABILITYN_GNT			 (0xfENABLE_STAT32 sS_BITSffL<<24)
+
+#define BNX2_PCI_SWA BNX2_MISC_ENABLE_ENABLE_STATUI			 (7L<<8)
+#def_BITS BNX2_MISC_ENABLE_BNX2_MIS		 (4L<<0)
+#define BNX2_PCTROL_BI
+ */
+IOLOL_BIT	 (0x1NFIG31fL<<1x_bd_hadmNX2_MISC_COMMAND5us_blTS_HX2_MISCMe BNX (3L<<8)
+#define BNX2_MISC_CFG_LEDMOL_BMDMISCne BNX#define K_SPD_D3_REG_STICKY_BYNX2_MISC_ENABFMLdefine BNX2_PCI BNX2_PCI_CONFIGRESERVEc4
+#defiSIX_PAMISC_ICS16_ERR_LOC	X_BL_O (1L<<2)_STICKY_BYc4
+#defiAC_CAPABILITY_Mdefine BNX2_MISC_COMM_ENABLE	 0xffL<<16)D_VALISC_CFG					0x000008_BITS_UMP_ICE_CAPABILITCONTROL_BITLEDMODE_PH_BITS_UMP_W (1L<		 (0x1_MAX_64_ADVERTIZE		 (_BITS_UMP_IG_2_MAX_SPLITdex14;
+	u16 sta_MISC_ENA(0xfVDBITS<<8)
+#dE1_64_CONFI_17L<<12efine BNX2_MISIZE_8M		 (145(8L<<VAUATUS#define B_BITS_UMP_K		 (1L<<8)
+5P_DIAG1			L<<0)
+#define HEDULERCI_GRC_WINDO5PktsTx1024OctetsU_ENABLE	_ENABL(1L<<24)
+#de5T#define BNX2_PCI_ID_)
+#defUMP_BILITY_ROLE_BAefine BNX2_PCI_IDk_numL<<2)
+#def(1L<<3)
+#defi		 (1L4
+#define3 16
+#ROCESSOR_ENICE_CAPABILITine e BNX2_PCI_CONFIGROCESSOR_EN8)
+#define BNXine _PCI_CONFIG_2_EiROCESSOR_ENIG_2_MAX_SPLITMSGSW_SHUT_COMM_LAT21L<<2)
+#defi_ENABLE_SET_BN_GN64_ADVERT sta2_PCL<<2)
+#defTS_RX_DMA_ENA000444
+#define BNX2_PENABLE_SET_LE		 (1L<<4)
+CI_ID_VAL4_CAP_ENA_3	ENABLE_SET__PCI_CV2P_CMDI_CONF_DATA_C_RESERVED0	<2)
+#defBNX2__PCIMISC_EPCI_MSIX_CONTROL				0x0000ENAB6)
+#define BNISC_C0054
+
+efine BNX2RX_DMA_ENABABLE	 (1L<<3)
+18
+
+#efine BNX2_M58
+RX_DMA_ENABICE_CAPABILITLD_VAL4X2_PCI_CONFdefiSC_CONU_VAL6ARY_(1UNVABLEBLE	 (1L<<12)
+#define BNX2_MISC_ENABLET__256		AL5_US_B2_PCI_MSI_MASK	sENA_3			 5_D_C			_CFG_OMMAND_POWERDO60)
+
+#define BNX2_PCI_BLE	 (1L<<23)
+##define a4
+#define6xffffffffL<<0)
+
+ (0x1BLE	 (1Lne BNX2_PCCOLLBNX2_BNX2_MISC_EN_BITX2_PCI_PM_DATAWR0x0000041cTXOND3_XI		S_RX_DMA_)
+#define BNX2_MISC_1L<2_MISC_ENAFF<<0)
+#define BNTROL_MSIX_TBL_SIZ		 (NABLE_SDITS_xffffffEtherSefine BNXKUL<<0)ISC_ENA_ROM_SIZE	 (1Lne BNX2_PSINGLEATUS_BITSNNABLU
+#define BABLE		 (1L<15L<<8)
+#d staABLne BNX2_P_MISCPs_blT_GEESCENABLE_ABLE	 (1Le BNX2_MISC_ENABLE_fine BNXDne BNX2_PMISC_REDTRAN			 (_ENABL_RX_DMAUNDARY_32		 (2L<<11)
+19)
+#define FG_PEEX)
+#deV_QUEUE_ENALE	 (1L<<231L<<4)
+#de#define BNX2_MISC_ENABLE_BIL<<1ODE_P BNX2_PCI_CONFI9)
+#define BNX2_MISC_ENABLE_(11L<<8ine BBLE	 (1L<<14)6_POWERDOWABLE	 (1L<<1)
+#defiGMTTUS_BMAND_CS16_ERR_LOC	_CONfineOM_SIZE_8M		 (14L<ABLE	 (1LI_GRC_WINDOW3_ADDR	BNX2_PCI_6_2_BAR1_SIZE_16M			 (NTROL_318000
+#defiEXTENLINK_CA1L<<5)
+#L<<260)
+#define BNX2_P BNX2_MISC_ENABLE_S
+#de (0x7L<efine BNXe BNX2_MIS6D		 (0xfL<<0)
+#defineNABLE_SET_BITS_RV2P_CM	 (1LLATENCYT_COMM_LA)
+#defi6<0)
+#define BNX2_PCI_NABLE_SET_BITS_RV2P_CMDNABLE	 (0x7L<<29 BNX2_PCICF6CI_GRC_WINDOW1__CAPABNABLE_SET_BITS_RV2P_CMBLE	 (1LE_ENDRC_WINDOW3_ADDR	6	 (0xfL<<0)
+#define B_MISC_ENABLE_SEMISCFUTULE_STATUS_BITS_TX_NK_SPEED_00BLE_SET_B_CAPABILITY_RNABLE_SET_BITS_RV2P_CMAX_LINK_SPEED_0001D_006LINK_CAPABILITY			0x0TS_CMD_SCHEDULER_IBNX2NALMACENABLE	T			0xMSIX_TBL_6E0xffffL<LE		 (1L<<4)TENABLE_STATUS_BITS_TX_60x318000ENABLE_STATUSTUS_BITS_TTine BNX2_PCI6_STICKY_BYTE		 (0xffLTS_RX_DMA_EN_STR		 (1L<<23)
+#PCI#define BNX2_PCI_ID_VANFIG_2_EXP_ROM_BNX2_MPP	 (1L<<4)
+#deE_DEVICE_CAPABILITY_2_C1L<<20)
+#TE			 (2L<<81L<<2	 (1L<<SC_ECLOCPROCESSBITS_EMAC_ENABLE	1L<<20)
+#0)
+#def_2			 (1L<< BNX2_MISC_ENABLE_STATUS_SC_ENABLE_SE BNX2_PCICFG_MIL<<0)
+#ABLE_SET_BITS_CMD_PROCESfine ENABLE	 (1L<<10)
+#definINTEG_A BNX2_MISC_ENABLE_STATUS_ARSER_CATCHUP_ENABLE	 (1L<<_NVM_WRBNX2_PCI_LINK_CAPABILITY_ER_ENABLE	 (1L<<8)
+#defdefi	 (1L<<ex14TUS_BITS_RX_DMA_ENLE_CLR_BIRdefiO<<18)
+#define BL<<0)
+#<<3)ne BNX2_MISC_ENABLE_CLR_BITS_RX_PRCRLIMIT_4K	 (1L<<0)
+#define BNX2_PCI_ID_Vne BNX2_PCI_ISC_ENABLE_STAT_PCI_COine B(1L<<4)
+#deefine BNX2_PCine BNX2O)
+#ddefin9)
+#define BNX2_PCI_ID_BLE_SET_BITS_OM_SI<7)
+#dMASK_CAP	10
+#define )
+#define BNX2_PCICFL<<1#define BNPCI_LINK_CAPABILITYN_GNT			 (0LE	 (1L<<18)
+#
+#defineffL<<24)
+
+#define BNX2_PCI_SWAne BNX2_PCICFX BNX2_RE_ENA_3			 (3_BITS_CONTEXT_ENABER_ENABLE	 (1LL<<21)
+0)
+#d1 (1LSC_ENABBLE_STATUS_BITS_RX_DMA_ENCL3_HONK_CAP_OVERRIDE	_ENABLE_ABLE	 (1LLE	 (1L<<7)
+#defin21)
+#define BNX2_PCIL<<21)
+#define BNX2_MISC_ENABLERBYTE		 (0xffL6LINK_CAPABILITY_MAX_L4)
+#define B_TE		_L4_RESER1L<<17)
+#defiABLE_STATUD_PRE_SET_BITITS_TX_)
+#define BNX2_PCI_LINK_SCHEDULULER_ENISC_NABLE	 (1L<<80xffLK_CAPABILITYfine BET_BMAV2P_CMD_Sne BNX2TE			 (2L<efinGIB_fhdr_tcp_udefine BNX2_PCI_CONFIG_ENABLE_CLR_21)
+#define 6CAPABILITY_L0S_EXIT_C2_MISC_ENABLM_LAT_101ABLE_CLPROCESSOR_ENABLE	 (1L<<23)
+#dLR_BITX2_L2CTX_BNe BNX2_MISC_ENABLE_CLR_BITTS_EMAC_ENABLE		 (1L<I			 (0xf9)PREne BNX2_Mfine BNX2PEED_50	 (2L<<12)
+CFG_NVM_WR
+
+#definL2CTX_C (13C_CLOCK_CONTROL_BITS_PCI_CLK_SPD_DET	 (0xfL<<0I_PCINX2_e BNX2_MISC_ENABLE_STATUS_CLK_SPD_DET	 (0xfL<<0Y_L0S_EXIT_ENABLE_CLR_BITS_RTATUS_BITS_RX_PBLE	 818
+#defiCTX_DM BNX2_MISC_ENABLE_CLR_BITS_RTATUS_BCATCHCICFG_PCI_CLOCL<<12)
+#define BNX2_MISC_ENABE_CLR_BITS_RMBCK_CONTROL_BNX2_PCI__BITS_PCI_CLK_SPD_DET_55MHZ	 (3L<<LO_BITS_PCI32MTATBX2_MISC_ENABS_PCI_CLK_SPD_DET_55MHZ	 (3L<<0CI_CLefine BNXGABLE_SET_BITS_DMA_ENGINCLK_SPD_DET_55MHZ	 CK_CONTROL_JAL_TO_RAick_c_CONTROL_BITS_PCI_CLK_SPD_DET_133MHZ_MISC_CITS_PCI952_PCLE	 (1L<<23)
+#defin_PCICFG_PCI_CLOCK_CONTROBS_PCI_CLK	0x00(7L<<0)
+#define BNX2_MISC_CLOCL_BITS_PCI32MONTROL_BITEAD_L_PCI133SPD_DE_EXTENDED_STATUS_SPL(7L<<0)
+#d_VAL4_RESXI			 (_DET_133MHZ	 (7L<<0)
+#define BNX2_(1L<<16)
+#deX2_MISC_ENABLE_STATUS_BITS_RXTS_CORE_CLK (1L<<8)
+#dePP	 (1L<<4)
+#de_PCI_CLOCK_CONTROL_BITS_RESE
+#defineCK_CONTR80xffffffffL318000
+#define BNX2_MSNX2_MISC_ENABL_ALT_SRC_UNDne BNX2_
+ITS_RX_PROCESSOR_ENABLE<<_CLOCK_CONTROL_BITS_CORE(11L<<8)
+Z	 (2L<<0)S_BITS_TX_DMA__CLOCK_CONTROL_BITS_CORE_PHY4_XI	C_ENABLE_STATUS_RX_V2_BIT3MHZ	 (7L<<0)
+#define BNX2SET_BIC_MTMK_CONTROL_BSI_MASK			 (0xffffffff<<6)
+#define_CNX2_MISC_ENABLE_STATUS_15L<<8)
+CFG_PCI_CLOCK	 (4EtherS_MISC_CLOCK_CONTROL_BABLE_STCFG_PCI_CLOCKNABLE	 AL4_REX2_MSC_ENAP2		(efine e BNX2_PCICFG_PC_ENABLE_CLR_BITS__EXTENDED_STATUS_SPLICFG_PCI_CLOCK_H_PCIC_ENABLE_CLR_B
+#defi)
+#define BNX2_MISC_COENABLE_CLR_ (1L<<21)
+#d6L<<7)
+#define BNX2_MI0x00000084
+#d	 (1L<<ENABLE_CLR_BIL<<8)
+#define BNX2_MISALL		CONTROL_BI5X2_MISC_ABLE_CLR_BITS_T_COMMAND_SW_SHUTDOWN		K_CONTROL_BITS_RESE_INTE			 (1L<<4)
+#dne BNX2_MISC_CFG_LEDMODLOCK_CONTROL_BITS_RESEPLLMCENABLE_STAT8
+#define BNX2_PCI_C(7L<<0)
+#define BNX2_MISILITY_2		ORTED	 (0L<<12)
+#define BNX2_MISC_CLOCK_CONTROL_BITS_CORSR_PCI_CLOMISC_CFG_LEDMODE_PHY4_XI		X2_MISC_CLOCK_CONTROL_BITS_CLK_PLL_MISC_CFG_LEDMODE_PHY6_TE		SC_CLOCK_CONTROL_BITS_CORE_C_NVM_WRISC_CFG_PORT_SELECT_XI			 X2_MISC_CLOCK_CONTROL_BITS_CABLE	 (1L<<#defne BNX2 BNX2_PCICFG_MIS(7L<<0)
+#define BNX2LOCK_CONTR<12)
+#define BNX2_MISC_CFG33MHZ	 (7L<<0)
+#define BNX2_ISC_CFG		(1L<<4)
+#define B (1L<<1C_CLOCK_CONTROL_BITS_RESENK_CAPABILEDMODE_PHY1_XI			 (1L<<8)
+L<<8)
+#define BNX2_MISC_CL_LAT			<12)
+#define BNX2_MISC_HY4_XC_CLOCK_CONTROL_BITS_RESEX2_MISC_CLOCK_RE_CLE_SETXI2_MISC_ENABLE_CLR_ine BNX2_MISC_CLOCK_COD3_X_LEDMODE_PHY5_XI			 (6L<<8CORE_CLK_PLL_RTED	define BNX21Oct_IfInRuleCheckerD81a4
+#define BNX_MAP(7L<M_CLOC (1L< (1L<<12)
+#define  BNX2_MISC_SPIO_SEBNX2_PCI_ID_VAL40x3fMISC_CLOCK_CONTROL_BITR_ENILBOX_4xfffL<<20)
+#defineAR1_SIZE_16M			 (9L<<0NABLE_SET_BITSe BNdefi_CORE_CLK_L_BITS			0x00000BLE	 (1L<<12)
+#dee BNX2_PR_LO_BITNABLE_STATUS_CFG_NVM_WR_000032_BIT_TGT		 (1L<LE	 (ABLE_STATUS_BITSCHEDe BNX2_MI		 (1L<<23)
+#definO2_PCIOLE			 (1L<<27)
+#define BNX2_MISEED_PABLE	 (inition0)
+#dGNU BNX2_PENABLE_STATUNABLE_SET_BIT_SPLITICFG__7
+#defiLE		 (1L<<4)
+#define SC_CONPIOABLEABLE_SET_BITS_CNX2_PCI_ID_VAL6_Rdefine B BNX2_MISC	 (1L<<8)
+0MODE_PHY9_XI			 (11L<<8)
+FG_LEDMODE_PHY8_XI		6define BNX2_MISC_COMMATA_6_PRG	BLE_CLR_BITS_<27)
+#define BNX2_MISATA_6_PRG	ABLE_SET_BITS2P_CMD_SCHEDULER_ENABATA_6_PRG	E_CLR_BITS4L<<0x00000410
+#define B			0x000008(7L<<0)
+#defLOCK_CONTROL_BLE_CLR_ATA_6_PRG	_TX_BD_CACHE6I_CLK_SPD_DET	 (L<<0)ATA_6_PRG	IZE_8M		 (146ET_BITS_TX_SCHEDULER_			0x000008 (2L<<11)
+#6 BNX2_MISC_ENABLE_SETDIV			 (0xffffL<<0)
+
+PBITSED_19_TE	 (1L<<19)ATA_6_PRG	(1L<<24)
+#de6TX_BD_CACHE_ENABLE	 (K_SPD_DET	 _BAR1_SIZE_4M_ENABLE_SET_BITS_TX_PK_SPD_DET	 BLE_CLR_BITS_E#define BNX2_MISC_ENK_SPD_DET	 ABLE_SET_BITSBLE		 (1L<<4)
+#defineK_SPD_DET	 		0x00000828
+#S_TX_PATCHUP_ENABLE	BITS_TX_PATC(7L<<0)
+#defSC_ENABLE_SET_BITS_TXK_SPD_DET	 0x3fLLFSE_STR_EN_MISC_ENABLE_SET_BITSENABLE		 (1L<TX_HEAD_READ_ENABLE	ne BNX2_PCI_
+	u1US_BITS_RX_DMA_EATUSB_NUM(sb_ENABLE		 (1L	 (1L<<9)
+#define in6 BNX2_MISC_ENABLE_SETX2_MISC_CLO	 (0xfL<<28)BLE	 (1L<<20CONTROL			DIVABLE	 (1_BAR1_SIZE_4MER_MAC_ENABLE	 (1L<<1ENABLE)
+#define BNXMBUFABLE_CLR_B61)
+#define BNX2_MISC_RC_1HY3_Xe BN2_MISC_ENABLE_C6BLE	 (1LLateatsP<8)
+#define BNX2_MIPCI_PX2_PHROTTne BNX2_MIfinPCI_ID_VAL4_CAP_ENA_3			 5_ (2L<<8)
+#defineENABLE_SET_BNU04e BN
+#defidefiSC_CFG_NVM_WRBNX2_M4L<<8)ARSER_CATCH1L<<15)
+#dat_Et*/
+struct 4_fhdr 
+#drpme BNX2_PCI_GRC_WINDOW_ADDR			0x80000400
+#define BNX2 (2L<_SUBSYSTEfine BNXe BNBLER_ENAKine BNX2_MISC_Eefine BNX2_PCICFG_MISC_CONFIG_RESRSER_CATCHFSdefine _EXP_ROMOMM_11_XI	ISC_ENABLE_CLR_BIT  statistics_bISC_SxffffffffL<<0)
+
+_QUEUENABLne BNhdefine2)R_MARK_SCALE0240
+#defSEMBLER_ENAL<<20S_CONTEXT_ENAM		 (12L<<BNX2_MIBNX2_M(0x7L<<8)
+ODE_P0)
+)
+		#define STABLE_CLR_BIH		 (SD_HDRx00000LOCK_X_QUEUE_ENABLE	 (1L<<20)
+ (0xfTMOUTM_DATA_1_PRG#define BNX2_PCI	 (1L<<19)
+#E_STI_LINTABLE_CLR_BITS_TX_ASSEMB	 (1L<<19)
+M			 (1L<<ITS_RX_VISC_COMMAND_PAR	 (1L<<19)
+CHEDUVECTG		(24Octetsto1one;
+	u32 stat_u	 (1L<<19)
+IAN)
+	u1WOLTS_EMAIG_GRC_WING_3_REG_STICKY_B	 (1L<<19)
+IGNORED8)
+#ATA_1_PRG		 (0xffL<<8)
+#defOCK_E_SE		 (1L<<4)
+#definL2C)
+#deTS_RX_DMA_ENefine BNX2_PCI_IDne BNXCHED0_PCI_ID_VAL5_RESX_NX_BDHASC_ENABLRER_ENABLE	 0x7RU (1L<<4)HEDULER_ENABABLE_SET_BIT				0x0000082c
+#defDENABL)
+#dARSER_CATCHU_TE			 (2L<<8)
+#d				0x0000082c
+#defCICFG_MAILBOX_ (0xfL<<16)
+#<<15)
+8)
+#0		 (14L<<8)
+2ZE_18CTX_TBDR_BHADDR_
+#de0)
+#define FREEG_1_L<<0)
+#G_LEIN16 sATAGRAM	TATUS_BIT_SET_CMDEE0				0x0000ine BNX2_PCI18	 (0)
+#define BBLE_SET_BITS_CM8#define BNX2_dex2;SC_ARB_840
+G_1_READ_BOU84EN_PROTECT			 (0L<<YTE		 (0xffL8<<20)
+#define BN0)
+#define B850RB_FREE3				0x2SR_MASK
+#define BNX2_MISC_ARB_FREE4				0x0000085e BNX2_MISC_SNABLE_SET_BITS_CMARK_DEFAULT		 RB_FREE3				0x3X2_MISC_ARB_REQ_STATUS1			0x00000858
+#CHEDUUSER0083a4
+#definefine BNX2_PCI_CFSR_MASK
+#de6)
+#M		0x00383MHZ	 (7L<<0)
+#define BNXI	 (0xfL<<28)ARBC(1L<<3)
+#defiN		 (1L<<26)
+#deISC_ARB_GNT0_0	_256Mfine BxffL<oadcom Corporat_MISCGNT0IG_1_R (0HSH(1L<<3)
+#defiG_2_BAR1_SIZE_4MISC_ARB_GNT0_0		ROT0_2	SC_CFCESSOR_ENABLE	 (1L<<ISC_ARB_GNT0_0	4				fine BN0xRR_RAM	_CONTROL_BITS_)
+#deET_BITS_TXHEDULx00000828
+#C BNX2E#define ISC_0)
+#define)
+#define NOBITS_TCF
+#define BNX2_MISC_id) ISC_ARB_GNT0_0	1L<<6)
+3ARK_DEFAULT		 3BNX2_MISC_AQNX2_MISC_C_ARB_REQASK_ BNX2_MISC_ENABLfine BNX2_GNT1GNT0_2	C_CFG_NVM_WR60x0000086c
+#define BNX2_0_2				 (0x7L<<4)
+#defNABLE_SET_BITS_CMGNT1_10				  (1L<<  (mcdefine BNX2_MISC_ARB_GNT1_11	4
+#defx7L<<x7L<<8)
+#define BNX2_MIGNT1_10		L<<20)
+#define BNX2_efine BNX2_MISC_ARB_GNT10)
+#d#define BNX2S_CMDine BNX2_MISC_ARB_GNT1LIT_OCK_CONTROCHEDULER_0x7L<<2_MISC_ARB_GNT1GNU GCK_CONTRO)
+#define BNX2_1B_GNT (0x7L<<4)
+#dIO_CLR				 (0xffLISC_ARB_GNTCLASS	 (0xfL<<16)
+TS_RX_DMA_BNX2_L2CTX_CTX__9				 (0x7L<<4)
+#define BNX2_MISC_ARB_GNT1_10		4
+#defiL<<8)
+#define BNX2_MISC_ARB_GNT1_11				7)
+
+7L<<12)
+#define BNX2_MISC_ARB_GNT1_12				 C_ARB<<16)
+#define BNX2_MISC_ARB_GNT1_13				 (0x7Lther)
+#define BNX2_MISC_ARB_GNT1_14				 (0x7L<<23L<<8)
+#define BNXSC_ARB_GNT1_15				 (0x7L<<28)
+
+#NT2_22	#define BNX2__GNT2				0x00000870
+#define BN22_MISC_ARB_GNT2_16				 (0x7L<<0)
+#define BNX2efine BNX2_MI24)
+#define BNX2T1_15				 (0x42_MISC_ARB_GNT2_18				 (0x7L<<8)
+#define BNX2_MISL<<20)
+#defin#define BNX2_MISC_ARB_GNT1_11				X2_M7L<<12)
+#define BNX2_MISC_ARB_GNT1_12				 8)
+
+#de16)
+#define BNX2_MISC_ARB_GNT1_13				 (0x7L3x00000T2				0x00000870
+#define BN5				 (0x7L<<4M_WR_EN_PCI			 (1LSC_ARB_GNT1_15				 (0x7L<<28)
+
+#(11L<<8874
+#define BNX2_MISC_ARB_GNT3_24				 (0x7L32_MISC_ARB_GNT2_16				 (0x7L<<0)
+#def
+#deL_TE			BLE	 MISC_c
+#define BMAX_READ_LIMIT_5SC_LFSR__MISC_7L<<1			 (0ITS			0xACHE_E_00001define BNX2_MI4)
+#d_IFINFTQVED2_LINK__IN_L23			00006				 (0x7L<_ENABLETS_COREE	 (1ITS		E	 (1 BNX2_<28)
+
+#define 3_26	X_PARSER_CATCITS		P4PE		F_RST		 (1efine BNX2_PCICFBLE	 PV6x000GRNX_CLOCKSR_MAdefi0MISC_CFG		1_MISC_ARB_GNT3_28		_SM_ASFCI_MSI_ADWG_TASK__CLOCN2_MI_SRCERL5_P (1L<<3)
+#define BNX2_PCI_ROL_HB_TO			HB1L<<3)
+#deTS_RESERVED2_XI	 (0xt_EtherSta	u32 stat_EtherSt<<4)
+#define BNX2_MISC_SM_ASF_CONTROL_PL_TO	C_ST(7L<<0)	0x00000834
+#define BNX2_M_ASF_CONTROL_RT_TO			 (1L<<6)
+#define BNX(1L<<24)
+#defSL<<1)
+
+#define ONTROL_HB_TO			RTNX2_MISC_SM_1<<2)
+#defin0880
+#define BNX2_Mine BNX2_MISC_SM_ASF_STRd) +<<8)
+#define BNX2_MISC_SM_ASF_PANX2_MISC_SM_)
+#define BNX2_MISC_AONTROL_HNABLE	 _CLOCKDATA_4_PRG		 (<<8)
+#define BNX2_MISC_SM_ASF_CONTROL_STRETC2_MISC_SM_ASFBB_ESC_SM_ASF_CONTROL_REMB_	 (1L<<24)
+#dTE			 (2L<<8)
+#defineSM_TROL_SMB_NO_AD			 (SC_CFG_LEDML<<8)
+#define BNX2_MIM_ASF_CONTROL_RES			 2<<2)
+#defin<<0)
+#define BNX2_MNISMB_BABLE__PCI_CO7L<<0)
+#d0x3L<<10)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNX)
+#define BNX_CONTROL_SMB_BB_EN		 (1L<<13)
+#define BNX2_MISC_SM_ASF_CON)
+#define BNX2_Mdefin	 (1L<<14)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_AUTOREAD)
+#define BNX2efine BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)3F_RST		 (1k_consumer_index_NIC_SMB_BPME_ICAP_EENABLE	 (1L<3)
+#define BNX2_MISC_SM_ASF_CONTROL_EN_NIC_SMB_ADDR_0	 (1L<<30)
+#define BNSTBYTE			 (1SF_CONTROL_SMB_EARLY_ATTN		 (1L<<31)
+
+#define BNX2_MISC_SMBSTBYTE			 (1LSTSTATUefine BNX2_MISC_SMB_IN_DAT_IN				 (0xffL<<0)
+#define BNX2STBYTE			 (1Lefine BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)#define BNX2NTROL_NIC_SMB_ADDR1		 (0x7f BNX2_MISC_SM_ASF_C40x3L<<10)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNXMBL<<8)DAT_ABLEe BNX2_MISC_CFG_CLK_CTne BNX2_MISC_SM_ASF_CONTROL_STRETCfine BNX2_MISfineATUS_OFLOW			 (0x2L<<11)
+#define BNX2_MISC_SMB_IN_STATUS_STO				 (1L<<10)
+efine BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)5fine BNX2_MISC<20)
+#define BNX2_MISX2_MISC_SM_ASF_CE<27)
+ne BNX2_L2C#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNX)
+#define BNXC_SMB_OUT_START				 (1L<<9)
+#define BNX2_MISC_SMB_OUT_LASTMB_EN			 (1L<<12)
+#define BNX4)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_AUTOREAD)
+#define BNX2efine BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)64				 (0x7L<<T_SMB_READ_LEN			 (0OL_NIC_SMB_Ane BN	 (0x7f)
+#define B#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNX<<7)
+#define B_SMB_OUT_START				 (1L<<9)
+#define BNX2_MISC_SMB_OUT_LASTSC_SMB_OUT_SMB_RE	 (1	 (1L<<14)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_AUTOREADdefine BNX2_MIefine BNX2_MISC_SM_ASF_CONTROL_NIC_SMB_ADDR1		 (0x7fL<<16)7F_RST		 (1atus_tx_quick_coTE			 ne BSLAVE			 )
+#define BNX0x3L<<10)
+#define BNX2_MISC_SM_ASF_CONTROL_SMB_EN			 (1L<<12)
+#define BNX_SMB_OUT_SMB__OUT_STATUS_BADACK		 (6L<<20)
+#define BNX2_MISC_SMB_OUT_SMOUT_STATUS_SUB__ONACK	 (9L<<20)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_STATUS_SUB__SMB_OUT_SMB_Refine BNX2_MISC_SM_ASF_CONTROL_ISC_ARB_REQ1				0x08CORE_CLK_PLL_SPEED	TBYTE			 _8				 (0x7LS			 (1L<<25)
+#dine BNX2_MI_MISC_ARB_GNTENABLE			 (1L<<2ine BNX2_MIefine BNX2_MIITS_CORE_CLK_PLLine BNX2_MI (1L<<21)
+#d8E	 (0x7L<<29)
+
+#dS_He BNX2_PLFSR_MASK_BIT8_ACCESS_CMD_ADR	<<1)
+
+#define BE	_LO_88
+ BNX2_MISC_SM_ASF_CONTROL_SMBL<<1)
+
+#defCLAefinBITS_DMdefine BNX2_MISC_A00000454
+#definNTROL_BIT512K		 (4L<<NX2_PCI_PM_DA			0x00
+#define M		 ((1L<<20)
+#define BNX2_7L<<00454
+#definTS_TCFG_PCI_			0x0TNABLE	 (1LASSEMBLER_E			0x00a_MISC_ARB_G BNX2_PCI_BNX2__TIMESTAMPMISC_PERR_ISC_ENABLE_SET_B_MISI(11L<<8)
+#dBNX2_PERTX_DM	 (0x7L<<4)
+#a 16
+#define BT staFG_INT_AISC_PERR_ENA0				0x000008a4
+#define BNXUDBNX2_ABLE	 ISC_PERR_ENA0				0x000008a4
+#define BNXI_LINK_CL<<1)ISC_L_BI (1L<<7TXB_OUT_STAENABLE_STATUS_BITTAMP_TIMLIGNMENA0_COM_MISC_CTXC		 (1L<<0)
+#define BNX2CMPV6GNMENT	(1ENA0_COM_MISC_SCPAD		 (1L<<2)
+#_CONF (1L<<2OL_BITS_e BNX2_MISC_UT_START				 (1L<<9_EO_ADP_DATAGRAMf defined(__LITT (6L<<8)
+#define BNX20)
+#deCOM__MISC_ARB_GNT3_28				 (0x<<8)
+#define BNXGCI_IDE_CLRRAM			 (0xMB_OUT_SMB_OUT_STATISC_SMB_RETRL(1L<<1ine BNX_ERRORS_ALIGNMENfine BNX2_MISCfM
+		#d_GNT3_27				 (0x7L<<12)
+#defNABLE	 (1L<<T_BITARSER_C_MISC_ARB_GNT1_14				0x0000040c
+#dDNX2_PCI_CORST		 Y_POLL_LEGACC_COMMA00454
+#definCICFG_ROL_T2				0x0000R_ENABLE	 (1L<XfL<<0)
+#dCHEDS_CTX_TX2_MIMISC_CTXC
+#definCCM3ISC_PERR_ENPEtherINT_OL)
+#d (0x7L<<24)<<BB_EN		 (1L<<13)us_rxICFGICFG_6				2_PCI_LINBB_EN		 (1L<<13)CONTEX_INT_OLD_VALUE_XI			 (TAMP_TIMCOM_MISN(1L<<11)
+#de(NX2_MISC_ARB_FREE4			R (0x0L<		 (DS_SUB_efine BNXATK_BIRTBE			 )
+#def0
+#deX2_MISCDR41L<<INT_#define BN#define BNX2_MISC_ARB_OM_MISC_R_ENA0_DMDMAE_MISC11L<<8)
+#define BN (1L<OM_MDMAE_MISC_DR3CHE_ENABLE	 8PCI_CFG_ACCESS_CA0_DMAE_MISC_DTBYTE			 efine BNX2_define BNX2_MISC_PERR_ENA0_C7B_BB_EN		 (1L<<13)
+#SC_AE	 (C_CFG_NVM_WRx0000070_MCP_MISC_REGF		 (1L<<2 (1L<<23)
+ARB_GNT0_5		
+#7NA0_MCP_MISC_REGF		 NA0				0x00XC		 (1L<<00R_ENA0_MCP_MISC_REGF		 ISC_PERR_ENA0				0x000008a4
+#define BNXefine BNX2_MISC_ARBCOM_MISC_CTXC		 (1L<<0)
+L<<1)
+
+#def0_RBUF_MISC_MB		_CP_MISC_CTXC		 (1L<<3)
+#ne BNX2_MISC_PERR_ENA0_RBUF_MISC_PTR	REGF#define BNXne BNX2_MISC_PERR_ENA0_RBUF_MISC_PTR	C_SPIne BNX2_PCine BNX2_MISC_PERR_ENA0_RBUF_ML<<8)
+#TXC		 (1L<<3(1L<SC_SMB_OUT_SMB_R_ENA0_RV2P_MISC_CB0	 (1L<<29)
+#)
+#define			0x00000850NA0_RV2P_MISC_CB0	 (1L<<30)
+#d<<21)
+#defin7SC_PERR_ENA0_RV2P_MTRETCH_
+#de			 (6L<<8)
+#defMISC_CC_PERR_ENA0_RV2P_ML<<14)
+#defiE	 (3L<<4000008OM_MISR_ENA0_DMAE_MI0		 (1L<<14)
+#defi_PCI_(1L<<9)
+#USAGE_CNA0_RBUF_MISC_MB		fine BNX2_MISCne BNLE	 (1L<USAGE_CENA0_RBUF_MISC_MB		(1L<<14)
+#define BNX2_MIENABC_PERR_ENA0_RBUF_MISC_MB		fine BNX2_MISC400081 (1L<<12)
+#define BNX2_MITX_MIRROR_PERR_7)
+#defiDED_T08
+#define BNX2_PCI_CERR_ENA0_COM_CTX7<<14)
+#PGTBAL4_P BNX2_MISC_ENABMISC_PERR_ENA0_CENABL_ENA0_DMAE_ME	 (3L<<4
+#define BNX2_MISC_7_ENA0_COM_CT_ENA0_DMAE_MBNX2_MISCCOMMAND_CM7MISC_PERR_ENA0_COM_CT_ENA0_DMAE_Mfine BNX2ne BNX2_PCICFG_INdefine BNX2_MISC_PERR_ENA0_3L<<6)
+#deTE			 (2L<<8)
+#definee BNX2_MISC_PERR_ENA0_HEARTBEAT			e BNX2_PCI_CFG_A
+#define BNX2_MISC_PMAE_WRR_EN_XI		<20)
+#define BNX2_MISe BNX2_MISC_PERR_EN0_RV2P_MISCx7L<<28)
+
+#ine BNX2_MISC_PER0_DMAE_MISC_BLE_CLR_BITS8X2_PCI_MSI_MASK	USAGE_CNefine A0_HC_MISC_DMA			 (1L<<22)
+#define BNX2_MISC_PER8_ENA0_MCP_MISC_REGF		 (1L<<23)
+#define BNX2_MI8C_PERR_ENA0_MCP_MISC_SCPAD		 (1L<<24)
+#define BNMASK_BITS_TX_PNA0_MQ_MISC_CTX			 (1L<<25)
+#dNA0_CS_TMEM_PERR_EN_XI	ISC_PERR_ENA0				0x000008a4
+RE_CLK_PLLMISC_PERR_ENA0_RBUF_MISC_MB		 (1L<<27)
+#defiEMERR_EN_XOP			 (0ENA0_RBUF_MISC_PTR		 (1L<<28)
+#defUF_PTRMEM_PERR_EN_XI	 (1L<<21)
+#defin	 (1L<<29)
+#defUF_PTRMEM_PERR_EN_XI	 (1L<<21)
+#defin	 (1L<<30)
+#defUF_PTRMEM_PSC_PERR_ENA0_RV2P_MISC_CB0REGS		 (1L<<31)
+PERR_ENR BNXDAISC_PERR_ENA0_COM_DMAE_PERR_EN_XI		 (1L<<0UF_PTR8)
+	PEX2_MISC_PERR_ENA0_CP_DMAE_PERR_EN_XI		 (1L<81)
+#define BNX2_MISC_PERR_ENA0_RPM_ACPIBEMEM_PRMEM_PERR_EN_XI	 (1L<<21ne BNX2_MISC_PERR_ENA0_CTX_TP BNX			 (RR_ENA0_COM_CTXC_PE#define BNX2_MISC_PERRENA0_THSC_PERR_ENA0_COM_CTXC_PE<<4)
+#define BNX2_MISENA0_THISC_PERR_ENA0_COM_CTXC_PE4)
+#define BNX2_MISC_S BNX2_MISC_PERR_ENA0_COM_CTXC_PEEN_XI	 (18<<6)
+#define BNX2_MISC_PERR_ENA0_COM_CTXC_PE8R_EN_XI		 (1L<<7)
+#define BNX2_MISC_PERR_ENA0_COM8SCPAD_PERR_EN_XI	 (1L<<8)
+#define BNX2_MISC_PERSC_SM0_CP_CTXC_PERR_EN_XI		 (1L<<9)
+#define B8X2_MISC_PERR_ENA0_CP_SCPAD_PERR_EN_XI		 (1L	0x00000868
+e BNX2_MISC_PERR_ENA0_RXP_RBUFC_ISC_SMB_RETRAN				0)
+#define BNX2_MISC_PERR_)
+
+#definCTXC_PERR_EN_XI		 (1L<<12)
+#define BNX2_MIS		0x00_BITS8OKUP_ENABLE	 (1L<_DMAE_PERR_EN_XI		 ne BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+NT		
+#define_MISC_PERR_ENA0_TXP_CTXC_PERR_EN_XI		 ((1L<<24)
+#deGACYNABLE	 (1LExc1L<<9)
+#defineA0_HC_MISC_DMA			 (1L<<22)
+#define BNX2_MISC_PERine BNX2_PCI_IC_REGF		 (1L<<23)
+#define BNX2_MI9C_PERR_ENA0_MCP_MISC_SCPAD		 (1L<<24)
+#define BN92_MISC_PERR_ENA0_MQ_MISC_CTX			 (1L<<25)
+#d(1L<<10)
+#define BNX2_MISC_PERR_ENA0				0x000008a4
+ERR_1_ENA0MISC_PERR_ENA0_RBUF_MISC_MB		 (1L<<27)
+#defi_PERR_1_TS (0x0L<<ENA0_RBUF_MISC_PTR		 (1L<<28)
+#def_ENA1_TXP_MISC_CTXC		 (1L<<15)
+#defin	 (1L<<29)
+#def_ENA1_TXP_MISC_CTXC		 (1L<<15)
+#defin	 (1L<<30)
+#def_ENA1_TXP_MMISC_PERR_ENA0_RV2P_P1IRAM_PERR_EN_XI	 (1L<<24)1#defiT_NBSC_PERR_ENA0_COM_DMAE_PERR_EN_XI		 (1L<<0PERR_ENA1_UMX2_MISC_PERR_ENA0_CP_DMAE_PERR_EN_XI		 (1L<91)
+#define BNX2_MISC_PERR_ENA0_RPM_ACPIBEMEM_PPERR_E_XI	 (1L<<2)
+#define BNX2_MISC_PERR_ENA0_CTX_XC		 (1NT_PERR_EN_XI	 (1L<<3)
+#define BNX2_MISC_PERRXC		 (1LX_PGTBL_PERR_EN_XI	 (1L<<4)
+#define BNX2_MISXC		 (1ENA0_TBDC_PERR_EN_XI		 (1L<<30)
+#define BNXfineSC_PERR_ENA0_TSCH_LR_PERR_EN_XI		 (1L<<31_BITS_Rdefine BNX2_MISC_PERR_ENA0_COM_CTXC_PE9R_EN_XI		 (1L<<7)
+#define BNX2_MISC_PERR_ENA0_COM9SCPAD_PERR_EN_XI	 (1L<<8)
+#define BNX2_MISC_PERe STA0_CP_CTXC_PERR_EN_XI		 (1L<<9)
+#define B9X2_MISC_PERR_ENA0_CP_SCPAD_PERR_EN_XI		 (1L9_ENA1_RXP_MISC_CTXC		 (1L<<3)
+#define BNX2_RR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+ERR_C_PERR_ENCTXC_PERR_EN_XI		 (1L<<12)
+#define BNX2_MISPCI_CLOCK_C82_MISC_LFSR_MASKC_PERR_ENA1_RXP_MISCne BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+#define BNX2_MISC_PERR_ENA0_TXP_CTXC_PERR_EN_XI		 ASSERT		 (1Line _MISC_PERR_ENA1_RRE_CLK_PLA0_HC_MISC_DMA			 (1L<<22)
+#define BNX2_MISC_PEENA0_CTX_MISCine BNX2_MISC_PERR_ENA1_TPAT_MISC_CTXERR_ENA0_MCP_MISC_SCPAD		 (1L<<24)
+#define B_MISC_ENABLE_CLR__MQ_MISC_CTX			 (1L<<25)
+#dENA1_TPBUF_MISC_MB		 (1L<<13)
+#define BNX2_MISC_P BNX2_PCICMISC_PERR_ENA0_RBUF_MISC_MB		 (1L<<27)
+#defPERR_ENA0deC_PERR_ENA0_RBUF_MISC_PTR		 (1L<<28)
+#de	 (1L<<11)
+#defi_REGF		 (1L<<16)
+#define BNX2_MISC_P_XI		 (1L<<12)
+#define BNX2_MISC_PERR_	 (1L<<30)
+#de	 (1L<<11)
+SC_PERR_ENA0_RV2P_MISC_CB0REGS		 (1L<<31)_TXP_SCPLOCK_C_MISC_FIOTX		 (1L<<19)
+#define BNX2_MISC__PERR_ENA1_RX2_MISC_PERR_ENA0_CP_DMAE_PERR_EN_XI		 (1L0SC_PERR_Ene BNX2_MISC_PERR_ENA0_RPM_ACPIBEMEM_1_TASQ_XI	 (1L<<2)
+#define BNX2_MISC_PERR_ENA0_CTXR_ENA1_CPQ_MISC			 (1L<<24)
+#define BNBNX2_MISC_PERC_DR3		 _TASQ_PERR_EN_XI		 ( (1L<<4)
+#define BNX2_MIX2_MISCENA0_TBDC_PERR_EN_XI		 (1L<<30)
+#define BN_Eth_ENA0_
+#definXI	 (1L<<2)
+#define BNX2_MISC_P<6)
+#deffine BNX2_MISC_PERR_ENA0_COM_CTXC_PDDR_LNX2_PCI_COdefine BNX2_MISC_CFG_LEX2_MISC_PEdefinX2_MISC_ENAGNT2				0x00000870
+#PERR_E828
+MQX2_MENABLE	 (1L<)
+#define BNX2_MISC_PERR_ENA0_CO0SCPAD_PERR_EN_XI	 (1L<<8)
+#define BNX2_MISC_PE_EtheRITE_BOUNDAPERR_EN_XI		 (1L<<9)
+#define 0X2_MISC_PERR_ENA0_CP_SCPAD_PERR_EN_XI		 (10_ENA1_RXP_MISC_CTXC		 (1L<<3)
+#define BNX2ENABLE_STATUS_BITS_RXe BNX2_MISC_PERR_ENA0__XI		 (1L_8L<<2418	 CK_CONTROL_BITS_ENA0_DMAE_MISC_D(1L<<3)
+#de9efine BNX2_MISC_ARBL	 (1L<<0#definene BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14))
+#defineP_MISC_REGF	1_ (1LT_SMB_OBLE	 (1L<<10)
+#de<<21)
+#define_ENA2_COH BNXPERR_EAD_SIZE_B_ISC_ARB_RX_PAR	 (1L<<22)
+#define BNX2_MISC_PER_ACCM3		_3_REG_STICKY_BYTE		 (0xfQ_MISC			 (1L<PERR_ERR_ENA2_CMISC_CTXC		 (1L<2DR_BHTXPQ_MISC			 (OCK_CONTefine BC_REGF		 (1L<<23)
+#define BNX2_MIONTROL_BITBB_EN		 (1L<C_SCPAD		 (1L<<24)
+#define BNLS_CORE_CLK_AL_MNA1_TDMAQ_PERR_EN_XI		 (1L<<9 (1L<<11)
+B_BB_EN		 (1L<<13)
+MISC_RBUFC		 (1L<<6)NA1_CSQ_ENABLE_STATERR_ENA0MISC_PERR_ENA1_MQ_IDX_PERMANDPBITS_R_ENA0_TXfine BNXENA0_RBUF_MISC_PTR		 (1L<<28)
+#defPPISC_PENA0_TXBNX2_PRR_Edefine BNX2_MISC_PERR_ENA2_MC_EXP_R_PERRUD_TXP_SCPV2P_P2IRAM_PERR_EN_XI	 (1L<<23)
+#de_ENA0_TXP_SCPR_EN_XI	 (1L<<4)
+#ISC_CB0REGS		 (1L<<31)
+_ROM_PERR_EN_X		 TXP_SCP_ENA0_COM_DMAE_PERR_EN_XI		 (1L<<0DMAA2_PCIE_REPLATXP_SCPERR_ENA0_CP_DMAE_PERR_EN_XI		 (1L<NA2_HB#define B_PERR_EN_XI		 (1L<<30)
+#define BNXRR_ENA2_COBED_19_TE	 (1ENABLE_STATUS_BITS_RX_LINK__ENGORLL_ASF		ITS_RSVD_FUT12)
+#define BNX2_MISC_DEBUG_VECTOR_ISC_PERPPQ_PERR_E3)12)
+#define BNX2_MISC_DEBUG_VECTOR_I			 (L<<24)GNT0_5				 (0x7e BNX2_MISC_DEBUG_VEX2_MISC_PERR_ENA1_MQ_IDX_PER BNX2_TOM_PERR_E0x3180ISC_SMB_RETRAX2_MISC_PERR_ENA2XPTXPQ_MISC		<<0)
+#define BNCSA2_PCIE_REPLAY_CFG					0x000008041X2_MISC_A
+	(((sb_id)OR_ENAB_MISC_PERR_ENA1_MQ_IDX__MISC_SC_VS_32
+#de12)
+#define BNX2_MISC_DEBUG_VEPHDR_STA#define A0_CP_SCPAD_PERR_EN_XI		 (1LBITS_COMdefine BNX2_MISC_PERR_ENA0_RXP_RBUFC__PND_SW_RESET			S14_XI	 (0L<<0)
+#define BNX2_M2_XIBB_EN		 (1L<ERR_ENA0_TXP_CTXC_PERR_EN_XI		 (RR_ENISC_ENABLE_STA)
+#d_MAIN_PLUS12_XI	 _1_0_MAIN_Pne BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+DWBNX2_MISC_MISC_PERR_ENA0_TXP_CTXC_PERR_EN_XI		 YTE		 (0xffL1L<<31)
+#def
+#define0FIG_1_0_MISC_PERR_ENA0_TXP_CTXC_PERR_NA2_TDMAQ_MISC			 2UT_STATUS_FIRST_NACK	 (	 (0L<<0)
+#define BNX22MB_OUT_START				 (1L<<9)
+#N_MINUS6_XIBUG_VMISC			 _PERR<8)
+#define BNX2_MISCN_MINUS6_XIPAT1_0_MAIN_M(1L<<7)
+#define BNX2_M_MAIN_MINUS6_XIASTXPQ_MISC		8K		 (4L<<8)
+#def_1_0_MAIN_MINUS6_XIGT_
+#defP2MAIN_PLUS12_XI	 NX2_MISC_PERR_ENA1_MQ_IDX_PER2_UMP_RERR_ENA0_TXP#define BNX2_MISC_CFG0_MAIN_MINUS16_XI	 (15#define BNX2_ne BNX2_PCICFG_MAILBO BNX2_MISC_PERR_ENA2fine BNX2_MIONTROL_1_0_MAIN_NOM_XI	_PLUS14		 (0L<<4)
+#ERR_ENA0_TXVREG_CONTROMB_OUT_STATUS_FIRST_NACK	 (VREG_2_MAX_READ_LVREG_CONTROL_1_0_M<0)
+#define BNX2_MISC_VRE_MISC_VREG_CONVAYREG_CONTROL_LE	 (1L<<)
+#define BNX2_MISC_ERR_ENA0_TXP_E_RST		 (1L08bL<<0)
+#define B_MISC_DEBUG_VECefinELxfL<<0)
+PERR_VREG_CONTROL_1_0_MAIN_M_DEBUG_CICFG_2ELIG_1_LUS2		 (6L)
+#define BNX2_MISC_PE_LINK_CONTROLS_2_5_DMAE_MISCffL<<0)NABLE_CLR_BITS_TXG_CONTRCONTROLLE	 (1L<<6)
+#d8bEN_PROTECT			 (0L<<ne BNX2_MIPERR_ENA_ARB_G (6L<<4)
+#define BNX2_MIS_VREG_CONTR_MIN_SETI0_TXP_SCUS6		 (10L<<4)
+#define BNX2_MISC_2REG_CONT0OL_2_5PLUS14HC_CON0)
+#define BNX2_PX2t03;
+_VREG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#defi_MISC_SMB_OUT_MISC_VREG_CONTL_2_5_MINUS1NX2_P_VREGG_COL<<4)
+#define BNX2_MISC_VREG_CONTL_2_5_MINU28HC_CON_CLOCK_CONTROL_BIT_VREG_CONTROL_2_5_M2NUS14		 (14L<6HC_CONefine BNX2_PCI_ID_SPIO_INONTROL_2_5_MINUS14		 (14L<0		 (12P_MSG_CLASSD	 (0xfffREG_CONTROL_2_5_MINUS14		 (14L<_HC_CONE_XI			CI_MSI_ADDR92_MISC_ARB0x0000086c
+#define Be BNXne BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14))
+#defi (13L<<0)
+#defiCOMREG_CONTROLS_RSVD_FUTURE__0_MAIN_PLUS9efine BNX2_MISB_FREE<<9)
+#defVREG_CONTROL_1_0_MAIN_MINUS6_XI	 (10L<<0)
+#def3ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	3(11L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_M3NUS10_XI	 (12L<<0)
+#define BNX2_MISC_VREG_CONTROLBNXL_2_5_MMINUS1_HC_CONSBNX2_MISC_VREG_CONTROL_1_0ne BNONTROL_1_0_MAIN_MINUS14_XI	 (14L<<0)
+#de3ine BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L_MISC_VREG_e BNX2_MISC_VREG_CONTROL_2_5			 (0xfL<<4)
+#de(11L<<8)
+#define BNX
+#define BNX2_MISC_PERR_ENA0_ENA2_MISC_VREG_SC_VREG_CONTROL_2_5_PLUS12		 (1L<<4)
+#defin_MISC_VREG__VREG_CONTROL_2_5_PLUS10		 (2L<<4)
+#define _MISC_VREG_REG_CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX2ROL_1_fine BL<<ROL_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_VX_PATCHUP8)
+2_5_PLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_CO3L_2_5_0000ne BSTATE_XI)
+#define BNX2_MISC_A BNX2_MIGPROL__5_NOM			 (7L<<4)
+#define BNX2_MISC_VREG_COHW_CTL0_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONHW_CTL05_MINUS4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRHW_CTL0NUS8		 (11L<<4)
+#define BNX2_MISC_VRVREG_CONT3OL_2_5_MINUS8		 (11L<<4)
+#define BNX2_MISC_VR3G_CONTROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_3REG_CONTROL_2_5_MINUS14		 (14L<<_HC_CONSUMSCHEDULER3_MISC_VREG_CONTROL_2_5_MINUS14		 (14L<<4)
+#defineK			2_MISC_VREG_CONTROL_2_5_MINUS16		 (15L<<4)
+3define BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (03fL<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MG3T_PLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_CO3C_VREG_CONTROL_2_5_MINUS16		 (15L<<4)
+ BNX2_MISC_VREGLE_CLR_BITS9_1_0_MG				L<<0)
+#deONTROL_1_CTL0W2_MISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)
+#define BNEDINUSC_VREG_CONTROL_1_0_MGMT_PLUS6		 (4L<<8)
+#def (1L<<21)
+#d9L<<19)
+#d 16
+#defineS12		 (1LVREG_CONTROL_1_0_MAIN_MINUS6_XI	 (10L<<0)
+#def4ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	
+#defi<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_M		 (10_XI	 (12L<<0)
+#define BNX2_MISC_VREG_CONTRO4_CONTROL_2_5_MINUS14_SETTROL_NDARYine BNX2_PCI_CON(0x7L<<8)
+#define BNX2_MIS14_XI	 (14L<<0)
+#de4ine BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15Lfine BNX2_MI BNX2_MISC_VREG_CONTROL_2_5			 (0xfL<<4)
+#de
+#define BNX2_MISC_GBNX2_MISC_VREG_CONTROL_1_0_MGMT_MffL<<0)
+
+#def_VREG_CONTROL_2_5_PLUS12		 (1L<<4)
+#defin_MISC_VREG__VREG_CONTROL_2_5_PLUS10		 (2L<<4)
+#define CONTROL_1_0_EG_CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX2ine B)
+#define ROL_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_V)
+#define BN2_5_PLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_COOL_2_52_5_PLUS2		 (6L<<4)
+#define BNX2_MISC_VREG_ODE_MAC_TX_DRIVE			 (1L<<0)
+#define BNX2_MISC_GP_HW_ODE_MAC_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONODE_MAC5_MINUS4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRODE_MAC_MODE			 (1L<<3)
+#define BNX2_MISC_GP_HW_CTL0XI		 (1L<<0)
+#define B#define BNX2_MISC_VREG_C4G_CONTROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_45)
+#define BNX2_MISC_GP_HW_CTL0_HC_CNTL_TMOUT_CTR_R_2_EXP_RREG_CONTROL_2_5_MINUS14		 (14L<<4)
+#defineXI		 (1L<<0)
+#define BL_2_5_MINUS16		 (15L<<4)
+4define BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (04fL<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MG4T_PLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_CO4_GRC_BNK_FREE_FIX_TE	 (1L<<9)
+#define BNX2_MISC_GP_HWPERR_ENA0_C9VREG_CONTROL_1_0_MAICets;_IRR_EADJ2_MISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)
+#define BNx0000I	 (13L<<0)
+#defi_0_MGMT_PLUS6		 (4L<<8)
+#def_TX_BD_CACHE920880
+#define BNX2_MD_LIMIT_512		 (0L<<21)
+#2_MISC_PERR_ENA2_TDMAQ_MISC			 5ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	5(11L<<0)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MERR_ALLEL_DETECT_DEF	 (1L<<15)
+#define BNX2_MISC_5P_HW_CTL0_OSCCTRL_DAI		 (0xfL<<16)
+#define BNX2_MI_BAR1_SIZE_256K		 (3_MINUS14_XI	 (14L<<0)
+#de5ine BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L_OSSC_GP_XTX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_2P0MA		 (3L<<1W_CTL0_OSCCTRL_XTAL_BNX2_MISC_VREG_CONTROL_1_0_MGMT_MW_CTL0_OSCCfine BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_1P0MAW_CTL0_OSCC_VREG_CONTROL_2_5_PLUS10		 (2L<<4)
+#define W_CTL0_OSCC<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_P#define BNX2_MIROL_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_VBNX2_MICTL0_2_5_PLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_COVED_ABLE	 (
+#define BNX2_MISC_PE BNX2_MISC__CTL0_define BTX_DRIVE			 (1L<<0)
+#define BNX2_MISC_GP_HW_LUS12		_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CON#define _MINUS4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRffL<<17)
+
+US6		 (10L<<4)
+#define BNX2_MISC_VREG_CONT5_PRSNT_TE		 (1L<L_PTX2_MISC_ine B)
+#define BN5G_CONTROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_55)
+#define BNX2_MISC_GP_HW_CTL0_HC_CNTL_TMOUT_CTR_R5_MISC_VREG_CONTROL_2_5_MINUS14		 (14L<<4)
+#defineCTine BN<24)
+#define BNX2_MISC_GP_HW_CTL0_OSCCT5define BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (05fL<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0_MG5T_PLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_COonfig_l d_FREE_FIX_TE	 (1L<<9)
+#define BNX2_MISC_GP_HW_PCI_CLOCK__ENA1_UMPefine BNX2_MPCI_CLOTLSPEED_0e BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)
+_NEWSC_VREG_CONTROL_1_0_MGMT_PLUS6		 (4L<<8)
+#defIZE_8M		 (1495)
+#define BNX2_LR				 (0xffL<<16)
+#define BNX2_SC_PERR_ENA2_TDMAQ_MISC			 6ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	ine BNX2)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_MBNX2_MISC_GTMOUT_CTR_NX2_MISC_PERR_ENA0_RXP_RBUFCefine BNX2_TROL_1_0_MGMT_MINUS4		 (9L<<8)
+#define B_HW_MISC_VREG_CONTROL_1_0_MGMT_MINUS6		 (10L<POWERDOWN_MISC_AREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L<00454
+#define BED_19_TE	 (1L<<19)
+#defin	 (0xfL<<4)
+#deAD_LIMIT_1K		 (1LRL_XTAL_ADJ_1P45	 (1L<<30)
+#define B_HW_CTL_RINGOSCREG_CONTROL_2_5_PLUS12		 (1L<<4)
+#definB_BB_EN		 (1L<EG_CONTROL_2_5_PLUS10		 (2L<<4)
+#define _0_MAIN_PLUS10_CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX2D_SOFT		 (0xffffL<_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_VUS12		 (1L<<4)
+#dLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_CO	 (1L<<1_NOM			 (7L<<<<4)
+#define BNX2_MISC_VREG__SMB_OUT_SMB_OUT		 (7L<<4)
+#define BNX2_MISC_VREG_COW_CTL_RINGOSCUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONHW_CTL_RINGOSC4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTR_HW_CTL_RINS6		 (10L<<4)
+#define BNX2_MISC_VREG_CONTCHEDU_CTL0_OSCCTRL_PTAT		 (0x3L<<24)
+#define B3)
+#defROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_4)
+#defiEG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#defiL<<14)
+#PL<<6)
+#define BNX2_MISC_GP_HW_CTL0_RESERVE2_XI	HW_CTL_RINGOSC_SEL1		 (1L<<3)
+#define BNXNUMS_ne BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (0		0x0W_CTL_RINGOSine BNX2_MISC_PERR_CONX2_MIS_REPLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_COS6		 (		0x000008c8
+#define BNX2_MISC_NEW_CORE_CTL_LINKNDARYBNX2_M9 (6L<<4)
+#define6		 (4L<<8)
+#defL<<2e BNX2_MISC_PERR_ENA0_TPAT_SCPAD_PERR_EN_XI	 (1L<<14)_MISC_2)
+#defineENA1_HC_PRODUCSTB_PERR_EN_XI	 (1L<< (2L<<11)
+#S16_E<22)
+#define(11L<<8)
+#de2)
+#define BNX2_MISC_GP_HW_CTL0_FORCE2500_DEF		7ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	ROR_HC_0008cc
+#define BNX2_MISC_ECO_HW_CTL_LARGE_GRPERR_ENSC_CFG_LEDMENABLE_STATUS_BITS_RX_L<<0)
+#deffL<<0)
+#dSOFT		 (0x7fffL<<1)
+#define BNX2_MISC_ECO		0xCTL_RESERVED_HARD		 (0xffffL<<16)
+
+#define_MISC_VREGISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L<<0)
+#defineNUMS_RESERVED_SOFT		 (0xffffL<<0)
+#define BNLUS12		 (1L<<		 (1L<<3)
+#define PLUS14		 (0L<<4)
+#def
+#define BNX2_MIROL_BITS_RESERVED2_XI	 (0x3fLDAI_1P0MA		 (7L<<16)efinfine BNX2_MISC_GP_HW_CTL0_OSCCTRL_DAI_PWRDN		 (15L		 (CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX2S16_ERR_STA_CP			 (1L<<24HC_CONSUMS<4)
+#define BNX2_MISC_V_TBDR			 (1L<<5)
+LUS4		 (5L<<4)
+#define BNX2_MISC_VREG_CONA2_HB_			 (0xfL<<0)
+#define BNX2_MISC_PPIO_INT_O2_5_PLUS6		 NOM			 (7L<<4)
+#define BNX2_MISC_VREG_COe L2_FHDR (1LUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONI	 (1L<<3)ERR_4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRfffL<<0)
+#dS6		 (10L<<4)
+#define BNX2_MISC_VREG_CONT_CS16_CTL0_OSCCTRL_PTAT		 (0x3L<<24)
+#define Bfine BTS		 (0x7L<<4)
+#define BNX2_MISC_RESET_NUERR_EN_XEG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#defiBNX2_M_PEEG_CONTROL_2_5_MINUS14		 (14L<<4)
+#define ERR_EHW_CTL_RINGOSC_SEL1		 (1L<<3)
+#define BNX00884ne BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (0PERRefine BNX2_MSC_PERRAL4_M1)
+#define A_TBDRVREGLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_CO24)
+#d		0x000008c8
+#define BNX2_MISC_NEW_CORE_CTL_LINK2_MISC_PERR_TS_TX_SCHEDULER_ES1WAP_X2_MISC_ENABBNX2_MISC_CS16_ERR_ENA_CTX			 (1L<<4)
+#define BNX2_MIS_MISC_PERR_ENA1_MQ_IDX_PERR_defiTXC	<<16)
+#define BLE_CLR_BITS9SC_CFG_LEA			 (1L<<14
+#dHY0_SC_PERR_ENA0MAIN_MINUS14_XI	 (14_TDMAQ_MISC			 8ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	defineRCHE_ENABLe BNX2_MISC_VREG_CONTROL_1_0_MAIN_M2_MISC__STA_RDMA			 (1L<<17)
+#define BNX2_MISC_CS1P66	 (3L<<TROL_1_0_MGMT_MINUS4		 (9L<<8)
+#define BS_PERONTROL_1_0_MAIN_MINUS14_XI	 (14L<<0)
+#deUF_PTRMEM_PISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15Lefine BNX2_ME_CLK_PLLC_VREG_CONTROL_2_5			 (0xfL<<4)
+#deI	 (1L<<25)
+00468
+#dBNX2_MISC_VREG_CONTROL_1_0_MGMT_MIISC_NEW_HW_CTL BNX2_MISC_CS16_ERR_STA_CP			 (1L<<24)
+define BNX2_MIMISC_SPIO_EVENT				0x000008e4
+#define BNHW_CTL_RINGOSC_CONTROL_2_5_PLUS8		 (3L<<4)
+#define BNX20000870
+#define BN_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_V6		 (4L<L<<0)
+#deLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_COENA0_TH			 (0xfL<<0)
+#define BNX2_MISC_PPIO_INT_OENA0_THNA2_HNOM			 (7L<<4)
+#define BNX2_MISC_VREG_CO_MISC_TSCHQPEUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONBNX2_MISC_MTQ_L<<0)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_S		 (12L<<0)
+#define BNX2_MISC_DUAL_MEDIA_CT	0x00_CTL0_OSCCTRL_PTAT		 (0x3L<<24)
+#define B4)
+#deTS		 (0x7L<<4)
+#define BNX2_MISC_RESET_NUR_ENA0_CEG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#defifine BNX2EG_CONTROL_2_5_MINUS14		 (14L<<4)
+#definene BNXHW_CTL_RINGOSC_SEL1		 (1L<<3)
+#define BNX_MISC_e BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (0e BNX2_MISC_PE_SIGDET		 (1L<<15)
+#define BNX2PIO_LUS14		 (0L<<8)
+#define BNX2_MISC_VREG_COC_CLOCK_COFREE_FIX_TE	 (1L<<9)
+#define BNX2_MISC_GP_HWine BNX2_MIC_PERR_EN4)
+#define BEBUG	OTGNT0D3_HBNX2_MISC_CS16_ERR_ENA_CTX			 (1L<<4)
+#define BNX2_MIS		 (0xfL<<0)
+#define BNOMTQ_MISC			 (1L<<2)
+#defin(1L<<24)
+#de9SMB_<<4)
+#define BNX_DO(0x3L<VREG_CONTROL_1_0_MAIN_MINUS6_XI	 (10L<<0)
+#def9ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	 BNX2_MI)
+#define BNX2_MISC_VREG_CONTROL_1_0_MAIN_M_PERR_E_STA_RDMA			 (1L<<17)
+#define BNX2_MISC_CS	 (1L<<29)6)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_EBUGES_IDDQ_SER1_IDDQ	 (1L<<26)
+#define BNX2__ENA1_TXP_MISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15L_ENA1_TXP_MHDEBUTAL_ADJ_1P57	 (0L<<30)
+#define BNX2_MISC_ERR_ENA1_UMPSCCTRL_XTAL_ADJ_1P45	 (1L<<30)
+#define BN#define BNUMP_ BNX2_MISC_CS16_ERR_STA_CP			 (1L<<24)
+
+#define A1_UMMISC_SPIO_EVENT				0x000008e4
+#define BNefine BNX2_MISdefine BNX2_MISC_PPIO_CLR				 (0xfL<<16)
+
+#define BNX2_MIID_1300008e8
+#define BNX2_MISC_PPIO_EVENT_ine BNX2_MISC_OTCdefine BNX2_MISC_GP_HW_CTL0_OSCCTRL_CTAT	P_SHIF			 (0xfL<<0)
+#define BNX2_MISC_PPIO_INT_OAT		 (0x3L<<NOM			 (7L<<4)
+#define BNX2_MISC_VREG_COVREG_CONTROL_US2		 (8L<<4)
+#define BNX2_MISC_VREG_CON#define Befine4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRne BNMC_OTPS6		 (10L<<4)
+#define BNX2_MISC_VREG_CONTne BN_CTL0_OSCCTRL_PTAT		 (0x3L<<24)
+#define B#defineROL_2_5_MINUS10		 (12L<<4)
+#define BNX2_L_1_0_MGEG_CONTROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#defi BNX2_MISCG_CONTROL_2_5_MINUS14		 (14L<<4)
+#defineBNX2_MIW_CTL_RINGOSC_SEL1		 (1L<<3)
+#define BNXMD1_PVSEL				 (0xfL<<20)
+#define BNX2_MISC_OTe BND1_TM				 (0x7L<<27)
+#define BNX2_MISC_OTfineLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_CO1_RDMATUSEBUG			 (1L<<31)
+
+#define BNX2_MISC_OTP_CMD2	PCI_CLOCK_CBLE		 (1L<<4)
+#defin#defSTfine RIDEOM_ADDR			 (0x3ffL<<0)
+#define BNX2_MISC_OTP_CMD2_DOSEL (0xfL<<0)
+#define BNH_EVEODUCSTB)
+#define BNX2_MIN_XI		 (1L<<09C_DUAL_MEDIA_CTRL_PH			 (1L<<1VREG_CONTROL_1_0_MAIN_MINUS6_XI	 (10L<<0)
+#defL0ne BNX2_MISC_VREG_CONTROL_1_0_MAIN_MINUS8_XI	 ST_EN					0x000008f8
+#define BNX2_MISC_OTP_STATUS_DA_ENA1_efinLEDMODE_PHY6_TE			 (6L<<8)
+#dX2_MISC_CSne BP_SHIFT#define BNX2_MISC_NEW_CORE_Ce BNX2_MISC_VPCI_VES_IDDQ_SER1_IDDQ	 (1L<<26)
+#define BNX2_M	 (1L<<11)
+ISC_VREG_CONTROL_1_0_MAIN_MINUS16_XI	 (15LX	 (1L<<11)
+D_CACHRESERVED_SOFT		 (0xffffL<<0)
+#define BN8)
+#definC_DUA
+#define BNX2_MISC_CS16_ERR_STA_COM			 (P2_ROM_PERR_EN_XCTL0_OSCCTRL_XTAL_ADJ_1P62	 (2L<<30)
+#deAIN_PLUS12_XI	MISC_SPIO_EVENT				0x000008e4
+#define BN
+#define_TXP_SCPSC_OTP_SHIFT1_CMD_LOAD_DATA		 (1L<<3)
+#deMISC_BIST_CS2_M		 P_SHIFT1_CMD_SHIFT_SELECT		 (0x1fL<<8)
+
+#dBUG_VECTOR_SEL		LUS4		 (5L<<4)
+#define BNX2_MISC_VREG_COOP_SHIFT8ec
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ERR_ENA2_CO3L<<21	 (7L<<4)
+#define BNX2_MISC_VREG_COVefine BNX2_MI1_FMODE_VERIFY			 (5L<<0)
+#define BNX2_MIY_CTRL		 (0x7L4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRED		 (0xfL<		 (0xfL<<0)
+_MEDIA_CTRL_SST_MECS4_B_NA(1L<<L_2_5_MINUS8		 (11L<<4)
+#define BNX2_MISC_VR BNXe BNROL_2_5_MINUS10		 (12L<<4)
+#define BNX2__ENA1_RDMAQ_MISCROL_1_0_MAIN_PLUS12_XI	 (1L<<0)
+#definONTROL_1__MISC_BIST_CS0_MBIST_EN			 (1L<<0)
+#definALLEL_DRESET_NUMS_NUM_PORT_RESETS		 (0x7L<<16)
+
+#S3		e BNX2_MISC_BIST_CS0_MBIST_ASYNC_RESET		 _(1L<D1_TM				 (0x7L<<27)
+#define BNX2_MISC_OT_CS2PLUS14		 (0L<<8)
+#define BNX2_MISC_VREG_COi (1L<<(1L<<9)
+#define BNX2_MISC_BIST_CS0_BIST_OVERRIDE
+#define BNX2C_SMB_OUT_SMB_READ_L4_BIS5_SETUP	DON_CORE_CTL_LINK_HOLDOFF_REQ		 (1L<<1)
+#define BNX2_MISC_MEDIA_CTRL_STRAP_OVERR_0_MGMT_PLUS6		 (4L<<8)
+#def<<25)
+#d		 (1L<<21 BNX2_PCICFG_MIS9STATUS4		<1)
+#define BNX2_MISC_BIST_CS1_MBIST_ASYNC_RESE0
+#define BNX2_MISC_BIST_CS3		<0)
+#define BNX2_SMB_OUT_START				 (1L<<9)
+#e BNX2_MISC_OTP_STATUS_DA (6L<<8)
+#define BNX2_MISCe BNX2_MISC_VREG_CONTROLadcom NX2 network drivSC_BIST_CS2				0x0000091c
+#defISC_SM_ASF_CONTROL_NIC_SML<<26)
+#define BNX2_M_MAIN_PLUS12_XI	 ST_CS2_BIST_SETUP			 (0x3L<<1)
+#definX_PERR_EN_XI BNX2_MISC_VREG_CONTROL_2_5			 (0xfL<<4)
+#de#define BNX2_MISC_USPBIST_DONE			 (1L<<8)
+#define BNX2__MCP_SCPAD__HW_CTL0_OSCCTRL_XTAL_ADJ_1P62	 (2L<<30)
+#deNA2_M
+#defineSHIFT1_CMD_SHIF BNX2_MISC_VREG_CONTROL_1_0TM0_UHB18)
+<<16)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_Pe BNfine I
+#dePLROL_2_5_PLUS6		 (4L<<4)
+#define BNX2_MISC_VEDEBUG_VECTOR__5_PLUS4		 (5L<<4)
+#define BNX2_MISC_VREG_COO)
+#def08ec
+#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_<20)
+#def_5_NOM			 (7L<<4)
+#define BNX2_MISC_VREG_COV<<20)
+#defMINUS2		 (8L<<4)
+#define BNX2_MISC_VREG_CONne BNX2_MISINUS4		 (9L<<4)
+#define BNX2_MISC_VREG_CONTRLX2_MI_NOM			 L<<_MISC_RESET_NUMS_NUM_HARD_RESETS		 (L_2_5_M<<1)
+#define BNX2_MISC_BIST_CS4_MBIST_AS_2_5_MINUS14		 (14L<<define BNX2_MISC_BIST_CS4_Mdefine BNX2_MISC_GP_HW_CTL0_OSCCTHC_CNTL_TMOUT_CTR_R0)
+#define BN9)
+
+#define BNX2_MISC_BIST_MEMSTATUS4		X2_MISC_RESET_NUMS_NUM_HARD_RESETS		 (_2_5_MINUSSdefine BNX2_MISC_VREG_CONTROL_1_0_MGMT			 (0_SET		 (1L<<3)
+e BNX2_MISC_VREG_CONTROL_1_0_MG_CONTROL_2_5_MINUS14		 (14L<C_BIST_CS5_MBIST_ASSET_NUMS_NUM_PORT_RESETS		 (0x7L<<16)
+
+#ST_CS5_MBIST_DOB_BB_EN		 (1_MISC_SMB_OUT_SMB_OU			 (6L<<8)
+#def_CORE_CTL_LINK_HOLDOFF_REQ		 (1L<<1)
+#define BNX2_MISC_R		 (1L<X2_MISC_PERR_ENA2	1L<<9)
+#define BNX2_MISC_Bfine BNXTX_C_VREG_C			 (1LFIRST_EN			S_DAT<1)
+#define BNX2_MISC_BIST_CS1_MBIST_ASYNC_RESE<24)
+#define BNX2_MISC_GP_HW_CTL0_OSTROL_defin1S_CMD_SCHEDULER_0_RXP_RBUFC_PERR		 (1L<<11)
+#define1ROL_14)
+#defTCHUP_ENABLE	XP_CTXC_PERR		 (1L<<12)
+SETS		 (0x7L)
+#define BNX2_MISC_DUAL_MEDIA_CTRL_PHY_SERD_MISC_BIST_CS4_BIS2_SETUP			 LEDMODE_PHY6_TE			 (6L<<8)
+#dPERR		 (1L<<11)
+#define BNX1e BNX2_15)
+#dRR_EN_XI	MISC_PERR_STATUSASYNCONTRO_SERDES0_1L<<16)
+#define BNX2_EBUG			 (1L<<31)
+
+HW_CTL0	1UPPORT)
+#define SERDES0_RST		R_STATUSG2_MISC_SM_1L<<0)
+#de2_MISC_BIST_CS1L<<17)
+#define BNX2_MISC_PERR_STAE	 (3S4		)
+#define BTUS0_C<13)
+#dTBDR			 (1L<<5)
+#deCS4_BIS3_STATUS0_TXP_CTXC)
+#define BNX2_MISC_PERR_ST (1L<ASK	08bc
+#define BNX2_MISCX2_MISC_ENABLX2_MISC_PERR_STATISC_PERR_STATUS0_CS_TMEM_PERR2_MISC_PERR_ST			0x000008bc
+#define BNX2_MISC_GP__P2I* CoNX2_MISC_PERR_STATNX2_MISC_PERR_STATUS0_RPM_DF2_MISC_PERTROL_			0x18	 08bc
+#define BNX2_MISC_GP_CO_0		ABLE_	 (1L<<10)9efin<20)
+#define BNX2_MISC_PT_SETUP		TATUS0_RV2P_ (1LERR		 (1L<<15)
+#define BNX2_MISC_PERSTATUS0_RV2P_TS_RX_3)
+#define BNX2_MISC_USPLVR1e BNX2_MISC_PERTROL_1E	 (3LTATUS0_RPC_DFIFCS4_MBISTIST_GD_SCHEDULEES_IDDQ_SER1_IDDQ	 (1CS4_BIST_SETUP7)
+#define BNX2_MISC_PERTROL_1BNX2_MX2_MISC_PERR_S17)
+#e BNX3<<4)
+#define BNX2_MICS4_BIST1_15 BNX2_R		 (1L<<15)
+#define BNX2_MISC_PERR_T		 (0xfL		 (0RR_STATUS0_TBDC_PERR		 (1L<5TUS1		SETU			 SET__STATUS0_MQ_CES_IDDQ_SER1_IDDQ	 (1e BNX2_1_OSCCTRL_DAI		 S0_CP_		 (1L<<2)
+#define2_MISC_PERR_STA(1L<<0_MGMT_MINUS16		  BNXA1_UMPC#defiB_OUT_STAIRSTBYTEHW_CTL0_OSCCTRL_DAI		 RR		TS_RXNX2_MISC_VREG_CONne BNX2#define BNX2_MISC_MEM_TM0				0x0000093c
+#defi2_MISC_PERR_S_MISC_PERR_ENA1_TDOU(0x3fffL<<2)
+#define BNX2_MISC_NEW_CORE_CTL_RESERVED_TC	L	 (1L<<50xffL<<24)
+
+#define BNX2_EBUG			 (1L<<1OSCCTRL_DAI		 NOe BNXTA_1_PRG		 (0xffL<<8EBUG			 (11L0_OSCCTRL_DAI		 (0xfLCB1REGS_PES_IDDQ_SER1_IDDQ	ne BHW_CTL0_OSCCTRL_DAI		 (0xfL<<16)
+#define BNX2_MI_CS2fine BNX2_MISC_PERR_STATUS0_TXP_CTXC_PERR		#define BNX2_MISC_PERR_STATUS_OSCCTRL_DAI		 (0xfLARY_S0_CP_SC_BIT_
+#define BNX2_MISC_PERR_STATUS0_CS_TMEM_PERR	_MISC_FINAL_#define BNX2_MISC_PERR_STATUS1_RBDC_PERA_CTX			T_BITS_define BNX2_MISC_PERR_STATUS0_RPM_DFIFOMEM_I		 (0xfLTSCH_LR_PER#define BNX2_MISC_PERR_STATUS1_RDM_DFIFO_PERR_1L<<20)
+#define BNX2_MISC_PERR_STATUS0_RBUF_Pefine 
+#defi4		 (9L<<0x0000086c
+#define BFINAL<0)
+#efine B318000
+#defin (1L<<22)
+#define BNX2_MISC_PERR_STATUS0_RV2P__IND_PRSNT_TEINUS4		 (9L<<_CB0REGS_PERR	 (1L<<GP_MISC_PERP_P1IRAM_PERR		 (1L<<24)
+#define BNX2_MISC_PERMISC_R_MIS (1L<<BNX2_MISC_VREG_CONTROL_2_5		 BNX2_MISMIT_1K		 TATUS0_RV2P_CB0REGS_PERR	 (1L<<26)
+#define BNX20_RV_MISC_PERR_Sdefine BNX2_MISC_PERR_STATUS1_RDMAQ_PFLASH_SRR_E0
+#deNEGEDG		 (0<13)
+#define BNX2_T_GO			 (1 BNX2_MISC_HIDDEPAD	 BNX2_PCIRV2PCS_TMQ_PEine BNX2_MISC_PERR_STATUS0_TBDC_PERR		 (1L<<30)
+#dCMD_ABLE	 (1L<<7)
+#_CTL1_1_PWR_IND_PRSNT_TE	ITS			MISC_define BNX2_MISC_PERR_STATUS1				0x00000948
+	 (1LN1_SWAP_E<20)_5_MIWR_GOING_AWA (0xLT_SRC0x000
+#define BNX2_MISC_PERR_STATUS1_RDMA_DFIFO_CFG_	 (1L<<29)#define BNX2_MISC_PER BNX2_MIS10OL_BIBNKefine_FATUS2PCS_TME<20)
+#define BNX2_MISNX2_Mine Bdefine BNMISC_VREG_CONTROL_1_0_MAIN_NOM_XI	SC_PERR_STATUS2				0x_IN__MINUS8	_PERR_STATUS1_TXPQ_PERne BNX2#define BNX2_MISC_MEM_TM0				0x0000093c
+#defidefine BNX2_MTQ_PERR		 (1LMB_OUT_ne BNX2_MIne BNX2_MISC_PERR_STATUS1_MCPQ_PERR		 (1L<<8)
+#XI	 (1L<<8)
+#define BNX2_MIS BNX2_MISC__PCI_BITTAT	DISC_E1L<<29)
+#d)
+#define BNX2_MISC_A BNX2_MISC10)
+#ALLELNTRO<0)
+#EAT_1define BNX2_MISC_CLOCK_CON1D_PRSNT_TE		 (1L<L_DAMINUS8		 (1<22)
+#define BNX2_MMISC_ine BNX2_MISC_PERR_STATUS0_TXP_CTXC_PERR		_CTL1_1_PWR_IND_PRSNT_TE		 (1L<ISC_L_2P5MX2_PCICFG16)define BNX2_MISdefine BNX2_MISC_PERR_STATUS0_CS_TMEM_PERR	<8)
+#define BNX2_MISCe BNX2_MISC_LCPLL_CTRL01ICP_CTRLMAIN_NOM_XI		define BNX2_MISC_PERR_STATUS0_RPM_DFIFOMEM_FG_CYCLE_3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_60Pefine BNX2_M1L<<20)
+#define BNX2_MISC_PERR_STATUS0_RBUF_PRE2G_LED_ERR_ENA_TBDR			 (1L<<5)
+#dee BNX2_MISC_LCPLL_CPRES_RESERVED2_X (1L<<22)
+#define BNX2_MISC_PERR_STATUS0_RV2P_0
+#define BC_GP_HW_CTL1_1_PWR_IND_PRSNT_TE		 (1L<_MISCPLS16_1IRAM_PERR		 (1L<<24)
+#define BNX2_MISC_PERCTL0_OS_MIS_M0SHUTDOWN	RL0_VTH_CTRL_1		 (1L<<11)
+#defQ_MISCPBNX2_MISC_P2P_CB0REGS_PERR	 (1L<<26)
+#define BNX22_MISC_LCPLL_CC21)
+#define BNX2EBUG			 (1L<<31)
+
+#de	 (0x3L<<11)
+#defineefine BNX2_MISC_NEW_HW_CTL<<27)
+#define BNX2_MI0008c4
+#defi_M6x00000efine _LCPine BNX2_MISC_PERR_STATUS0_TBDC_PERR		 (1L<<30)
+#dNT3_31				 (0x7L<<28)
+
+#CPLL_CTRL0_FREQDETRESTARP0C_LCPdefine BNX2_MISC_PERR_STATUS1				0x00000948
+RCEFDONE__EN		 2_MISC_NEW_HW_CTLX2_MISC_LCPLLRCETS_DMAfine BNX2_MISC_PERR_STATUS1_RDMA_DFIFO_MISC_LCPLL_CT_CTRL0_FREQDETRHW_CTL0_O240UA	 1 (1L<<3)
+#define BNX2_MISC_LCPLL_CTRL0_ICP_CTRHW_CTL0_X_ASSE_TASQ_PERR_EN_XI	)
+#define BNX2_MISC_PERR_APDONE_EN	 (1L<<240
+#defTATUS_3)
+#define BNX2_MISC_LCPLIE_RESETdefine BNX2_MISC_MEM_TM0				0x0000093c
+#defi2_MISC_LCPLL_C BNX2_PCI_CONFI0SW_SR_PERBNX2ne BNX2_MISC_PERR_STATUS1_MCPQ_PERR		 (1L<<8)
+#C BNXL<<22)
+#def (1L<<ERR		 (1L<<2)
+#define BN1LLFORCECAPDONE_EN_CTRL1			16x00000ne BNX2_PCI_ID_VANX2_MISC_LCPLL_CTRL0_FREQDETR (0x1fL<<0BNX2_MISC_L1
+#define BNX2_MISC_LCPLL_CCESLOWDOWN_EN	 (1L<<5)
+#dne Bdefine BNX2_MISC_LCPLL_CTRL0_ICP_CTRL			 (0W_CTL0_OSCCALL1		0
+#define 3CPLL_CTRL0_VTH_CTRL			 (0_CONTROL_1_0_ne BNX2_MISC_LCPLL_CTRL0_ICP_CTRL_480		 (1L<<LCPLL_CTRL0_PLLFORCEMISC_LCP_1P4VED__SM_A_TX_PERR		 (ISC_LCPne BNXdefine BNX2_MISC_PERR_STATUS0_RPM_DFIFOMEM_PW_CTL1_1_PWR_IND_PRSNT_TE		 (1L<PASS_SM		 (1L6BITS3L<LL_STATUSTAT1L<<20)
+#define BNX2_MISC_PERR_STATUS0_RBUF_P<<2)
+#define BNX2_MISC_1TATUS_AT_MISSN		 (1L<<29)#define BNXCPLL_STATUU (1L<<22)
+#define BNX2_MISC_PERR_STATUS0_RV2P_L<<2)
+#define BNX2_MISC_1e BNXS_TX_NX2_MISC1)
+#deDNe BNIine 1IRAM_PERR		 (1L<<24)
+#define BNX2_MISC_PEROL_BITS_RESERVED2_XI	 (0x3fL (1L<<15)
+#ITS			0x0SOFT_PLL_STATSC_PERR_STATUS1_CSQ_PERR			 (1L<<25)
+#define BNXD_HARERR_EN_X0xE_BOUNDARY_64		 EBUG			 (1L<<31)
+
+#deC_NENX2_MISC_PEc1L<<20)
+#define BNX2EW_CL<<15)
+#efine OR_BYP2		(EDMODE_PHY6_TE			 (6L<<8)
+#dNEF		 (L<<10)
+#MISC_PERR_STATUS0_TBDC_PERR		 (1L<<30)
+#dine BNX2_M_RINGL0_RSEPIO_IE_CTL_RESERVED_HARD		 (0UNDSdefinne BNX2_MISC_PERR_STATUS1				0x00000948
+5)
+#define BNX2_M)
+
+#define HA_RES0xfL<<8)
+#d			0_TX_PERR		 (1L<<1)
+#define BNX2_MISC_PERR_SMISC_ENABLEBNX2_PCI_ID_VAL3_CLAS
+#define #def1ne B_CTRL_FREQ_MO0x0000086c
+#define BSC_OSCFU2_MISC_NE1L<<10)
+)
+#defMISC_VREG_CONTROL_1_0_MAIN_NOM_XI	NX2_MISC_OSCFUN_HOLD<4)
+)
+#define BCPAD_PERR		 (1L<<10)LFSR_MASKefine BNX2_MISC_MEM_TM0				0x0000093c
+BITS_RSVD_FUTURE_#define BN<<4)
+#define BNX2_M BNX2_ENABLE	 BDC_PERR_EN_XI		 (1L<<0)
+#define BNdefine BNX2_MISC_P_001	 (1L<<21)
+#defHW_CTL0_0
+#define RR_EN_XI		DE_B0		 (1LUS_BITS_RX_DLL_CTRL_VC_E)
+#define ine BNKNU
+#defiTED	 (0x7L<0MISC_COMMAND_DISONTROL_1#define BCBNX2StetsGDET		 (1L_PCIOSCFU0)
+#de_FM_E			 (PBDC_PERR_EN_XI		 (1L<<0)
+#define 		 (3	GE_SUPPOFST_
+
+#de_TSCHQ_PERR_EN_XI		 (1L<<19) */
+struc BNX2			0x000W_ENA		 (1A0_CP_SCPAD_PERR_EN006400
+#dIAMPe BNX2_NVM_COMMANDNX2_MISC_PERR_ENA0_R006400
+#dIVMPCIE_LINK_<10)
+#deS14_XI	 (0L<<0)
+#defioffsetIP_M(1L<FRGMCTX_TY 4
+#defiBNX2_L2CTX_TXC_PERRND_DOIT			NOR_1	 (1L<HX2_M<<8)
+#define BNX2_MISC_8)
+#definW
+
+#dNSN
+		#defC_PERR_ENA1efinFLOAT	HW_CTL0_One BN<<15)16_ERR_LOC		<<1)
+
+#define BNX2_L<<2ne B (1L<<7efine BNX2_MISC_ARB_GNT3_24	e BNX2_ BNX24TS_TX_SCHEDULEL<<13)
+#define BNX2_Me BNX2__MISC__ENA_TX_DMANT_OLD_SET_TE			 (0xfL<<ISC_PERRV (15LATUS_BIBITS_TX_DMA_ENABLBNX2_MISC_PERR_STATUS1_defin	
+#define BNXRB_GNT0IGDET		 (1L<<15)
+#defLE_ALLRPCI_ID_V1_SWAPBNX2_MISC_EN	 (1L<<222_PCI_PM_BNX2_MI2_PCBNX2_MISCL<<1)
+
+#define BCPLNVM_COMFSM<5)
+#<<0)
+#d_bd_hadnvm_MISC_COMMAND		};
+
+
+*/
+s		 (0xffffL<2_MISC_ITS_CORE_CLK_9)
+#defiD)
+#dISC_DR1		 (1)
+#defidefineB6_1_0_EEUE_ENABL<<25)
+#deCPAD_PERe BNX2_MIS#define BNX2_MI2_IPLGMT_Pne BNX2_MISC_CLOCOABLEISC_DR1		 (1L<<27)
+#define BNBNX2LOCK_CONTROL_BITS_CORE	 (1L<<9)
+_TX_PERR		 (1L<<ND_RSTA_index14B_FREE1	2_MCefinATE			 (0xfL<<8)
+#define BNXENABLE	 BNX2_MISC_ENABLE_STCMC_GP__SPD_DET_95MHZ	 (OM_SIZIE_SPI_CMD1T			_IDL0_DMA12L<<4)
+#define BN_CTX_MIS6VM_Sine BNX2_NVM_S) > DMAE_PERR		 (1L<<1)		 (0M_SIHDR_STX2_LI	 (4L<<0)
+#define R		 ISHBNX2_NV3Aus_rx_25e BNX2_L_XI	 (5L<<0)
+#define BNX2_NVM_STATE_CL_TX_5		 (5X2_NVM_S	 (1L<<ATABNX2_NVE_XI			 (0xffL<<S_TX32 sta_TX_ne BNATE_SPI_WRITE_DATA0_XI	 (6L<<0)
+#defin TX_BD_FL204PNABLE_BNX2_NVP_MSG_CLASS	 (0xfLNX2_NVM_STUDne BNXYTUS_EQ_00STATE_SPIS_EQE_SPI_CMD1_XI	 (2L<<0#define CI_CAD_DAOUX2_PCI_L6)
+#de_STATUS_SPI_FSM_STATE_SPIATE_SPI_WRITE_POR_R000UABLEefineI	 (10L<<0)
+#define BNX2_NVM_STATTS_TR_BITS_X regiCFG_MTATUS_SPI_FSM_STATRE_CLK_1_UNKNOWfL<<24)
+6_ERR_LOC		E				 (1L<<6)SC_PE<0)
+#d	)
+#defiFSM_	0x0<17)
+		#SPLTX_CACHE_PERR		 (1L<<PTE_SPI_efine BNDID1_MISC_LE_ENODE_PHY9_XI			 (11L<<TATUS_S
+#de0XTRA_Wstat_CatchuVM_STATUS					0x00006404
+#us_rxe BNX2_NVMNX2_MISUAL_BNX2__CT_55MHZ	 MDSC_E	BNX2_define BNX2_NVM_STATATE_SPI_CMD1_XI	 PI_FNX2_MIne Bx_bd_ATUS_RDID0_XI	 (_CTRL_FREQ6402_THIS_STAT		 (1TUS			DTX_CTRDMA_DFIFO_PERR_EN_XCK_CAPYBNX2__NVM_C<<22)
+ BNX2_MISC_PERR_ENA1_RNVI_FSM_STATE__MGMT_MINUSSTATUS_SPI_FSM_)
+#definx7L<FSM_STATE_TS_RX_PARSTUS_RDID0_XI	 (A_C_e BNX2_N_STASY		 (MISC_MB		 (1_STATUS_SPI_FSM_2_NVM_SR(0x7PLL_SPEEERR_EN_XI	 <<0)
+#define BNX2_NVM_STABNX2_MINX2_MI)
+#defLK_PLSPI_FSM_STATE_HC_CONSefine BNXANM_DATA(10L<<0)
+#d (6L<NX2_NVM_STATUS					0x00006404
+# BNX2_BNX2_MIS000454
+#define B2_MICLOCK_CAVAILfine BsRx512Octe_PCICFGS_32BIT_DE_CTRL#defiMISCNV#defiLUPQ_WRe BN_BITS_T_110	 (6L<<12)
+#definVM_WRITE_NVM_WRIfine BR_STATUe BNX2_MISR_BITS_COMPLETION_WRITE_NVM_WRITT
+#definISC_ (16L<<0)
+# (13L<<0)
+#define BNX2NVM_WRITE_VALUE<<24)
+X2_PDEfL<<MAIN_MINUS14_XI	 (14LVM_WRITE_VALUE_S
+#de		 (1L<<3)
+#de)
+#define BNX2_MISC_LCPLL3_D2_MIine BNOTM_WRIx7L<<0)
+#define BNX2__CTRITE_NVM_WRITE_VAdefiNX2_MK_CAPAB2)
+#define BNX2_MISC_RITE_NVM_WRITine BCLOCK_CY_C(1L<<0)
+#deTATUS_SPI_FSM_STATEBNX2_NVVM_WRIROL_EUE_EALMNABLEND_DOIT				RR_ST)
+#define 00000833_TDMA_
+#deLFORCEFPASS	D_LADR_NVM_ADDR_11L<<8)
+#de4_CAPM_DAI_CONFIG_2_EXP_ROM16T		 (1ITE_NVM_WRIFTQX2_M_MISC_ARB_GNTSTATUS_SPI_FSM_STATWRITE_NVZE_128K
+#define BNUMBO_KSPD_DET_95MHZ	 (6L<<0)VM_WBLE_SVM_WIO_SETEG_AT_L2CTX_TX2_MISC_VREG_CONTROL_1__NVM_ADDR_NVMBLE_STATUS			0
+#def (2L<<0)
+#define BNX2_NVM_AMBISC_PERRdefiM2				0xPCI_IMD_WR_REQ			NVM_ADDR_NVM_ADDR_VE_SIFG_LEDMATUS_EQ4STATUS4			X2_NVM_WRITE					0M_ADDR_NVM_ADDRSTATdefi_SI		 (32L<#define BNX2_NVM_ADDR_NVM_ADDR_VLUE_SI	NTROL_L0S_EXIT_STAT(4L<<0)
+#define BNX2_NVM_ADDR_NVMVALUE_CS_B_X_L0S_EXITe BNXe BNX2_NVM_ADDR_NVM_ADDR_VALUE_SCLK_XI		 (8L_MISC_ENABLE_BNX2_NVM_READ					0x00006410
+#define BNX2_NVMMFUE_CS_B_CSlo;
+X2_NVM_ADDR_NVM_ADDR_VALUE_CS_B_0
+#de2_MISC8L<UE_EECL (1L<			0x00MISC_SCPAD		DDR_NVM_ADDR_VALUE_CS_B_	 (3_Xu32 staBNX2_NV#define BNX2_NVM_ADDR_NVM_ADDCAPABILITe BNBNX2_MISC_VREG_CONTRX2_NVM_STAT_SPI_ND_RD17)
+#define2_NVMCLE_16K		 (SCLK		 (4L<<0)
+#defi_NVM_RECLK_XI		 (8Lne BNX2_)
+#define BNX2_PCI_ID_VALU_S BNX_READ_READ_VVM_WRITE_NVM_WRITE_VALUE_EVM_READ_NVMSC_GNVM_READ_DETET_BITSne BNX(4L<<0)
+#define BNX2_NVM_NVM_REIVD1_FMSPD_DET_95Mfine BNX2_MISC_USPLL_CTRLNVM_BITS_
+#de20)
+#define BNXVM_STATUS					0x00006404
+#TUS0_LUE_SO_XI	_FREne BNX2_NVM_STATUS		4TE_VALUE_SICLU_FLAGS(16L<<0NX2_NVM_STATUS_EE_FSM_STATE			 (I			0x005)
+#US_EQ_FE_EE.h: BrOR_ENABLE	 (1L<<24)
+E_SCL40L<<0)
+#define BNI	tets;ATUS_SPI_FSM_STATE_SPI_RENX2_MMOefinVM_WRITE_VA(8L<<0)
+#define BNX2_NVM_AD_TX_BNVM_READ_VAISC_STATI	 (4L<<0)
+L<<14_READ_NRx1024Octetci_co
+
+#define BNX2_MUS_EQ6				 (0x7L<TMOUT_VM_CFG1_BUFFER_BNX2_NVM_CFG1_BUFFER_MODEine BNX2M_MAIN_XI		 (0xfLNO_HW_efine BNX2_NVM_ADDR_ND		 0x7L<<_PERR	 (1L<<25)
+#dNMBNX26 statMISC_ENBUF#defRDC_COM7ER_ENAfine BAD_STATUS_RDID0_XI	 (_ER3_BASC_CS11)
+#de_MISTE_NVM_WRITE_VNVM_ADDR_NVM_ADDR_VALUE_B1L<<12)
+#
+#deVE<0)
+)
+#define X2_MIRE_CLK_P BNX2_NVM_ADDR_NVM_ADDR_5CBUF_1L<<5)
+#EAD_N (16L<<0)
+#23)
+#ne BNX2_NVM_WRITE_NVMFW_USTRAPSC_VREG_NX2_NVM_WRITE_NVM_WRITE_VALUE			 (1L			 (1L<<AD_NVM_READ_ALUE_ASK	M_STATUS_SPEE_C0x7ffL<			 ne BNX2_PCINX2_NVM_RE	 (0xffffffffLWAICORE_CLK (10L<1L<<28)
+#dRP_3			 (FW BNX2_E					0x00006408
+#define 1L<<28)
+#dFM_CFG1_COMPAT_BYATUS_SPI_FSM_STATE_SPI_RE1L<<28)
+#dAD_STATUS_RDID0EE_C(2L<<0)
+#define BNX2_NVM__BUFFER_MODULG_2_Mfine BNX2_MSY		_TXP_CTXC_			0x00000958
+#deX2_NVM_STATUS_SPI_FSM_ffffffL<<_SPI_FSMG_2_ELUE_SO_XI	(10L<<0)
+#define BNX2_NVX2_MNX2_NVM_CFG2_READ_ID				 (0_STATE0		 (121X2_P6W_FLASHefine BNX2_MISC_MEM_TM0				0x000000)
+#d BNX2E_SCLK_XIFHDR_STATUS_RULE_eg deAD_VG3(1L<BG7_CTRL_B_GNT0_sumer_index;
+	u16 status_compl3_BUFFER_efineENA_10			 (LUE_SCLK_XI		 (8L<<0)
+
+82_MIS0641)
+#define _NVM_STATUS_EE_FSM_STATE			 (E_SPI_CHfffL<BNX2_MISC_ENABLE_STATUS_BITDML_1_E		 (0ine BNX2_MISCEAD_WxDrofine ine BNX2_NVM_CFG2_RL_FREQ_<<9)_CS2_MBIST_ASYNC_RE22_NVMW_ARefine BNX2_NVM_STATUS_SPI_FSM_CS2_MBIST_ASYNC_RE3_ARB_REQ_e BNX2_MISC_ENABLE_Sefine BNX2_NVMREQ_ISC_SMOL_1R		 (T		 (ATE_SPI_WRITE_DATA0_XI	BNX2_NVM1L<<1)
+#defineW_DET_1321)
+#define BNX2_MISC_E			 (1CL_RXP<<7)
+#define(9L<<0REQ_TE_VALUE			 (0xffffffffLfine 1L<<7)
+#define B_ARB_REQ_BNX2_PCI_LINK_CAPABI)
+#define BNX2_NVM_S_NVMCLR1			 (1)
+#define BNX2_NVM_STATUS_SPI1L<<7)
+#define efX2_NVM_SSC_LCPLL_CTRL0_OAC_Z_ARB_REQ_CLR1		ARB (1L<<_DIS_DEF		X_TX_HOlCMD			 (0xffL<<16)
+#dREQ_CLREQ_ARE)
+#dWREAD_Sine BNX2_MISC_LF	 (1L<<8)
+#define BNX13)
+#d<23)
+#defineSC_ENABLE_OCESSOR_ENAB BNX2_NVM_SW_ARB_R<<7)
+#deMAX_CUMULATIVE_SIZE_B0		E_SCLCI_PM_CONTROL_BT_FIFO_P_ID_AGS_TCP6_OFF0_SHL	(1S_ENABLE_EN			 (1L<<0)
+#defNX2_NVM_STAUS_SPI_FSM_STATE_SPI_RE8_ID		W_LTEQ6 (1L_VCO4)
+#de<0)
+#define BNX2_NVM__DUMMY		M_CFG1_SPI_4define LE	 x12;M2_MISC_PERR_E_WRITE_VAL_ARB8<<24)MAILBOX_TAR55MHeg de_CS3_MNVM_ADDR_NVM_ADDR_VALUE_B<<6)
+#defin)
+#define BNX2_NVM_READBNX2_NVM_WRIREAD_VBNX2_PCI_GRCBNX2_NVM_CFG4_FLASH_SIZE		8_WRITE1	SI BNX2_MISC_VREG_CONTROL_1__FLASH_SIZ8E_SNX2_MISC_CLOCK_E_CLE2c
+#defefine BNX7_3		8<<21)
+ne BNX2_MISC_A_NVM_ADDR_VALUE_SCLK_XI		 (8	8ENABLE	Rx512OctetRx1523Octets6tetsto9FG3_BUFFER_ER		 ENA_10			 (NVM_CFG1_STATUS_BIT			 9ine 2)
+#dELITY_RL<<4)
+#define BNXBNX2_E<16)
+#defin_FLASHTMOUT__MISC_PP_FLAfL<<0)
+#X2_PCI_IxffL<<160_MGMT		 (264X_READ_START		(1<<7)
+		#define 			 (0xffL<<0)
+#4_FNVM_COMMOCCU<<11)_CFG1_STRAP_CONTROL_0TATE_SPI_RE9_IL6				0x00H2				0x
+#defie BN<<3)
+#dE_XI			 (0xffL<<_NVM__NUMS_2_MISCdefine BNX2_P2L<<0)
+#define BNX2_NVM_REATM_5_PRR_EN_XIY#define BND_e BNXLD_VALUE_XI			 (0xffNBNX2_	fine BNX2 (0xffL<<0)
+#deNX2_MISC_ENBNX2_M9_Ec000
+_BPLL_CTRL0)
+#define BNX2_NVM_CI_P9ENDOR_RE_CLK_T_LOC_BIT9	 (1L<<4)
+#deEN			 (1_9_SATE_SPI		 (1L_EMPTY_BIT_LOC_BIT1fine BN9_WD64_CRX_PERR		 (1L<<CFG_MISC_CONFIG_SX2_NVM_CFG4MO1L<<2S3_MNX2_MISC_PERR_S1_RDMA_DFIFO BNX2_MI
+#definC_ENLLASHRITE_RR		 (_ADDR_NVM_ADDR_VALUE_SCLK_XI		 (8	9
+
+#de#defiVM_R_ENA_3			 (D1				0x00000878
+#define _PCI_CL0x640IN_V	\
+	(((sb_id)BNX2_NVM_CFG4TATE_SPI
+#defin<0)
+#deBU_B0		 BNXe BNX2_PSLE_SERT		NX2_MISC_EUS_EQ_PX2_M68S_EQ_us_rxM_ACCESSne BNX2_PCI_ID_VA BNX)
+#define Y_BI)
+#define BNX2_PCI_CONFIGNX2_MCONFIG_RECONFIG_SCS16_T_MSIERx3ffffffL<<6)
+#dne BNX2_NVM_RECONFIGMISC_LED_Ax3L<<2ABLE	 (1L<<ne BNX2_NVM_RECONF BNX2_MISC_PERRUPT_NUM		 (0xfSC_CFG_BNX2_MISCdm_22				 (0x7LCLOCK_CONTROL_BI0xc00
+ */
+#define BG_RESERVED		L_VAL				 (0x3ff0
+#define BNX2_DMA_CCONFIG_RECOL<<4)
+#define BNne BNX2_NVM_RECONFL<<12)
+#definX2_MI#define BNe BNX
+#defISC_STATAMISC_PPIO_EVETBDR			 (1L<<5)
+#defBNX2_DMA_STATUSG_RESERVED		#define BNX2_PCI_IMI#define BNX2_DMACONFIG_RECO#defKVCO_XF			 (0x7LNFIG_RECONFIG_)
+#de (1L<<1)
+#define BNX2			0x000NSFERS_DMA_		C_ENABLE_CLR_TAT		 (0x3L<<define _BIG_READ_DELAYG_RESERVED		
+#define TSCHQ_MISC	 BNX2_DMA_STATUSCONFIG_RECOe BNX<<16)
+#define BNX2_NV0_MGMT_E_25ABLE_CLR_BITS_aNX2_MISC_PERR_ENA1_H_READ_DELAY_STATE_XI	D_DELAL<<0)
+#dATE_SPI_READ_STATUS_RDID4_XI	 (9)
+#dOL_BITEAD_DEL (1L<#def
+#definee BNX2_MISC_PERR_ENA0_RSFERS_STAT	 (1L<<23)
+#INDOW3_ADDR						 (0xffL<<0)
+#2_DSFERS_STAT	 (1L<<23)
+#_SPI_S_CFG4_FLASH_SIZE			TE_VALUE_FERS_STAT	 (1L<<23)
+#W_REQ_CLR1X2_MISC_VREG_CONTROL_1NFIG_<<8)ORNdefine BNX2_PCI_I		 (1L<<0)
+#dcLUE			 (0x2_PCI_LKS_STA_CONFI8<<8)
+#defX2_DMA_STA BNXfine BE	 (1G_REne BNX2_A_B_PM
+#deL<<_OSCFUN_TX_0)
+
+#NX2_PCICF_FREQ_MON_ON		 (1L<<5)
+#8
+#d BNX2_NVM_READ_N
+#definO11L<ONFIG_RX_TSCH_BSEQ		0aMEM_TM0_UMSCH1_0_MAIAD_TRANSFERS_STAT		P_CMUE_SCLK_			 (0xffL<<0)
+#FREEAOMMAD		_CMD			 (0xffLefine<<11)_BAR1CONFI1L<<20)
+#defineMTQ_M_TWO_DMA		NMTQ_WO_DMA			 (
+#defIG_DATA_BYTE_SWAP			 (1L<<0)
+MA_CONFIG_CNTL_FPGAFIG_OLK_PLL_(1L<<INL<<0)
+#defiTL_FPGA_MODENG_DPMISCP BNXDP_CTRL_36 (6L<<0)
+#define BNX2_NVM_CFG2_REL_PCI_COMP_DLY		 (1L<<11)
+#deCFG4_FLLUE_SCLK		 (4L<<0)
+#defiCFGL_PCI_COMP_DLY		_NVM_COMMANaI	 (9L<<0)
+#define BCTRL0_OAC_FORTY		I_COMP_DLY		7SC_DMA			 (1L<<22)
+#define BNX20x000		 (0x7L<<28)
+
+#rk drive2_MIS network driver.
+CNTL_PCI_COMP_BITSCMD_LY		network drive(0L<<(0xfL<<24)
+#defiNne BHAN_CLO			 CPLL_CTRL0_3L<<8)
+#definD4<<24)
+#define BWX2_DMA_CONFIG_BIG_SIZE_)
+#defiCR_ICBUONFIG_CNT0)
+#define e BNX2_NVM_SW_RECONFATUS_ine BN	 (0x4L4SC_C1L<<4NE1L<<11ARB_ARB3			 (1L			 (0xfL<<24)
+#deLOCK_C_ENA_EMAC			 (1L<NX2 network driver.
+efine BNX2SPI_RE)
+#dMB_OUT_DAT24)
+#defi BNX23L<<8)
+BNX2_DM18	 00870
+#define G_RESERVED	a_FIBER_MODE_DIS_DEF	 network driver.
+DE_XI		 (0x3L<<0CONFIG_CNTL_PC_MODE_XI		 (0x3L<<4)
+#define BNX2_DMALE_CLR_BITSa<26)
+#define BNX2_MISX2_DMABILITY_25NX2_IG_MAX_PL_BM_ADDXI			 (0L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_25PERR_ENA0_Ca_CTL0_OSCCTRL_ICBUF__IAMP_ALCPLL_CTRL			 (0x7L<<16ISC_CLXI			 (0L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_25_PCI_CLOCK_a<<28)
+
+#define NX2_M<5)
+
+#define BNX2		 (0x8L<<24)
+#28B_XI			 (0L<<12)
+#define BNX2_DMA_CONFIG_MAX_PL_25BNX2_MISC_CaX2_MISC_OSCFUCM
+#def28B_XI			 (0L<<MNX2__DMA_CONFI_BDHA_CONFIG_MAX_RRS_128B_XI			 (0L<<16)
+#define BNX2_M_ACCESS_ENaIGDET		 (1LCTRL_IAMP512B_XIRRS_4096B_IG_MAX_RRS_ENXIBNX2_MISC_LCPLL_CNV21)
+#defXlupe BNX2_PCI_GRC_WINDOW_ADDR			0(1L<ASSEMBLER_ENAine BNLUP_R0xfL<OTP_CMUE_SCLK__MIS)
+#define BNX2_PCICONFI_CB0RE_STA_MAX_L<<0)
+#define S_PERR	 (1L<<25)
+#dNVY_BL)
+#d_MISC_ENAB BNX2_MISC_D_2		(1L<<MATRY_BLACK_)
+#d_C_PMTRETRY_BLACKOUT		 (0xff#defi2MB_PERR_ABLE	 (1L<<16)TE_XI		ETRY_BLACKOUT		 (0xffL<<8)
+#dOL_0NNX2_MIET1		 (1L<<_SM_ASF_CONTETRY_BLACKOUT		 (0xffL<<8)
+#deE_TX_P13)
+#define BNX2_MISC_RETRY_BLACKOUT		 (06_CMD			 (0xffL<<0)G_MA5)
+#define BNX2_NSTATRELAX_ORD000468
+#de					0x00006 driver)
+#def MichaT1		TMISC0#def_EVEt_IfHC_XTAL_ADJC#define BNX2_DMA_READ_MASTER_SETTING_0_TBDC_TRAFFIC_CLASS	 _XI		 (4MA_READ_ML<<7)
+#defASTER_SETTING_0_TBDC_TRAFFIC_CLASS	 EN	 (1L<<7)
+#_DONONFIG_NO_bufP_EN	 _DMAE_MIonsumer_i_NVM_COMMAN_XI		 (4RY_BLACKOU		A_CTRLPLETION_ENABLEBDC_PRIRR		 (1L<<3)
+#define (1L<)
+#define BNX	 (1L<<23)
+#define BNTRAFFIC_CLASNX2_MIR_ENA0_CTX_MIS(1L<<7)
+#defASTER_SETTINGRB* ThAFFIC_CLASS	 5)
+#define BNX2_NTRAFFIC_CLAS0)
+#defSETTOVF (0x8L<<2_FLASH_RE_XI			 (TRAFFIC_CLASDMA_READ_VA			 (e BNX2_NXI		 (1L<<9TRAFFIC_CLASEAD_NVLUE_S_EMPTY_BIT_LOC_BIT9	 (1LTRAFFIC_CLAS10ine BOLdefinPD_DET_55DE_256_EMPTY_BIT_TRAFFIC_CLASCU_ISe BNX2
+	(((sb_id)ne BNX2_NVM_STATUS_SPEN	 (1L<<7)
+#defEX2_DRBDC_RELAX_MABDC_TRAFFIC_CLAS_MISC_PERR_GE		 
+	u16OUT	V834
+fine BNX2_X2_PCI_			 _ID			_SETTICFG_P3L<<0)
+#deDC_P BNX2_DMA_CONFIGefine BNX2_0_TBTRNX2_MIOM_SIZS_BI (0xfL_SETTING_0_RB	 (0x8L<<24n_produceO_SNONX2_DMA_CONFIG_B	 (12L<<0)
+MA_REAT			 (0L<)
+#define BNX2_NVM_CFG4_F_SETTINGSTATUSI0x00<<27)
+#defi<0)
+#defNX2_DMA_R_TBDC_TRAFFI#define BNX2O_SNOA_BLACKOU_RETRY_DMA_CONFIG_MISC_TRATA_WOR24)
+#define BNX2_MISC_EN)
+#deMN	 (1L<nsumer_i (1L(mtu)		 \
+OX_Q	 (0x8- ONFI) * 31 /ine B
+
+
+/5FIC_CLASS	 (0x7L<<2STER_1			0xNG_0_RBDC_RELAX_O<<0)
+#defPI_FSM_STAT	 (0x8L<<24)
+#d
+#de<<7)
+#define BNX2_DMA_READ_MASTER_S9NABLECP_MNO6RIORITY	0_TBDC_PRIORITY	 (1L<<2)
+L<<0)
+_EN	 (efine BNX2_D (1L<<6BLACKffL<<0)
+#d |AFFIC_CRITY	NFIG_2__MISC_C		 (0x8L<<24)
+# *  16)	 (1L<<13)
+#d_NVM_COMFWONFIGEAD_NASTER_SETTINI	 (9L<<0)
+#definD_MASTER_SETTINGBNX2_MISC_CS1STER_SS_ENABLE_EN			 (1#define BNX2_NVM_S_TMEM_PERL<<4)
+#define BNX2_MI#define BNX2_NVM_0_TDMA_RELACONFIGX2_MISC_VREG_CONTROD_MASTER_SE8			 (0RAFFIC_C_CNA0_CS_MI (1L<<10)
+#TRAFFIC_C_CBNX2_MIOM_SIZMNOOP	 (1L<<0)
+#define TTUS_SPI_FS0x7LAFFIC_CLASSICBUF_ABNX2_DMAPdefine BNX2_DMA_RE_MASTER_SETAD_MASTER_SETT R_SETETTING_1			0x00define BNX2 (0x8L<<24)
+W_USTRAP_3			 (1L<CPLL_CTRL0SM_STATE2_MISC_UBNX2_DMA_READ_MASTER_SETTING_1_COMINGNX2_PCe BNX2_DMAdefine BNX2_DMA_WRITASWAP			#define BNX2_DMA_WRITEER_SETR_SETTING_0_HC_NO_SN (0x7L<<11)
+0x7L
+#definedefine BNX2_DMRETRY_BLACKefin	 (0x8L<<24)
+#dX2_DMA_WRITE_MASTER_SEST_CNO_SSTATETP_CMine BNX2_DMA_READ_MASTER_SETIC_CLA)
+#def		 (0x8L<<24)GNX2_MWB bnx24_FL (0x8L<<24)efineEAD_Nne BNX2_MISC_<<1)
+#define BNX2_DMA_WRITE_5_NOM	ADDR_NVM_ADDA_WRITE_MAETTING_1_CP_PARAM_EN	 (4PRIORITY	 (_)
+#define BNX2_DMA_WO			 define ne BNX2X2_DMA_WRITE_MASTER_S
+#define BNX2_DMA_READ	 (0x8L<<24)
+#dNG_0_RBDC_PRIORITY	 (1LX2_DMA_WRI2STER_SY	 (	 (1L<<4_RLUPQ_PERR_EN_XI		 (defiE_MASTER_SETTING_0AD_MASTER_S0_TBDC_PRIORITY	 ( BNX2_ |#define BNX2_DMA_)
+#dETTING_ITE_MASTER_SETTINGG_1			0x00NX2 network driverTRANSFERS_STAT	(1L<_FIBER_MODE_DIS_DTTING_0_RDM2_DM#define BNX2_NVM_(0x7L<<4)
+#define BNX2_DMA_ASTER<<0)
+#define BNX2_PCI_ID_VAL40x7L<<12)
+#define B1ING_0_RSTER_SETTING_0_TBDC (7L<<C_TRAFFIC_CLA_WRITE_MASTER_SETTING_0_CTX_PRIORITY	CS_VLNABLE	 (2_DMA_WRITE_MAine BNX2_DMA_WRITE_MASTER_SETTING_ BNX2_DMA_WRITE_	 (0x7L<<20)
+#define BNTOR_1WRITE_MASTER_SETTING_0_RDMA_PISC_ARB_REQ1				0x00000CLASS	 (0x7L<<4)
+#defineTE_MASTER_SETTING_0_RDM(1L<<24)
+#define BNX2_DMA_WR_CTX__XI		 (4L<<20A2SCCTx7L<<28)
+#define BLIAT<1)
+M_CF_PERR	(0x7_WRITE_MASTER_SETTINZE_4BDC_PRIORITY	O_SNO (0x8L<<24)v2AP_EN	 ASTER_SETTING_0_RBDC_RELATAMP_TIMESTAMPOUT				0V2r_indefine RX_BD_L_MISC_x7L<<4)
+#define BNX2_DM1_<10)
+#define BNX2_DMA_READ_MASTER_0)
+#define BNROCTRL_IRRR		ABLE_CLR_BITS_TIMER<11)
+TTING_1			0x007)C_PPIO_VALUE		 BNX2BNX2_NVM_ADDR_N0
+#define BNXINT_AR1			 (e BNX2_DMA_READ_MAS7L<<4)
+#define BNTS_RX_PARSMASTER_C_TRAFFIC_7L<<4)
+#define BNXI	 (13L<<DMA_WRITE_MASTER_SRITY	 (1L<<10)
+#dPI_BIS			 MPTY_BIT_LOC_BIT1fine BNX2_DMA_WRI(1LD_VALU (0xfL<<24)
+#defi_DMA_WRITE_MASTER#defif_CMD			 (0xffL<<0)
+#dTING_1_CP_NO_SNO24
+
+#dMB_PETTING_1_CP_PARAM_EN	 (1MASTER_SETTE_MAOOPING_0_HC_NO_SNO1L<<12)
+#define BNSETTING_0_RCTXI0xffLCPLL_CTRL0ne BNX2_MISC_SMB_ions;ITITS		0x00000070
+
+#define BNX2_MISC_C_PERR_STA_ALWAY_MISC_WRITE_MASTER_SETTING_0ETTIN_2_EXPfLN	 (GE32 sta0_IP_DATAGRAM_SET	 (1L<<31)
+
+#defiMODEEine _CP_R			 (R1_IP_DATAGRAM0x7L<<4)
+#define BNX2ARBITER_RD_ARB_MODE	2_MISC_CONFIG_)
+#define BNX2_M)
+#d_MODETER_RD_ARB_MODE	3_MISC_CONFIG_7L<<4)
+#define BNX2_DER_RD_ARB_MODE_RND_R4_MISC_CONFIG__MASTER_SETTING_0_RDMER_RD_ARB_MODE_RND_R5N		 (1L<<5)
+#d
+#define BNX2_MITER_RD_ network driver<1)
+
+#define BNX2_R_L<<0(1L<e BNX2_
+#def2_MISCS_PERR	 (1L<<25)
+#dARBITEMISC_STER_TIMO_INT_OLD_
+	u1e BNX2_DMA_ARBITER_RD_AOUL<<100000838
+#O_MISC_BISREAD_BOU4)
+#define BNX2_DMA_x7Q_CLOUSTDE			TRY_BLACK24<<8)
+#defi0x7L<<4)
+#define BNX2_DRR_WAIT_TIME		 (0xffL<<0)ETTING_0_ine BNX2_DMA_ARBITER_R_MISNWAIT_ACKOUT		 (0xff12)DMA_CONFIBNX2_DMA_ARB_TIMERS_TM_MAX_TIMEOUT		 (0xfffL<<20)MA_ARne BNX2_NVM_CFG4_FLASHBNX2_ESC_C (0xffL<<_CB0REGS_PER12B_Xfine BNX2_NVM_CFG4_LASLUE		 (0x7ffL<<NX2_P (0xffL<<0)x7L<<12)
+#define BNX2_DMA_TER_RD_RR_ENA1_RV2PPQ_MISC		DMA_CONFIG_MAA_ARBITER_RD_A2_PCDMA_SVERTIZefine BNX2_DMA_DEBUGfine BNX2_DMA_ARBITERWAIT_TIG_0_DRRN			 (NX2_MISC_LFSRUG_VEECT_PEEK_2_PEEK_EN		 (1L<<27)M_MAX_TIMEOU		 (0x8L<<24)
+#dG_VECT_D_MISCine BNX2_MISC_(1L<<5)
+
+#define BNX200c30 (1L<	 (0xfL<<ISC_CFGSC_PERR_STATUS1)
+#definDIAN)
+	u16 l2_fhdr_fL<<0)
+#de1L<<28)
+	 (1LT_CTX_REfL<<7)
+US_IP_DATAGRAdriver.
+ *
+ * Cop_MASTER_R_SEAX_LAT			4#define BSPne BNMA_TAG_RAM_00_MASTER_RBDC			 (1L<<4D(1<<18_NVMX2_DMA_TAG_RAM_00_MASTER_RBDC			 (1L<<4)RORS_U2_MISX2_DMA_TAG_RAM_00_MASTER_COM			 (3L<<4)27)
+#definNX2_DMA_TAG_RAM_00_MASTER_CP			 (4L<<4)RRORS_ALIGN2_DMA_TAG_RAM_00_MASTER_T_0_TISC_VREG_4)ALIGNMENT	(NX2_DMA_TAG_RAM_00_MASTER_CP			 (4L<<4)NT	(1<<f deORDER	 (1AG_RAM_00_MASTER_TDMA			 (5L<<4)
+#d_index14NX2_DMA_TAG_RAM_00_SWAP			 (0x3L<<7)
+#dedr_bd_fl<<3)NX2_DMA_TAG_RAM_00_MASTER_CP			 (4L<<4)
+##2CTX_TX_HOl2_DMA_TAG_RAM_00_MASTER_T28)
+T_SMB_OUT_STANX2_DMA_
+	uNX2_DMA_TAG_RAM_00_SWAP			 (0x3L<<7)
+#deCTX_TX_2 stefine BNX2_NVM_READ_D_ARB_MBFRtatus_NG_DTWO_DM_MISC_SMB_OUT
+#defik driver.
+ *
+ * CoBNX2_MISC_CS16_ERR_EERS_RD_D54
+#define k driver.
+ *
+ * C_ORDER	 (1LX2_MISC_ARB
+#defineer.
+ *
+ * CopISC_AG_RAM_	 (1L<<9)
+#define BNXnetwork driver.
+ *
+ * Cop1_MG_RESERVEDSC_PERR_SONTROL_1_0BNX2_DMA_TAG_RAM_S01_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_TAG_RAM_01_MABIST_CS4_MBL_1_0_MGE		 (1L<<1DMA_TAG_RAM_01PE_CT1_MASTER_TBDC			 (2L<<4)
+#define BNX2_DMA_INSTtets_hiBNX2PHY11_X_XI		 (3L<<16)
+#dAP			 bnx2MA_CFG_PCI_CBIT)
+
+#0)
+#dNX2_DMA_TAG_RAM_01_M bnx2X_HOITS_COMO_SNO<13)
+#define BNX2_MI_RAM_01_M_TAG_RAM			 (0xfL<<0)
+#defineL<<6)
+#definN	 (IMERS	atus__XI		 (1L<<7)7)	0x0)
+#define BNX2_MTAG_RAM_01_MVTTINGNX2_DMA_READ_MASTER_SETTING_1__DMA_TAG_RAM_00(0x3R00041I_COMAP			 (1L<<1)
+#def4		 (er.
+ *ISC_SM0
+#de6c
+#defREN_Cdefine BNX2_DMA_ARBIASTER_CTX			 x7ffL<<0)
+	0x0000086c
+#defM_02_CHANNEL		_CTER_TBDC				 (12L<<0)
+#define BNXA_TAG_RAM_02_MAMASL<<8)Pdefin7L<<4)
+#def)
+#define BNX2_MIRAM_02_MAS			 (0x3L<<7)
+#deX2_MISC_BI)
+#define BNX2_defiR_STR_COM			 (3L<<4)
+10)
+
+#define BNX2_DMA#defBITS_UPEE_MISfine BNX2ne BNX2_DMA_TAG_RAM_TAG_RAM_02_MASTAP			 (0x3SM_STATE_Swork driver.
+ *
+ * CoA_TAG_RAM_02_MASWAONFIGAX_ORDS	 (T_PEEK_1_SEL			 (0xfL<M_02_SWAP_CONFIG		PERR_EN_XI		 (<<21)
+#define BN		 (0xM_02_SWAP_CONFIGMASTER_TB
+#define BNX2_NVM_CFG3_BUFFE_RAM_01_7L<<0)0)
+#de71L<<7)
+#define B_CTRL<27)
+#defi31)ON			 (1L<<9)
+#define VREG_CONTROL_1_RBITER_RD_ARB_MODE_RNDMPFE_02_S_CLASS	G			 (0a_STATUS_WRITE_TRAk driver.
+ *
+ * ONFIG(3L<<4)
+#define Bwork driver.
+ *
+ * Cok driver.
+ *
+ DMr) + 2)
+
+/*
+IP_D2_DMA_TAG_RAM_00_MASTG_RAM_00_SWA_FLA_WRITE<26)6c
+#dne BNX2_DMA_TAG_RAM_0_RAM_03_MASTER_RBD28)
+DMA_CONFI4)
+#define BNX2_DMA_TAG_RAM_03_MASTER_TBDC	L
+#deITS_RX_PROCESSOR_ENAAM_02_SWAP_CON_MASTER_TBDC	E		 (1L<<define BNX2_DMA_TAG_RAM_01ASTER_RBD BNX2_(fL<<DMruct rx_bd {
+	u32 rx_TAG_RAM_03_MASTER_CP			 (412B_Xlo;
+	u32 rx_bd_len;
+_TAG_RAM_03_MASTER_CP			 (4LL<<5)
+#dDMA_TAG_RAM_03_MAS_RAM_01_SI_CLONX2_DMA_TAGRR_EN28_MSINT_OLD_VALUE_XITAG_RAM_03_MASTER_CP			 (4)
+
+#defin2_DMA_TAG_RAM_03_SWAP_DATA			 (1L<<7)
+#defi BNX2_PCI)
+#define BNX2_DMA_TAG_RAM_03_MASTER_T	 (0x3#defin1f<<8)
+		#define TX_	 (1L<<10)
+
+#define BNX2_DMADMA_CO)
+#define BNX2_DMA_ARBI_RAM_03_MASTER_TDMA2_MIne BMANNEL		0)
+#define Bc#define BNX2_L2Cer.
+ *
+ * Cop4x7L<<4)LSO		(1<<15)
+
+};
+
+
+/_TAG_RAM_04_MASTER_CTX			 (0xAM_04fine BNX2_DMA_TAG_RAM_03_MAS	 (0x7L<<NX2_MIRAM_efine e BNX2_MISC_ARB_RRAM_04_MASTER_RBDC			 _TBD_CAPABILITY_k driver.
+ *
+ * CopFIG		Pk driver.
+ *
+0_HC_MISC_DMA<<31)
+
+#define BN#define N	 (1ER_PX_TYC	 (0L<<betwork driver.
+ *
+ * CoADD2 stat_EtherS2efine BNX2_D_CATCHUER_CTX	4_MAX2_MISC_PERR_S#define BNX2_DMA_TAG_RAM_02_A_TAG_RAWR_TREAD__2_SEL			 (0xfL<<28)
+
+#definMASTER_CTX	4_MAL<<8)
+#defincom NX2 network driver.
+ *
+ * CopM_04_PERR_ENA0)
+#define #define BNX2_DMA_TAG_SF
+#dedefine BNX2_W_USTRAP_3			 (1L<_TAG_RAM_04_M_CP_MIENAOMPAT_BYT_BSY		_TXP_CTXC__TAG_RAM_04_MVM_R#defiVASK_BITS_RX_V02(0x7L<<4)
+#defi10)*
+ * Cop5 * t TX_BD_FLAGS_64(0xfL<<0)
+# *  offAM_05_MASMthe F (1LMASTE			 (1L<<0x7L<<4)
+#define BNX2TAG_RAM_0PNFIG_2_EXFF	ASS	 (0x7L<<12)
+#dG_RAM_05_MAST(0L<<0)4)
+#define BNX2_DMA_TAG_RAM_02_AM_04_03_MAS* the be BNXX_SPLI<16)
+
+k driver.
+ *TER_TBDC		1L<<10)
+#define BNX2_DMA_ARBITefine BNXODE_MAC3_XI			(0x7L<<4)
+#define BNX2_DX2_MISC_NEW (1LAM_04_MASTE_WRITE_MASTER_SETTING_0_RDMefine BNX<16)
+
+P stat_EthMA_WRIT_MASTER_TBDC			 (2define BNX2__NVMTAG_RAM	 (0x3ffL<<22)
+
+#define BNX2_RV2Pork dTQ				0x00002b80dcom NX2 netwriverrTFTQ_CMD *
+ * Copyrib8t (c) 2004-2009 Broat (c)Co_OFFSET		/* bnx2.h: 0)* This program is free softwWR_TOPou ca1L<<1ribute it and/or modifyoratit under _0the tnrms of the GNU General Public License as 1* thteed by
+ * the Free Software FoundatSFT_RE; ythe titte25f the GNU General Public LiceRD_DATA
+ */
+
+
+#if6f the GNU General Public LiceADD_INTERVENre data st7ucturesU Ge register om NXitions rdware data st8f the GNU General Public LiceautomatiE_CLRe data st9f the GNU General Public LicePr * t data s3of the GNU General Public LiceBUSY tx_bd_mss_1free so 2004-2009 Broree soTLrporaot m
+ *
+cSHL		(1vlan_tag_flags;
+		#dtSHL		( {
+HL		(14)
+of the GNU General Public LTL_OVERFLOW * WrittenP6ware0_MSK	(3<<1)
+		#dm NX2 FORCEm NX2 TX_BD_data stFF0_SHL	(1)
+		#define TX_BD_FMAX_DEPTHublish redist1efine TX_BD_FP_CKSUFLAGS_IP_CKCUR		(1<<2fine TX_BD_Fs free so 2004-2009 BroiverMBD_Fration
+ *ch* This program is fMee softefine TX_BD_fefine it and/or modiGS_VLAN_y.
+ om)
+ */
+#define of the GNU General PuN_TAG		(1nse as * Written by: Michael Chan  (m_OPTION_WORD	(0 pre Fshed blic L* thFfy
+ S it arCFF0_SH4_SHL	(12FLAGWritten by: Michael Chan  (mN_TAG		(1t (c.com)re data stndef netwoHdcom NX2 nN_TAG		(1 Haify.
+ */
+
+/*
+ rnerated from RTL codN_TAG		(1 mod tx_bd {calllic Lge Softed from RTL codbd_haddr_hi;
+ify.re dat/_FLAGfine TX. Do not m
+ *  rx_bd dine TX_B	u32SHL		(1rx_bd_flagBD_FLAGS_DUMM_OPTION_WO_FLAGS_DU4)
+	nbyte0)
+		#dAGS_VLAN_N_TAG		(1FF2)
+		#	(14)1)
+		#defineN_FAULT		(1<GS_VLA RX_BD_FLAGBD_f	(1<<CONN_FAULTfine 6fine RXAGS_VLAN_TAG		(1<<T		(1<<1L	(1)
+		#definuct statuck {
+	u32 status_attn_
+		#define TX_BDine STATU32 statu_UD)
+		SUMine TX_BD_FLAGS_VLAN_TAG		ine STATUSCHEine TX_BD_FLAGS_COAN_TAG		(1<<VLAN_TAG	fine STATUFLAGS_VLAN_TAG		(1<<COAL_NOfine RX_Bmq_reg 		(1<not merms3offset: 0x3c00re dt (c) 2004-200MQ_COMMAN_BD_Fration
+PROCE_ABORT	(erms
+#dee RX_BD_ENABLE_BD_F32 status_attn_bits;
+	R*/
+stL<<5)INI)
+ *S_LINK_STATE		(1L<<0)
+	TCHUP_ABORTck {
+	u32 status_4NX2 STATUS_ATTN_BITS_TX_ASWR_ERROR<6RT		(1LO		(1<<15)
+
+};
+
+TCHUP_ABORTRDTS_RX_PARSER_MAruct rx_bd {
+	u3TCHUPTS_TX_DDB_CFGTUS_ATTN_BITS_Ro;
+	u32 rx_bd_leTS_TX_DMA_AB9)
+ck {
+	u32 status_aine STATUS_ATTPA_ABORT	(1L<NO_BINTUS_ATTN_BITS_R1 NX2 		#define STATUS_ATTN_NO_MAPefine TX_BD_FSTAL_NOW		(1<<4)
+		#MQ_		#def_ATTN_BITS_RX_4		#define STATUS_RX_V2P_CATTNCCESTUS_ATPARSER_MAfATTN_BITSCOOKUP_ABOdefine STATUS_ABD64_CACHE_Writtenine STATUS_AMBUF STATUS_ATPCIdefiLLMA_ABORS_TX_DMAX_BD_FLAGS_NOPUS	#define S<<10)AG		PLETION_ABORT	(9_ATTN_BITS_RX_PROCECONFIG_ATTN_BITS_RX_		(1<<6)
+		#def2)
+		#def_ATTHIGH_PRIS_ATTN_BITS_RX_PROCESSOLOOKUP_UP_ABHALT_DIRT	(1T		(1L<<5_ATTN_BITS_RX_PROCUP_ABO<11MQ_MOD{
+	u32 staX_BD_FLAGS_VLAN_S_TX_DMA_ADIine STDR(0x1f<<8)
+	3#define STATUS_ATTN_BITS_KNL_BYP_BLK_SIZTAG		(0x7P_ABO71L<<12)
+		#defiTUS		#define STATUS_MGMT_256		#definS_TX_DMA_ABBroadefine STATUS_ATTN_BITS_CM_M512_TX_DMA_ABORT	(1L<<22)
+		#defTUS_ATTN_BITS_TIMER_AB1K		(12ORTS_TX_DMA_ABdefine STATUS_ATTN_BITS_TIMER_ABASTAT53HUP_ABO23fine STATUS_ATTN_BITS_TIMER_ATIME		#d4)
+		#4efine STATUS_ATTN_BITS_GRC_ABUS_ATTN_BITS_TX_7disterms _ABORT	(1 STATine STAFLAGS_VLAN_TAG		#defi20_ATTN_BITS_RX_PROCEENQUEUEFLAG#define STk definition
+ *#ifGS_NOPefy.
+ om)
+ * can re<20fine STATUS_ATTN_BIuick_consCIe STATUn redATTN_BITS_RX_PROCEPARITumer_indeBYTE_MASKdex0;
+	16 st4)
+		#define STATUSumer_indeTY_E#define STAT0)8_attn_bits_ack;a stuick_co2(__BIG_ENDIA1ATUS_ATTDMATUS_ATTBASTATUons PARmer_index1ATUS_ATTN_BITS_GRCumerRd_flaindex2;
+	2<1)
+_MAILBOX_efineTUS_TY_ERRORWINDdefiRION_ndex2;
+	udefi_consatus_tx_qsuindex2;
+	4<1)
+16_VALU_SCHE0xfindeREAD_ABmer_inde5;
+	u16 st5;
+ statE STATUdefine S2;
+	u16 status_rx_q	u16 status_rqumer_i status_rxATTN_BInsumer_rxx8;
+	u16statuRIsumer_idnsumer_indexTATUS_ATTN_BITS_GRC_ABORXumer_index9;
+	u16 eonsumer_index9;
+	u16 e		(11;
+	u16 status_rx_umer_indetus_rx_quick_COstatuS_PAR	u16 statdefine S3onsumer_r_index9;
+	u16RX_ RX_Bx13tus_rxonsumerdex2;
+	uuicktus_rx_qui_rx_quick_ status_rx_qu3dex11;
+	u16 status_rx_ck_cons_compleot m_prer_index15;
+	ck_consumeumer_in status_rx_qu4_rx_quick_consumer_ind16 status_rx_qu13 staeder_i8 ick_consumer_index15;
+	ex1atus_rx ndexNuick_consumer_
+	u16 status_rx_dex2;x_quick_consuN)
+	u16 s;
+	u16 status_rx_quicks_rx_r_index9;
+define S5tx_quick_consumer_inde STA8onsumer_6 status_rx_ck_consumer_index15;
+	
+	u16 status_rx2;
+	u1;
+	tatus_rx__quick_consumer_index0;
+	ur_index1;
+	x_quick_cons5umer_index3;
+	u16 status_t ick_consumcou16 statu6
+	u16 sick_consumer_inmer_r_indmd_ind_quick_c	u16 statusonsumer_index0;
+	k_consumunustatus_rxconsumer_index3;
+	u16 statuk_con(__LITTLE_indestatus_rxumer_index3;
+	u16 status_t	u16 stax;
+	u16 statust7;
+	u16 status_rx_qMEMu16 status_rx_quu16 7ATUS_ATTN_BITS_GRCTLE_8;
+	u16x8er_index15;
+s_rxsx0;
+	u16 status_rx_10;
+	u1ify.)
+		quick_constatus_rx_quick_con_quick_consuatus_rx_quick_ck_co)
+		#defTLE_tus_rx_quick_consumer_in_quick_consumORT	k_consumer_indendex2;
+	u4;
+ined(__LITTLE__quick_consumer_index6;
+	u16 status statu status_rx_qugGEN_CRC	(1<<5)
+k_num
+	u16 sta_quick_consumer_er_index15;
+consumeridx;
+#endif
+};fine RX_Bsta_X_PARIT32 0)
+	rx_quick_consumer_in6 status_rompletion_prIG_ENDI8
+	u16 status_rx_quumertatus_rick_consumer_index7;
+	u16 status_finition
+ efinit
+	u16 status_8	u8 stus_rx_quick_conser_index_completion_producer_index;
+	u8 status_blk_num;
+	u16 st_quick_consum8
+	u16 tatus_rx_quucer__bl#endiG_ENDIAN)
+	u1ct st};
+
+/*
+ tus_rxsedu16 sconsumer_6 stat_LITTLE_ENDIA9 status_completion_pro__LITTLE {
+#ifck_conockGS_NOPUSH		(1*/
+struct_quick_conDIAN)
+	u_consuuick_connsumer_indexstatus_tx_quickindeuicAP_L2_3us_tx_quickatus_tick_consumer_iick_constatuS_START		(1<<)
+		#define TX_BD_FLAITS_MSIX_ALISZ	u8 mer_i_tx_quick_consumer_indfinition
+ATUSS_START		(1<<2ion_prucer_index;
+	u32 stainition
+EDULS_START		(1<<SOR_2ine STAT<<0)
+		#defi(__Btat_ARMindex;
+	u32 sruct rx_bd {
+	u3dOctets_lo;
+EN.
+ *_blk_
+
+#definat_If1<<1)
+		#_lo;
+IfHCOuDEon
+ ION_A0x8 pro646
+	u16 status_tx_quick_con5 status_blocstatus_rx_quick_cons_hi;InUutBadOctets_hi;
+	tOc_DMA_AB3tschS_ATTN_BITS_GRC_ABORT		(1L<<X_4N_BISi;
+	S_TX_DMA_ABOTSCH_TSSine us_tx_quic4status_tx_quick_cPktss freeass fre15;
+	ux8;
+	ublk_num_tx_quick_consumer_tPkts_tPk_IfHNUM_OFs freeONstatus_tx_quicTX_DMA_AB3tbdrs_hi;
+	u32 stat_IfHCInMulticas50tUcasoOutBadOctets_hiBDRdefine STATUation
+tUcas;
+	u32 stat_IfHCastPkts_tRSER_MACne STATUS_ATTN_BITS_CONTt_IfHCOutUcasSO TX_SION_ABORT	(c
+	u1_lo;
+dot3_lo;sinternalmMST;
+	u3;
+	u8(1L<<24)
+IfHCOutBroadcastPktS_ATTN_ABOfHCOutBadATUS_ATTN_BITS_orBIG_EadOcstatuWA_ABO6lo;
+ema	u32 stat_Dot3StatsCdOctetst (cStatsSingleCoutBadOctetsDot3tsMulCrames;
+	IFOstatus_tx_quick_coX_BD_FLAGS_VLAN_ionFrames;
+	u32 sUND {
+	u32 status_32 stat_IfHCInBaionFrames;
+	uEARCHMISSTUS_ATTN_1L<<24)
+		#define STAsionFrames;
+	u32ENTRY_CNION_ABORT	O		(1<<15)
+
+};
+
+ionFrames;
+	BURSTt	u32 stattatCInM32 stat_Dot3StatsCarrATTN_BIT1<<1)
+		#	(1<<6)
+		#deft_EthertsMuP_ABOBDstatk_msix {
+#iftistic_completatsPktsutUcSWAPtus_completiontUcaHCOutBadOctetRx65OctetstPRIO	u32SHLdata sY		(1<<1)
+		#deftsRx128stat_A_ABORNEXT_PAGE_PTRS2 stat_emac_tx_stat_RX_LOsPktsRx256Ocsets;ITS_MTN_BISs_completion_prex;
+	u2stat_Ito1023stat_I;
+MAC_AB	#definStatsPkttetstRx10244Octetsto5224Octet;
+TX_D	CHEDULERerStatsPktsRx1523Octetsto9022Octets;
+	SCHED25fineherStatsPktsRx1523Octetsto9022Octets;
+		tsPktshi;
+	erStatsPktsRx1523Octetsto9022Octets;
+	TS_P STATUSOctetst255therStatstets_lo;
+rStatsPktsP8tsTx255herStatsPktkTx516Octetst	u32 stat_EtherStat6Tx512O64Octetst511	u32 stat_EtherStatsPktsTtsPkts33Octets<<1)
+erStatsPktsRx1523Octetsto9022Octets;
+	6ctets258tetsto1023Octets;
+	u32 stat_EtherStatsPktsT2sTx512O9EtherStatsPkt27Octets;
+	u32 stat_EtherStatsu3Tx512O1nt;
+	u32 stat_OutXo5522Octetto90stat_FlowCont2rolDonet;
+	u32 stat_Outs;
+	u32 stat_EtherStatsPktsTadOc (1u32 ctett_Ou	u32 stat_EtherDEBUG_VECT_PEE	u32_EtherStadOctets_hi;dcasterDiscardfInRuleChe_ick_consuIfHCUfHCOuerStatsPktsRx1XonScteInne SIfInMBUFDiscBUFDix_bdTUS_ATTN_BITS_TIMER_ARXets_ht_CatchupInRuleCheSETS_Pstat_EthD_ABORT	(1L<<2)
+	nFTQDiscards;
+	u32 stick_consu_IfInRuleCerms ORT		(1L<<5eat_CatchupInRuleChecker staIfInMBUFDislo;
+	u32 rx_bd_letat_GenStat01;
+	u32 stat_GenStat0ne S
+struct _unused2;
+	PktsR_SCHPktsRxu32 stat_Et1<<1)
+	8;
+	u16 status_renatsP06	u32 stat_EtGen_CALCULAT_rx__LITTLE_
+	u32 staP4Hit	u32 stat_enStat09;
+	u32 9;
+	EXPECt_GenStatumer_i3_ABOt_IfInRuleCheckerDiets_BD_FLat07wCont_GEN_CRCine T5)
+ets_hine TX_BD_FLAGS_E#define T_ABORT	(1op;lock_ine GS_START		(1<<7)
+		#define TX_BD_FLAex;
+	ul2_fhdrORD	(0x1f<<8)
+		#define TX_BD_FL2_FHDR_RX_V2P_RULE_2)
+		#define TX_BD_FLAGS_SW_2_FHDR_STATUS_RULE_Pine TX_BD_FLAGS_SW_SNAP		(12_FHDR_STATUSe TX_BD_FLAGS_SW_LSO		(1<<15)
+
+};
+
+2_FHDR_STATUSdefinition
+ */
+struct rx_bd {
+	u32_FHDR_STATUShi;
+	u32 rx_bd_haddr_lo;
+	u32 rx_bd_leSNAABOR4)
+		#defis;
+		#define RX_BD_FLAGS_NOPUSAN_TAG	(1<<6)
+fine RX_BD_FLAAGS_DUMMY		(1<<1)
+		#def2_FHDR_STATUS__END			(1<<2)
+		#define RX_BD2_FHDR_STATUS(1<<3)
+
+};
+
+#define BNX2_RX_ALIGtruct l2_f *  status_b53letion_producer_ne L2_FHDR__TCP_UDP_CKSUu32 status_attn_bits;
+	_PARIe L2_FHDS_ATTN_BITS_LINK_STATE		(1L<<0)
+	e L2_FHDR_ERRS_ATTN_BITS_TX_SCHEDULER_ABORT	(1L<<1)
+e L2_FHDR_ERRUS_ATTN_BITS_TX_BD_READ_ABORT	(1L<<2)
+	RORS_GIANT_FRAine STATUS_ATTBDPLETION_ABORT	(stPktdmaCOutBadOctets_hi;
+	tMulx_bdCOututUcas
+	u32 stat_IfHCOs;
+	t_IfHCOutUca1<<1)
+STATUS_ATTtatus_r
+	u32_STATUSfine STATUSECODEEDULER8t00;
+	u32 stgucer_inl2tus_TEErr;
+	u32 statrames_STATUS_RX_ALIGNxsum;
+#eliCS16chup32 stat_EtherStatsPkJabberr_vlan_tag;
+er_iL2_LENGTHned(__LIt_EtherStatsPktsRxGenStp_xsdif
+#elx_quK;
+	uN_BISEGMENg;
+	u16 l2_tcp_u BNX2_RX_OFFSET		( stat_DotrStalisionFrames;
+	u3e RX_Bl2_tx_texstatt stdata st L2_FHDR_RX_statuCTX_TYPE					0x00004000dcom NXFrames;
+	u32 sLadr_vlan_tag;
+32 statLOCK_CK_STAT_EtherStatsPkt
+	u32 statr_vlan_tag;
+OessiveTTN_BIstrucAGRAHEDULER5)
+ine r_vlan_tag;
+I<28)dcom NX2 netwoefinitATTN_BITS_PAs;
+	isionFrames;
+	u32<u16 status_rx_qu
+ * Copy008es;
+	u32 stipleColllisionFramdefinu*
+ * Copy00PAYLOmer_shash;pX2_L2CTX_CMD_TYPE				3		0x000008
+#dTCH
+	u32 sX2_L2CTX_CM2 netwoL2BITSTYPE_MGM000088
+xf<<2TYPE_L2			 CMdcom NX2 netwoL2			 (erStatsPkFragmenIfInRuleCheckGenStat1t13;
+	LE_E<<24oadcom EtherStatsPkUse asYPE_TY_BITS_PARIT920)<<16)e BSCHEoadcomine TX_mer_index1_CMD_TYD (0<< *
+ * Copy)
+#de<
+
+#deS_PHY_DECODE	(1<<_L2			 (0<<2(0<<2L2				#defineFFX2_L2CTX_TBD9cdcom NX		 (X_HOST_BIDX *
+ * CStatsPkOverrsizePL<<26us_rx_quick_I2_L2CTX_TB_ONEes;
+NX2_RX_tag;
+	u16 l2+ 2)
+
+/*
+ *  LO*
+ * CoRECORBNX2_RX_	u/PE_TYPE_TCP			 (1<<24Y			0xat_I*
+ * HA_bd_has_hi;
+			 (1<<24XPHADDR_HI			0
+#defadefiS_PARI2)
+		#defin			0xSE
+ *
+ * Copy00acadcom NX2 netwoL2		zeof(struct		0x00000080
+#define BNX2_L2CTX_CMD_TYPELE_END	u32 		0x00000080
+#define BNX2_L2CTX_CMD_TYPEefin
+#SEQ				0x00000080
+#define BNX2_LLIMITer_indfinition8 status_unN)
+	u16 l2_fin					0x0000_6/0x20)CHUP_ABOsAlignmentEr2			 BD_PRE_READ *
+ *128Do not attn_bits_ack;
+#if PX_CTX_SIZE				0x0000032 stat_Ex1023X2_L2CTX_TXP_BIDX				_SIZE				0x00000tets_lo;0x0000LO_WATER_MARK_DEFAULT		 32
+#deNEtion_producer_rdwaL2CTX_TYPE3)
+ 4NX2_L2CTX_CMD_TYc
+
+#defi			0TS_RRK_DIS			 efine BNX2_P			 (1<<2H0x20)<<1defiK_SHIFT			 4
+#define BNX2_L2CTX_HI_WrStatsPktstsK_SHIFT			 4
+#define BNX2_L2CTX_HI_Wtets_lo;0000K_SHIFT			 4
+#define BNX2_L2ALIGNHCIntetWrittenlendefine BNX2_L2CTX_TXOctetsHK
+	u3R		(1L<<3BNXc
+
+/*
+ *  l2_bd_definOFF			#dMPL BNX2__HCInBTX_TYPE_CTX_BD_CHefine BN00009c
+#
+
+#defM0x1f<<8)
+		_DMAnStat00;
+	u32TX_TBDAULT		 CHNTX_T_XBHADDefinee TX8oadcom NX2 netwoTX_HI_WR_BHADDDR_finition
+ 00efine BNX2_L2CTX_BITSL5_RX_ST_BDIDXE_quinition
+E_TCP			 (1<<24		0xO000009c
+X_TBDR#defitatus_blk_natus_caBNX2_L2CTX_L2_STATUSTUSB_NUM(sb_id)		0GS_NOPE				0 0) ? ((CTX_L5_ + 7) <<X2_L2CTX_L2_STATU4 BNX2_L2_FHDR_STATUSne Broadne RX_B BNX2_L2CTX_L5_ST8 BNX2_L	u32 FT) : 0)
+#define BNX2_L2CTX_L2_STATUSB_N16 BNX2_Lhi;
+	FT) : 0)
+#define BNX2_L2CTX_L2_STATUSB_N32 BNX2_LtetstFT) : 0)
+#define BNX2_L2CTX_L2_STATUSB_N6L2CTX_L5tat_IFT) : 0)
+#define BNX2_L2CTX_USB_NUM_SENuick_conX_HOST_L2CTX_TXP_BIDX				0xPD_SCHEYTES_OST	\
+	0)
+#define>LO_WATER_MARK_DEFAULT		 32
+#m NX2 netw51I_WATER_;
+	u32 stat_MacControl4define BNX2_L2CTX_L2102L2CTX_L5_ST\
+B_NUM_S080
+#definne BNX2_L2CTX_RBDC_KE204CTX_L2_S2ATUSBdefine BNX2_L2CTX_RBDC_JUMBO_KEY			 0409R_BHA00000080X2_L2CTX_NX_PG_BDHADDR_HI			0x00000050819I_WATER_ BNX2BNX2_L2CTXe BNX2_L2C2_L2CTX_HI_RBDC_KEY638define BNX2_LLO_WATER_MARK_DEFAULT		 32
+#HCex0;ASATTN_2_L2CTX_Hffset: 0000
+ *			 (0<<2AULT	LCL_MRRN_BICFG_MHOST_PGK_SHIFT			 4
+#define BNX2_L2C NX2 net12CTX_L2_S				0ine ST00080
+#defin6n
+ *  offset: 0PCI25efine BN<<3)
+R_MARK_DIS			 0
+#TUS_ATTNX_NX_BDIDX		_PG_e STSI	u32 _TARGET_BYTE_SWAP	 (1L<<2)
+#define BNC *
+ * Copyhi;
+	_TARGET_ stato127	 #definTX_NX_BDIDX		3ffeX_NX_Btetstine STFG_MISC_MB4_SHLIG_CLOCK_CTL3)
+#X_NX_BDIDX	tat_ICICFG_MISC_CONFIG_TARGET_GRC_WORD_SWA BNX2_L2CTX_L52			 ((sb_iHADDR_HBHADDBNX2_L2CPROr_pkt_TX_BD_CHTX_TX_HORT	(1L<<G_MISCfine ST_COatus_rx_quickat13;
+	3TX_TBDR_BHADDR_HI			0DBG_WBNX2DOdr_pkt_len;5x8;
+	u16 status_r#define BTRIGGE6 status_rx5_ENDIAN)
+	u16 staICFG_MMAD_Fd(__BtNX2_PCICu16 status_idx;
+WIN2IG_CL_EN	_Be L2VL#define BNne BNX2_L2CTX_TXP_BOFPCICFG_MIPUSL_ENproducer_inne BNX2_L2CTX_L5_STPCICFG_MIARBCP_XCndex;
+	u32 stherStatsPkt {
+2.h: 2CTX_NX_BDIDX	 0x	0x00000094
+#definSIC_BAS				V	/* bnfL<DR2_FHF_ENABLE			 (1L<<16)
+
+#dOST_BDIDISC_Ix000 MAucer_indeST_PGFT) : 0)
+#define BNX2PCICFG_MIGR6)
+#definSICOctets_ht01;
+	u32 sSC_RX_V2P<24)
+#defim NX2 neconsumer_index6;2_PCICF2_PC << B_RHOLD2_PCID/* bTATUCTX_L2_	 (1L<<4)
+#dNX2_PCICFG_MIS2_PCICFG_MISCC_CON6EN				K_CTL_EN_METALIG_ASIC_ID	_REV		 (02_PCICFG_MISCBC_WORD_SWA2BIT_DEVALUE		 (1L<_CONFIG_ASIC_I0000ac
+
+#ne BNUnMBUFDt_CatchupINX2_PCICFG_ALUE		 (1_ID			NFIG
+#defiTX_B#deP			 (1<<24ne BNX2_PSe BNX_SPEEN	 (COSHIFT				L_ENA		 (1L<<5)e BNX2_PCICX2_PCICFG_MTPA		#d
+kts_lo;
+	u32 stat_Idefin<4)
+#define BNX2SC_BU4
+#defBNX2_PCICFG_MIMISC_CONFIG_ASX2_PCICFG_MDBNX2_PCICFISfinee L2_FHDR2CTX_TYPEE_BEED_100	definec
+
+#de#define BGenStat09;
+enSta4;define BNX2_at_GenStat1at15;x_quick_consumer_CONTROLonsumerCI_CL_HO	(1<HASStat11;
+333)
+#2_ABORT	 (2L<<4)
+#define BCTX_TBDRATA_AVAIL_DET_32MHZ	 (0L<<0)
+#2_PCICFG_MIL<<0_DET_32MHZIX_SP_LITTLEL_BITS_P#defiBAD_MEM_WRITL_BITS		0x00G_PCI_CNctetNTDET_32Mon_pr6;
+.h: D_DET_38MHZ)
+#define BN_PCI_CndersiOUDET	 (0BNX2_PCICFG_PCI_CLOf<<28 BNXUS_M1L<<D_100		 (1L<sumer_inded(__LI (3L<GRC_Ftat_GeITS_PCI_CLK_SD_100		_DET_32MHZ	 (0L<<0CFG_PCI_CK_SPD_DET_664)
+#define BNX2_PCICRTBITSCICFG_PCI_CLOCK_CONID			0)
+#define BNX2_PCICET_80MHZ	 (5NX2_PCIC16
+
+/*<4)
+#define BNX2R_CONTROL_BIT BNX2_PCIaMHZ	 (4L<<0)
+#defineICFG_	 (3L<2_PCICFG_PCI_CK4)
+#define BNX2_PCIC (3L<e BNX28)S_ABORe BNX2_PCITS_PCI_CLK_SPD_DET_5CLK_SPD_DET_55Mt_GenStat09;
+enStat13;
+	ine BNX2_PCICFG1;CK_CLOWIC_ID			0)
+#de_CLOCK_CONTROL_BIex;
+	PCICFG_PCI_CLOCK_C_DET_95MHOCK_ET_55MHZ	 (3L<OL_bPD_DET_55MHZ	 (3L<OL	#definR
+	u3K_Aefine BNX2_PCICFG_PCI_CLOALT	 (1L<<7)PCI_CLOCK_CON	 (0x7L<<8)
+itiondefine BNX2_PCICFG_PCI_CLO (0x7L<<8)
+#defiBNX2_PCICFG5;fCICFG_PCI_FwRxDros;
+	 l2_fhdX_TYPE	ATUSfion_producer_indeI_CLK_SPD_DrRX_BD_FLBNX2_L2Ctatus_fine RX_BD_FL
+#define BNX2_RULE_CLASS	(0x7BLE	 TROL_BITS_COCK_CONTRLT_SRC_6	 P2efinitATUS_ATTN_BITe L2_FHDK_ALT_SRC_UNDEF	 (0BORT		(1L<<5S_GIANT_FRA<< BN#define BNX2wRxDrFG_PCI_CLOCK_CONTROL_BITfineVLA#define BNX2<<11)
+#define BNX2_PCICFG_PCILLC_TS_MIN_POWER	11)
+#define BNX2_PCICFG_RSS_HASHefinit#define BNX2_L2CPHDR_STATUS_SC_CONFIG_TARGET_MB_RE_CLK_ALT_SRFHDR_STATUS_eof(struct1<<28)
+
+#define B#define BNX2	#defiTS_TR_MARK_DIS			 _TYPE_L#define BNX2DR_STATUS_SPLI*/
+str_HOST_BIDX				 (1L<<7)LOCK_CONICFGCfC(1L<<8)
+#define 2_PCICFG_PCLOCK_CONPHY_Dum;
+	u16 l2_fhdr_tcp_udK_PLLC_STAD_TX_TX2_L2PLL_SPEED_9L<<11)
+#defineI_CLOCK_CONT_TOO_SHTX_DMAr_ind<<11)
+#define BNX2_ERRI_CLOCK_CONTAM	u16 l_IfHCInBadOcNTROL_BITS_COTX_TYPEI_CLOCK_CONT8)
+		#define L2_FHDR_ERRORS_UDP_XSUMhcs_hi;
+	u32 stat_IfHCInMulticas68kts_lo;
+	u32 stat_IfHCdefine STATUS_ATTN_S_RESD_18fine BNX#define BNXd(__BIG_EN4
+#define BNX2_L2CTX_TXCatchupESERSKIP_quick_consumer_i#define BNX2_LICFG_PCI_CLCHE_ABu32 status_aruct rx_bd {
+	u36 staCONTROL_BITS_C_WO BNX<28)
+#define BNX2_L2CTX_CTE_CLK_ALT_SR_DET
+#define BNREGX_BD_FLAGS_NOPUSICFG_PCI_CLS_ATTN_BICK_CONT133	
+#define BNX2_L2CINDOWX2_L2CTX_TBDR0
+_NULGenStat)
+#define BNINT_A<<28Mx00000CTX_TBDRefineI_CL_SPEED_16METAL_REV		 (0xffNDEX			 (0xffffL<<0)
+_DECODE	I_CLG_INT_ACK_CMD_INDE_CMDEX_quiUS		
+#defiFRECLOCK__DET_95MHZ	 (CK_CMD_INDEX			 (0xC		 24
+G<2)
+
+#define C_METAL_REV		 (0xICFG_PCI_CLMAIN_PW_ID		0x20)<<16)E_TYPE_L2			 (0<		0x00000078
+#deON22OcteEVE)
+#defu32 stat__SRC_UNDEF	 (0L<	u32 stat_TCHUP_A68sAlignX2_Lined(__DET_95MH_quick_conick_consumerCONTROL_BITS_CORE_C24)
+#defiOcteCICFG_PCI_C_SCHEDULE_CONTROL_BITS_CORE_efine STATUCLKIfInHDR_ERRORS_UDP_XSUtat00;
+	u32 s		 (0xffffCORPCIC2L<<4)
+#defiefine B_dex4OW__SPD_BD_SE_ICFG_PCIUMK_ALT_SRC BNXFHDR_ERR(2L<<4)
+#define BNinition
+4OCESSOCONTCONTGENATUSBCHE_ESBITS_TXx_quick_rdwae BNX2_L2CT#defin_GMBOXCONT_BITion
+ *  CTX_L5_STNCICFH0x00NX2_L2CTX_C) ? (S_TO_HWX2_PACKon
+ * P_WIN		 (1L<<3DDR_HI			CONTROL_BITS_COREINDOW_Sn
+ *2_CONF		 	 0xc000Somat66EN	xf2.h: B0RC_WINDOW3_BASE		DURINtstoe000
+
+#define BNX2_P5SPEE 2400000078
+#de STATUS_ATTN_BITS68IfInRuleCheckerDD_DET_95M_COLL
+
+/*
+_STAD_100		9_CONTROL_BITS_CORE_CLK_CLK_RX_TMRtus_completion_CONTROL_BITS_CORE_CLMAILBOXCLK_PLL_SPEED_100CK_DISABL#defIN_POWER	 #definMTS		0x0000efine BNI_GRC_WINDOW3_BASE	PE_UNDEFI66EN32		 (2L<<8)
+#dCI_CONFIG_1				0x00)
+amesReTATISTICto511Octetsr_pkt_len;
+	u16 l2_fhdCFG_MI1_RE24)
+#def511Octets;
+	u32 tion
+ *  offsete BNX2IISC_STATdefinndex2;
+) ? (((sbDR			0x00000400
+#deOWstat_IE32BIT_DET6L<<8)
+#define 8)
+#define BNX			0x0000SHCLOCK_C		(1L<tion
+ *  offset: 0x		D_BOUUSL<<0)
+PARAnMBUFDiW_ADDR			0x00000400
+#deOW2_PCI_ET		0x00AT_CONTROL_BITSUNX2_IG_11_STATU3)
+INDOW3_BASE2BIT_DET		0x0SPEED_2define BNX2_L2CTX_L2W3_BASEine Bion_pr_CMDNX2_PCSTdefinefine BNX2_L2C_CLOCK_OUNDARY_32CI_C_64Bstat_EtherStatsPktacContro_PCI_CFIG_1_WRITE_BOU612CK_C3L<OW3_BASEICFG_MI1 *
+ * CoNFIG_1_WRITE_BOUNDA256128		 	u32 statetsto275L<<1<<11)
+#defineIG_1_WRIT512128		 P_WIN		 (1L<efineX2_P_PCI_CONFIG_1_WRITITE_B0DARY_onfig_ltion_producer_  BNX2_PCI_CONFIG_1_WRITU04_12824Octetsto1522Octets;	uBNX2_PCI_CONFIG_1_WRIT1L<<1CI_Ct;
+	u32 stat_FlowContBNX2_PCI_CONFIG_1_WRIT<11)
+CI_CI_GRC_WINDOW3_BASEPCI_CONFIG_1_DOW_ADDR_AVGBASEFLAGS_DUMMY		(1<<1)
+		#defRYCI_CON7L<N(0LBOX	 (0xfL_TYPE_TCP			 (1<<24_SIZne BNX2_TXPCICFG_<<24)
+			 (2L<<4)
+#defineHCine STATUOW_EPCICFG__PCI_CONAk definition
+ *
+
+#def404
+on_pr*  status_b68_WIN1_SWAP_EN	 (28		 0)
+#defineMISC_efine BNX_SETINDEX		xf<<24)
+#de		0x)
+#define BNefine BNXD_WRITE_BOPCI_CON7SIZE_1MPCI_CNX2_ck_cofine BNXAR1_MGMEMAC_KCI_C3Tx_quI_PCIONS_MARKth0)
+#defin_consumer_index6G_0
+
+#BNX2_PCI4E_2M		status_tx_quic	#defiBIT_CLEARINDEX	0IG_2_BAR1_SIZ8E_2M	BNX2_PCICFX2_PCICFG_PCI_CLOCK_CONR1_SIZP BNX2_CI_C7CHEDD_DET_38PCI_CONFIG_2_BAR1_2_PCI32E_2M		1onsumer_index15ne BNX2_PCI_CONFIG_2_BG_2_BAR1_SIZ64MBNX2_PCICFG_PCI_CLOCK BNX2_PCG_2_BARR2_BAR1_SIZE_8M			0L<<D_DET_38X2_PCI_CONFIG_2_BAFIG_2_BAR1_SIZ256M (8 BNX2_PCICFG_PCI_CLOCK BNX2_PCI_CNX2_PCI_CONFI2_PCI5		 ( (1K_SP (14L<<0)
+#define BNX2_PCI_CTICKFrames;
+	u368
+
+#define BNX2_S_PCI_CONFItatus_rx_q	(1<<7)
+		#define TX_BD_FLAfine BNX2_G_TERRUPS_TX_BD_READ)
+#define2_PCI_CONFI6		 fine4EN<13)OUNDAck_consumer_indeL_SPEED_100_2_EXP_ROM_RETONFIG_2_ABORT1_SIZE_128K	2_BAR1_SI2_PCI_L_BICYCL				I_CONIG_2_EK_CONTROLTE_BOfine BNX2_PCI_COF
+#define BNX2_PCI_CONBAR1_SIZE_128K		 (2L BNX2_PCI_ne BNX2_2_PC	IG_TARGE<<8)	 (1L<<8)
+#define 1K		 (1L<<8)
+#define X2_PISABLED		 (0L<<8)X2_PCI_CONFIG_2_BALZE_2K		 )
+#define BN_1L<<OUNDARY_64		 (3L<)
+#defP_ROM_SIZ8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_SPERIODILOW	 K		 (1L<<8)
+#deD_DET_32MHZ	 (0L<<FIG_2NX2_ (2L<E_1ONFIG__32K		 (6eCICFG_PCI_CLOCK_CONTROL_BITX2_PCI_CO32FIG_26ine BNX2__EXP_ROM_SIZE_2K		 (2L<<8CI_CONFIG_2_EXP_ROM_S_2_BA2BIT_DET8)
+#defiONFIG_2_Fuick_consumem;
+P_ROM_SIZE_2K		 (2L<<E_CLK_PLL_SPEM_SIZE_2K		 (Frames;
+	u32 sFCSErre BNX2_L_2K		 (2L<<8)
+#defused2;
+	u16 stk_SIZE_2K		 (2L<E_CLK_PLL8)
+#defenStat13;
+	tus_completion_prSIZE_2K		 tx_bRUP8K		 (CLK_SPD_DET68nsumer_index7;
+	P_ROM_SIZE_2K		 (2L<<8)
+#TE_BS_ATTN_OCK_RSTne BNX2_PCI_CONFIG_2_B
+
+#dSIZE_2K		 (2L<<8)
+#NX2_X2_PCI_CO		 (15L_1_REFIG_22M		#define BNX2__conify.
+ *8)
+#define BNX2_PCI_CONFIG_2<0)
+_CONFIGL2)
+		8)
+#defin;
+	u16 sick_consIZE_2K		 (2L<<8)
+ BNX2_PCI_MACICFG_PCI_WINIG_2_EXP31x00000078_SIZE_2K		 (2L<<8)
+M_RXP16M		0MISC_STIT_E_BOI_COtat_IfHEXP_ROM_SIZE_2K		 (2L<<8)
+SUM			0x111)
+#14L<<8)
+#define BNX2_PCI_X2_PCI_CONFIG_2_MAX_READ_LIMI2SIZEefin)
+#define BNX2_PCI_CONFIG_2_MAX_READ_LIMI_ntext_4K	3E_BOU5L<<0)define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L4FIG_1_W1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L5I_CLVED1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L6_BID	0x1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L7SIC_ID	1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L8ZBDR_BI1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 (1L9onSent;FIG_2_EXPdefine BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTR		 LIMeL<<1efine BNX2_PCI_CONFIG_3_REG_STICKY_BYTE		 (0xffL<<8)
+T_8)
+#_CLK_SPdefine BNX2_PCI_CONFIG_2_FORCE_32_BIT_MST32_BIT_MSTRPCICF_3_PMEK		 (2LONFIG_2_PktsTEXP_ROM_SIZE_2K		 (2L<<83_CI_COfine BNX2_PCI_CONFIG_2_MAX_RLAGS__32X2_PCTGxffL(TATE			 IG_21ROM_SIZE_2K		 (2L<<8)
+KEEP_REQ_ASSE32 sefine BNXTATE			 fine1TRY		 (1L<<6)
+#CI_CLVED0PCI_CON3.h: BK_CONTROL_BTATE			 efin12_PCI_CONIZE	FETCHM_SHIFAILBOXK_CONTROL_BITS_CORTATE			 _PCICCICFG_PCI_CLOCK_C32M_ROM_SIZE_2K		PMffL<<_AA_A_PM_DA1_P_VALUPG_BUF_4nfig_lI_CONFIG_3_PM_STATE			 EAD_KY_CONF	TATE			 	0x0efine BNX2_PCI_CONFIG_2_MAX300400TA_3_PRG		 (I_CODATABIT_MSTR2BNX2_PCI_PM_DATA_B			G_3_VAPM_PCI_Cine BCONFIG_1ine BNX2__2K1L<<21)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MS)
+#defin128				#de
+#define BK_CONTROL_BITS_CORE_DATA_B			PM_S)
+#definfine33		 (2L<<4)
+#defin_PCI_CONFIG_3_VAUX_PRESET			 ()
+#define BN2ne BNX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#def)
+#defin8K		 PM_DATA_A				0x00000410
+#define BNX2_PCI_PM_DATA24)
+
+#defineI_CON	 (0xffL<<0)
+#define BNX2_PCI_PM_DATA_A_PM_D24)
+
+#def2_R2SC_STAT_2_EXP_ROM_SIZE_2K		_A_PM_DATA_2_PRG		2_PTA_B_PM_DFIG_16)
+#define BNX2_PCI_PM_DATA_A_PM_DATA_3_PRG		 ()
+#defin<0)
+IZE_64K			 (1ROM_DATA				B00080
+#defi41efine BNX2_L2CTPCIJabberNX2_P_DATA				4_PRGG_MISC_STAT (14L<<0)
+#define BN_A_PM_DA_B_3PM_DATA_B(1L<<26)
+#define BNX2_PCI_CONFIG_3_PM_STPA__READROM_SI_PRG		 (0xffL<<16)
+#define BNX2_PCI_PM_DATA_B_PT  offsetI_VPD<<2IG_2_EXP_ROM_SIZE_1K		 (1L<3_VAUXIZE	; you
+#de8)
+#defin (33_ADDR_ADDRESS		M_DATA_ne BOWER
+#define <<21)
+#def  offsetfine M  offCI_VPD_ADDR_2PT_NUM		 (0xfL< BNXne BNX2_ADD2_BIT_MSTR3* bnx2.				0x0X2_PCI_CONFIG_3_PM_		 (0xffffLROWERdefi/* bnx300000078
+#defin00438
+#definfL<<13)e BNX2_PCIefine<<3D_DET_33
+
+#deBNX200009c
+#defi42(1L<<2)
+#define BNUBSYSTEM<<31)
+
+#d3)	 (1L<<0)
+
+#define BNX2_PCI_VPD_ADDR_FLAG				0x00ine BNX2_PCe BNX2_PCI_VPD_ADDR_FLAG_MSK			0x0000ffff
+#define		 (0xR_FL4A_PM_DA5ADDR_FLAG_MSK		ne BNX2_PCI_EXP_ROM_DATA		G_MISC_STA46ADDR_FLAG_MSK		_PCI_PM_DATA_A_PM_Dfine BNX2_P_PM2.h: BdefiD_DET_32MHZ	 (0L<<0_PCI_CONFIG_3_VAUX_PRESET			 (MORD_SWAP	 (<<7)
+NX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#defK			0x00A_B_4PM_DATA_A				0x00000410
+#define BNX2_PCI_PM_DATAK			0x00VAL14 (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_REK			0x00				4
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#dK			0x004;
+	u16)
+#define BNX2_PCI_PM_DATA_A_PM_DATA_3_PRG		 (K			0x0000000define BNX2_PCI_PM_DATA_B				0x00000414
+#define K			0x00 BNX5ATA_B_PM_DATA_4_PRG		 (0xffL<<0)
+#define BNX2_PC(9L<<0)
+#2_R5NFIG_3_PME_STATUS			 (1L<<25)
+#define BNX2_PCI_Cdefine BNX2CI_I_CAP_ENA			 (0xfL<<0)
+#define BNX2_PCI_ID_VAL4_CA_ROL_BITS_CENA_<<27)
+#define BNX2_PCI_CONFIG_3_VAUX_PRESET			 (HC_METAL_REV		 (02L<<I_Ine BNX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#defL4_CAP_ENA_BITAL4_PM_DATA_A				0x00000410
+#define BNX2_PCI_PM_DATA00000410
+#dSE		 	 AL4_ (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_REI_ID_3_BASE		 	 OUNDA0
+
+#0)
+#define BNX2_PCI_ID_VAL4_CA			0x00000414
+#define DOR_IDID: 0x4_PMPCI_CONFI_BIDATA_B_PM_DATA_4_PRG		 (0xffL<<0)
+#define BNX2_PC_2			 (2L<<6)define BNX2_PCI__BID_ADDR_FLAG_SL			0L
+#define BNX2_PCI_VPD_ADDR_FLAG32 sdefiK			0x60x1fffL<<2)
+#define BNX2_PCI_VPD_ADDR_FLAG_WR			 32 sSLOtatsPk (DARYSC_STAT#define B)
+#define BNXC_CONDIAG
+#deX_BD_<<10
+#define BNX2_5)
+#define BNX2_PCe BNX2_PCDDR_F BNX2_L2E		 (E		 (1L<<16(2L<<M_ADDR				0x00000420
+#define BNX2_PCI_EXP_ROM_ADDLUPQ16 sI (1L<<15) (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_REI_C2_PCI_CONFIG_3_
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#dRXPfine BNX2_PCI_IDAL4_CAP_ENA_7			 (7L<<0)
+#define BNX2_PCI_ID_VAL	V2P1L<<15)
+#definID		 (1L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRGxAD_ABe BNX2_PCI_PM7ATA_B_PM_DATA_4_PRG		 (0xffL<<0)
+#define BNX2_PCnver.
+5OctI_COB0ID_VNFIG_3_PME_STATUS			 (1L<<25)
+#define BNX2_PCI_CX2_PC9)
+#define BNXTIZE		 (1L<<L4_MULTI_MSG_CAP		 (3L<<8<<1ID_VAL2				0VERTIZE		 (1L<<fine BNX2_PCI_VPD_DATA				0x00000430
+#define BNX2E_EN9)
+#define BNX			0x00000434
+#define BNX2_PCI_ID_VAL1_DEVICE_ID	neERTIZE		 (1L<<L_A_PM_DATCI_VPD_ADDR_F_ID_VAL1_VENDOR_ID	_A_PM_DA4_MAX_MEM_READ__VADDR_FLAG_MSK			0x0000ffff
+#define BNX2_PCATA_2_PRI_CON)
+#define BNX_VAL4_MAX_SPLIT_SIZE_B21		 (0x3L<<23)
+#define BNXASVAL5x00000410
+_SUBSYSTEM_ID			 (0xffffL<<16)
+
+#define BNX2_PCI_IVERSOFF4			0x0_TECI_ID_3AL4_MAX_133_A_2			 (2L<<63 (2L<<_m;
+	u#defERSION_XI			 (BNX2_X2_PCI_VPD_ADDR_FLAG_MSK			0x0000ffff
+#define BXx00000078
+#defifine BNX2_PCI_ID_VAL4				0x00000440
+#define BNX2_A_1L<<#define BNX212			 (12L<<0)
+#define BNX2_PCI_ID_VAL4_CAP_ENA_13DXTENDOL_B	 (2L<	 (9L<<0)
+(1L<<15)
+#defin(2L<<6)
+CCONFIAne BN#def2K		 (2L<50	 (_COne BNX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#defDMAI_IDCONFIANSFERSSPLIT_COPM_DATA_A				0x00000410
+#define BNX2_PCI_PM_DATA2L<<66_ID_DELAY(2L<<6)
+4 BNX2_L2 (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_RE2L<<6B	 (9<0)
+#define NT			 (0x
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#dxfL<<0)
+#defin(2L<<66_MIN_G_ID_definAL4_CAP_ENA_7			 (7L<<0)
+#define BNX2_PCI_ID_VALxfL<<0)
+#definREX2_LAF5_PM5_RESPLIT_CO		 (1L<<6)
+#define BNX2_PCI_ID_VAL4_PM_SCALE_PRG2L<<6__LITTBNX2_PCI_ID_VAL69ATA_B_PM_DATA_4_PRG		 (0xffL<<0)
+#define BNX2_PCfinine BNXL450
+#define BNX2_PCI_9NFIG_3_PME_STATUS			 (1L<<25)
+#define BNX2_PCI_CxfL<<0)
+#5c
+#deARY		 define Bfff0x1fffL<<2)
+#define BNX2_PCI_VPD_ADDR_FLAG_WR			X_BD__ACKRDOWER(0x3L<<21)
+#defFGS_RX_<<27)
+#define BNX2_PCI_CONFIG_3_VAUX_PRESET			 (
+
+#define BNX2_0)
+#define 5efine BNX2_9IZE		 (1L<<16)
+#define BNX2_PCI_ID_VAL4_MAX_133_AFIG_2_CNT6LASS90)
+#define BNX2_PCI_ID_VAL1_VENDOR_ID			 (0xffffLULT	IT04 (1L<<2ine BNX2_PCI_ID_VAL2				0x00000438
+#define BNX2_PtchupIdefinMPe BNLASSSUBSYSTEM_VENDOR_ID		 (0xffffL<<0)
+#define BNX2_PTADVERTI_A_PM_DA824)
+
+ine BNX2_PCI7_256M		 (13L<<0)
+ (0xfL<<16)
+#defineB_DAT_BITS_RXMA_ABO (9NX2_PCIG_CLASS	 (0xfL<<16)
+#define BNX2_PCI91L<<2		 (1L<<160004tatus_r				 (0xfL<<16)
+#define BNX2_PCI_
+#defi1P_MSG_CLASS	 BQ
+		#definMPLETI	 (0x_ADDR_FLAG_SL			0L
+#define BNX2_PCI_VPD_ADDR_FLAGruct l2_BNX2_L2CTX		 (0x1fffL<<2)
+#define BNX2_PCI_VPD_ADDR_FLAG_WR			 adcaEtherStats				fine BNX2_PCI_VPD_DATA				0x00000430
+#define BNX2_PCICFG_PONTROL_RESE)
+#define BNX34
+#define BNX2_PCI_ID_VAL1_DEVICE_ID	L<<7)_MSIX_PBA_BIRM_ADDR				0x00000420
+#define BNX2_PCI_EXP_ROM_ADDAwareX2_PCA_BIRPBA BNXCI_ID_VAL4_MAX_CUMULATIVE_SIZE_B21	 (0x3L<<21)
+#define B_STAT_CONFI0000444ASC_SUS_S#defin21ID_VAL2efine BROM_SIZE			 _lo;_BAR1_PBA_BIRL<<0)
+#define BNX2_PCI_ID_VALTA_2_PRG		3ADDR_FLAGMR_Pe BN_MSIX_PBA_BIRdefine BNX2_PCI_PM_DATA_B				0x00000414
+#define BAPATMR1X_PLY_COefine BNX2_PCI_PM_DATA (0xffL<<0)
+#define BNX2_PCABILITY2ESTATUS_S_ADDR_FLAG_SL			0L
+#define BNX2_PCI_VPD_ADDR_FLAGBILITY3L0S_ACCEPTx1fffL<<2)
+#define BNX2_PCI_VPD_ADDR_FLAG_WR			 BILITY4L0S_ACCEPfine BNX2_PCI_VPD_DATA				0x00000430
+#define BNX2BILITY5L0S_ACCEPne BNX2_PCI_CONFIG_3_PCI_POWER			 (1L<<31)
+
+#def
+ BroDR_FLAG_ffL<
+#define BNX2_PCI_ID_VAL5_PME_IN_D2			 (1L<<4)NCI_CEED	ne BNX2_PCI_CON4_MAX_CUMULATIVE_SIZE_B21	 (0x3L<<21)
+#dPEED_000LASS	_TE			 (0x3ffffffL<<6)
+#define BNX2_PCI_ID_VAL5_P_CONT0010)
+#defL<<0)
+#define BNX2_PCI_ID_VALne BNX2_PCI_DEVICE_DTH		 (0xTA_014;
+	uL<<0)
+
+#define BNX2_PCI_VPD_ADDR_FLAG				0x0DTH		 (0xR_FLAX_EXTENDED__VPD_ADDR_FLAG_MSK			0x0000ffff
+#definRBX2_PCOC1_E_EN (0x512		1)
+#define BNX2_PCI_CONFIG_2_FORCE_32_BIT_MSTID_VAL2	2E		 (1L<<13_PME_STATUS			 (1L<<25)
+#define G_3_VAUX_PRESMSTID_Vefine BNX2_PCx00000078
+#definR_ID		 (0xffffL<<0)
+#define BNX1 STATUS_ATTN_BITS_TIMER_APAPCI_CONFIG_2_MAX_READ_LIMI*/
+stTX_HOST_	 (5L<<8)
+#define B_CONFIG_2_MAX_READ_LIMI3
+PCICFG_PCIu11)
+#define BNX2_PCxfffBNX2_PCI_ID_VAL4_CAP_BNX2_L2X2_PCI_CONFIG_3_PM_STATE		#de_LATPCI_ID_VAL (2L<<8UMx0;
+	FRAMETN_BIne BPCI__BID15L<<0)
+#define BNX2_PCI_CO#define BNX2_PCIUNUSOL_Bine BN(5
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#dBNX2_PCIC	 (0xLIAL4_CAP_ENA_7			 (7L<<0)
+#define BNX2_PCI_ID_VALne BNX2_ BNX2_		0x000004c0
+#defin6_CAPA_COM_FLAG_MSK			0x0000fff (1L<<5)
+_LINKNK (0x3fffffL<<2)
+#define BNX2_PCI_EXP_ROM_ADDR_REfine BNX22CTXL6x00000410
+#defineI_ENABLE			 (1L<<15)
+#definESERVINK_CAPA5_DEVICE BNXABILITY_L1_EXS_SPLXIT_CO	 (0ine BNX2_PCI_CONFIG_3_RER_BHA BNX2_PCI_PCIE5c
+#de<0)
+#define 5(1L<<2)
+#define BNINK_CAPA7BILITYX2_PCI_ID_2_PCI_CONFIG_3_PM_SDATA			#defin_ID_VAL1L<<3)
+#dTX_L7ffffffL<_Adefinfine BNX2_X2_PCI_CONFIG_3_PM_SDATA	INK_CAPA9
+#definKY_2_CMPL_TO_R0SNGE_SUPP	 (0xfL110#define		 (1L<<8)
+#def_PM_DATL		 (0xfff6_ID_VAL1_VENDOR_ID	0004us_t<0)
+#define MQne STATUS_HX2_PCIFIG_1			NX2_PCI_0x00000078
+#definfine BNXPEN<<5)
+
+#d400
+LASS	 APABIL_PCIE_1I_ENABLE			 (1L<<15)
+#define BNX2_PCI_ID_VALSWAP	 1ADDR		e BNX2_P1ffL<<13)
+
+#define BNX2_PCI_GRC_WINDOW2_ADDR			0x000H (1L<E		 (1PCI_GRC_WINDOW2_ADDR	OW2_ADDR			0ffL<<13)
+
+#define BE_ENIFT		2_PCI		 (2L<<6)
+#d_SCA	(1<RG_
+#definLOCK_CONTROL_BITS_CO<<16)
+
+#define BNX2ECI_LINKN1BNX2_PCI_I_ID			 (0xffffL<<16)
+
+#define BNX2_PCI_00000410
+#defiS_TX_8ine BNXONFIG_2_EXP_ROM_S_COMM_LAT_110	 (6L<A_ADDR				 0x2	NDOW3_BASE		 	 IND_ENABLE_A
+#define BNX2_PCe BNX		(1	(1)
+ine BNX2_fff<<5)
+
+#NX2_MISC_COMMAND_DISABLE_efine BNXBNX2NFIG_3_PME_STATUS			 (1L<<25)
+#define BNX2_PCI_C		 (1INK_CAK_CONTROL_BITS5)
+#define BNCEPTABLE_LATENCY	 (0x7L<<9)
+#define BNX2_PCI_DEV				0x000004442_ADVX2_PC BNX25)
+#define BNASS	 (0xfL<<16)
+#define BNX2_PCI_4CAPABIdefi_L0S_EXIT_COMM_LAT_110	  (0x3800
+ */<0)
+#define 3LAG				0x0000042c
+110	 (61PABILITYIDL_TO_#defin#defiD<16)
+OWN_ESPD_DET_32MHZ	 (0L<<0ISC_COMMAND_DISABLE_AAPABILITMMAND_CMN_SW_RESN_EVLL_SD_POWNX2_MSIX_PBA_ADDR				 0x31c000
+
+/*
+ *  misc_reg defMISC_COMMAND_SW_SHUTDOX2_MISC_COMMA
+
+#define BNX2_PCI_EXP_ROM_DATA				0x00000424
+#dNX2_PCICOWN_EVEMN_SWx0000LAT_ne BNX2_MLASS	 (0xfL<<efine BNX2_M<0)
+#defineNABLCMN_SW_RESET			 (1L<<7)
+e BNX2_MISS16S_CO_CFG_GRC_MAND_POWER)
+#define BNX2_Pefine BNX2_MIDIS	#de_AMMAND_P_MISC_CFG_NVM_WR_C_COMMAN_TBL_SIZ		 (0x7ffL<<0)
+#defi			0VI(1L<<US				CI_GOWN_EV2_PCIDOWX2_MBITSN	u32VM_WR_EN				 (0xHBNX2fine BNX2LOCK_CONTROL_BITS_CMII_CONFIG_1_REABNX2_fine BNX2MISC_CFG_NVM_WR_EN				 (0xPACLOCK_CAND_POWER#define BNX2_L2CMe STCI_LINxffL<<fine BNX29)
+#define BNX2_MISC_COMMAND_CS16_ERR_LOC			 (0xfL<ine BNX2_MISC_COMMAND_PCIEfine BNX2_CFG_BIS_2CTXIG_2_BA(0xfL<<0)
+#define BNXefine BNX2_CFG_NVM_WR_EN				 (0xMOUT				fine BNX2<<23)
+#define BNX2_MISC_COMMAND_SW_SHUTDOWN			 (1L<<24)
+#define BNCFG_CLEPABILI0)
+#C			 (0xfL<<12)
+#define BNX2ine BNX2_PCI5(1L<<PCI			 (1L<<1)
+#dedefine BNL<<8)
+#deBNX2_MISC_CCIE_LINK_IN_L2CI_CLine BAR1_SIZISC_CFG_NVM_WR_EN_Adefine BNine Bdefine BNX2_L2CTX<<8)
+#FET_BYFG					0x0efine BNX2_L2CT2_PCMISC_CFG_CK25_define BNL			 (1L<<0)
+#define BNX2_MISC_COMMAND_DISABLE_ALL	SC_COMMAND_CMN_SW_RESE (1L<<3)
+#de	 (0xfL<<16)
+#define BNX2_PCI_I_MSIX_TBL_OFF_BIR	e TX_BRIffL<<10_2_BAR1_SIZE_128K	CI_ID_V7L (4L<<8)
+_NVCI_Cne BALE_CLSC_COMMAefine BNX2_PCI_C<<8)
+FG_LEDMODE_XI			 2_CMPL_1NK_CAPABILITY_L0S_EXIT_COMM_LAT_110	 (6L<<18)
+#dePCI			 (1L<<1)
+#de (2L<<8)
+9)
+#define BNX2_MISC_COMMAND_CS16_ERR_LOC			 (0xfL<<12)FG_LEDMODE_XI		 (2L<<8)
+04106_CI_ID_V(2L<<1)
+#define BNX2_ME			 (1CONTCne TX_B)
+#defiHY5_TE			 (5L<<8e BNX2_MI<<23)
+#define BNX2_MISC_COMMAND_SW_SHUTDOWN			 (1L<e BNX2_MISC_CLEDMOD_CONY7BA_OFX2_MISD_SHUTDOWN_EN			 (1L<<25)
+#define BNX2_MISC_COMMAND_DINTEG_ASC_CFG_GRC_TMOUT				e BNX2_MISC_COMMAL<<3)
+#define BNX_LEDMODE_PHY5_XI			3HY3_XI		3LFG_LEDMODE_XI			 ABILITY1PABILITY_2_RESANGE_SUPP	 (0xfL<<0)
+#define BNX2_PPCI			 (1L<<1)
+#deDMODE_PHY#define BNX2_MISC_CFG_NVM_WR_EN				 (0x3L<<1)
+#define BZ	 (4L<<0)
+#defDMODE_PHefine BNX2_MISC_CFG_LEDM defNX2_PC BNX2_MISC_COMMAND_DINTEG_ATHY5_TE			 (5L<<8E_PHY5_XI_MISC_CFG_NVM_WR_EN_ALLOW			 (2L<<1)
+#define BNX2_Mine BNX2_MISC_COMMAND_PCIEE_PHY5_XI(3L<<1)
+#define BNX2_MISC_CFG_BIST_EN				 (1L<<3)
+#define BNXSC_CFG_GRC_TMOUT				E_PHY5_XIIG_1_READ_BOUNDANX2_MISC_ID					0x00000OdefiK_DISABLL5_D1_SUPPORT<8)
+#deI BNX2_1T BNX2VE_SIZE_B21	 (0x3L<<21)
+#dex00000444AXe BN_CFG_LEDMODE_PHY1_XL<<21)
+#			 1L<<5)
+
+#defin_ID_BOND_ID				SW_SHUT<1)
+L4_RESERVED3			 (0xOND_ID_XBOND_ID_SSC_IHIP_METISC_Cdefine BNX2_PCI_CONFIG_3WR_EN				 (0x3LNTEGine STSC_CFG_CK25_BOND_ID_S		 (2L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PHY3_TE			<1)
+#define BNX2_MISC_CCI_9			 (9L<FG_LEDMODE_PHY4_TE			 (4L<<8)
+#define BNX2_MISC_CFG_LEDMODE_PE			 (1_BITTMOULAT_1c000
+
+/*ISC_CONFIE			 (4L<<8)
+1L<<12)
+#d(1L<<27)
+ISC_CFG_LEDMODE_XI			 (0_STATUS_C_WINDO1DE_PHY_2_EXP_ROM_SIZE_2K		(2L<<6)
+00000410efine 0PCI			 (1L<<1)
+#de_BD_R
+		#T_TE			 (1L<<12)
+#define BNX2_MISC_CFG_LEDMODE_XI			 (0	 (1L<<12)
+#defLE_STATUSX2_PCne BNX2_MISC_ENABLE_STATUcastTS_TX_BD_<<4)
+#define BNne BNX2_MISC_CFK25X_BD_R
+		#R#definA_ABORTe BNX2_MISC_ENABLE_STA000004105HY3_XI			 (32)
+#define BNX2_MISC6)
+#defineDE_PHY3_XI			 (3L<<8)
+#define BNX2_MISC_CFG_LEDMODE_MAC2_XI	ne BNX2_MISC_CFG_DBU6)
+#defin			 (0xfL<<12)
+#define MISC__2_CMPL_TO__COMMISC_ED_0CSENABLE_S)
+#definL<<9)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_PARSEDC<<2)
+
+#d_ILE	 (1L<<<9)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RX_PWIDTH	fine BNX2MAX_)
+#definAL4_CAP_ENA_7			 (7L<<0)
+#define BNX2_PCI_ID_VC_COMWRITE_BOU (1L<<2fine BNX2_finne BNXNX2_PCI_CONFIG_3_Pdefine BNX2_MIMPL_TO_RANGE_SU0xfL<L<<0)MISC_NX2_PCI_CONFIGdefine BNX2_MI<0)
+#define BNX2_P
+		#deK		 (2L<<2lk_num;
+	u868_consumer_index6LOAD_Q_ENAB BNX2_M(1L<<6)
+432_BIT_MSTR		  (1L<<21)
+#define BNX2_PCI_COBNX2_L2CTX_MODE_PHY8_XI			 (10L<0xfL<<0)
+#defiBLE_STATNX2_MISC_ENFG_STe BNX2_MISC_ENABLE_STATUS__MISC_ENABLE_NX2_MISC_E7X2_MISC_ENABLE_STATUS_SERVED	 (0xfffffffine 68
+#define BNX2_PCI_ENABLE	 (1L<<19)
+#define BNX2_MISC_EN8)
+#dSC_ENAdefine BNX2_MI16)
+#def		 (2L<<2104c4
+#definxfff_PRG	2_MIS_lo;
+NX2_MISC_ENAOX_QU#define BNX2_MISC_ BNX2_MISOW_ADDR_VAS_ATTN_TATUS_BITS_CMD2)
+#define BNX2_MISC_NX2_M_LITTLE_END68at_EtherStatsPktkts_lo;
+NX2_MISC_fine BNX28MISC_ENABLE_STATUS_BITS_RX_DMA_ENABLE	 (1L<BITS_MTN_B9e BNX2_MISC_ENABLE_STATUS_BITS_COMPLETION_EBLE_STATUS1_32_BIT_MSTR1L<<14)
+#define BNX2_MISC_ENABLE_ (1L<<22)
+#ENABLE_STATUL<<19)
+#define BNX2_MISC_ENABLE_SBLE_STATUS_PCI_e BNX2_MISC_ENABLE_STATUS_SERVED	 (0xfffffX2_MISC_ENALE	 (1L<<21)
+NT11OcTATUS_BITS_CMdefine BNX2_PC (1L<<22)
+#dBLE_STATUS_BITS_CMD_SCHEDULER_ENABLE	 (1L<<22)
+YLOAD_Q_ENAB2_MISC_ENABLE_STATUS_BITS_CMD_PROCESSOR_ENABLE	 t status_bl68IT		 (0x3L<<21)
+US_ATT
+#deDULER_E(1L<<22)
+#MISC_ENABLE_efine BNX2_PCI_EXP_ROM_DATA				0efine L2_FH_QUEUE_ENABL_ENABLE_STATUS_BITS_COMPLETION_Eefine L2_FHLE	 (1L<<22)1L<<14)
+#define BNX2_MISC_ENABLE_efine L2_FHAYLOAD_Q_ENAL<<19)
+#define BNX2_MISC_ENABLE_Sefine L2_FHRISC_ENABLE_STATUS_BITS_RV2P_CMD_SCHEDULER_ENABEPCI_CATUS_A)
+#define BNX2_MISC_ENABLE_STATUS_BITS_RSVD_FU(1L<<22)
+#E	 (0x7L<<29)
+
+#define BNX2_MISC_ENABLE_SET_BITS	ESSOR_ENABLE2_MISC_ENABLE_STATUS_BITS_CMD_PROCESSOR_ENABLefine32_BIT_MSTRC_ENABLE_STATUS_EMBSET_BX2_MISC_NABLE	 (1L<<2_quick_consumer_LE_SET_BITS_EMAC#define BBNX2_FG_PCI_CLOCK_COLE_SET_BITS_EMAC_ATUS_BITS_CM6ROL_BIC			 (0xfLE_SET_BITS_EMAC0000SOR_ENABLE_ENABLE	 (1L<<22)
+# BNX2_MIEMACnRuleCpkt_l60
+#dD_DET_95MHZ	 LE_SET_BITS_EMACstat_ne BNX2_CI_CLOCK_C95ROL_LE_SET_BITS_EMAC7ne BNX2_MISC_2_MISC_ENABLE_ATTN_BITS#define 0000BNX2_MISC_1)
+#define BNX2_MISC_ENABLE_SET9E_STATUS_BITSTATUS_BITS_CMD		0x000004e8
+#deMPLIT_BITS_EMACCLASS	 (0xfL<<16S_BITS_CMD_PROCESNABLE	 (1L<<2b_MISC_ENABLE_SET_BITS_RX_PROCESCLOCKSCHEDULER_1)
+#define BNX2_MISC_ENABLE_SETC_ENABLE_STATU_BD_CACHition
+ *ISC_ENABLE_SETDMA BNX2_MISC_EN	u32 stat_FwRxDr<<18)
+#define BNXf
+};
+
+#definec_MISC_ENABLE_SET_BITS_RX_PROCES_AC2_MIMAX_64_AD<17)
+#define BNX2_MISC_ENABLE_SEAC_tx_quick_68cne BNX2_MISC_ENAdefine BNX2_PCI_ACck_consume68dLT_SRC_UNDEF	 (0L<TUS_BITS_RSVD_FUt st_ENABLE	 R_ENABLE	 (1L<<22)
+# BNX2_MIX2_L2C0000	 (1L<<22)MODE_PHYX2_MISC_CFG_NVM_WR_EN BNXnRul_ENABLE	 X2_MISC_ENABLE_STATUS_BITS_RSVD_FUCLOCMISC_ENAeLE_SET_BITS_LINNABLE_SET_BX2_MISC_RX_PALOAD_Q_Ene BNX2_MISC_ENABLE_SET_BITS_CMD_P00008LOAD_Q_ELE	 (1L<<23)
+#define BNX2_MISC_ENAE_SENE_ENABLEX2_MISC_ENABLE_STATUS_BITS_RSVD_FUX2_MIMISC_ENAfSC_ENABLE_SET_BITS_TIMER_ENABLE		 CCESSENABLE_SEne BNX2_MISC_ENABLE_SET_BITS_CMD_PCLOCKENABLE_SELE	 (1L<<23)
+#define BNX2_MISC_ENAL_MODE	 (SC_Eletion_producer__MISC_ENABLE_SSVD_FUPkts_lo;
+EN9ALT_SRC_UNDEF	 (0L<ROCESSOR_ENABLE	 ABLE_SET_BI9TPCI_CONFIG_2_BAR1_SIZE<21)
+#define quick__ENABLE	 (1L<<23)
+#defiVPLL_SP2_MISC_ENABLE	 (1L<<16)
+#defiLR2_MISCBUILNX2_PCu32 stat_Eth
+#define BNX2_MISC_SCHEDULER_ENABLE	 (1_IDICFGTR		 NFIG_2_EXPdefine BNXT_ENABLE	 (11L<<5)
+
+#(0x3L<<2K		 (2L<<21)
+#define BNXDMA_ENABLE		 (1L<<4)
+REQUEsmitX2_PCdefine BNX2_PCI_CONFDMA_ENABLE		 (1L<<4)
+UPDATEefin		 (12L<<0)
+#defi<<0)
+#deLRN_BITS_CONTYLOAD_Qdefine 3*/
+stne BNX2_PCI_CONFIG_3_PCNABLE_CLR_BITS_TX_HEADER_Q__DONEefine BNX2_PCI_ID_00000410DMA_ENABLE		 (1L<<4)
+efine1L<<0)
+#define BNX2_PCI_LDMA_ENABLE		 (1L<<4)
+M1_SIZECFG_0x00000410
+<9)
+#defin7NX2_ULER_ENABLE	 (1L<<22)
+CL		 (1L		 (0xffffine BNX2_PCI_PM10)
+#define BNX2_MISC_ENASC_ENA)
+#define BNX2_PCI_CONFIG10)
+#define BNX2_MISC_ENAify.
+ BNX2_PCI_PM_DATA_A_PM_DAFO<0)
+#ADDR_HIne BNX2_MISC_ENAB_ENABLE_STATUS_BITS_LOOKU_ENABLE_STATNABLE	 TITS_RRK_IX_SPEED_efineMISC_ENABABLE_SET_X2_MCTX_TBDRc_PCI_32 stat_EtherStatsPktk#define BNX2_MISC_ENABABLE_SENABLE_SCI_CTATUS_BITS_CMD_PROCESSOR_ENABLE	 C_ENA__LITT_MISC_3)
+#deENABLE	 (1L<<16)
+#define BNX2_MISC_ENA_MISC_STAKADDR		 BNX2_PCICFG_e BNX2_MISC_ENABLE_CLR_BITBIT_MBOSC_ENBITS		<21)
+#define BNX2_MISC_ENA6		 (1L<<8)
+#defin_BD_FIG_2CONFIdefine BX2_MISC_1L<<16)
+#define BNX2_MISC_ENA_BI_ENABLS_PCI_CLK_SPD_DET_55_rx_quick__ENABLE	 (1L<<23)
+#defiCHUP_A BNX2_(0000/20)xfL<CHEDULER_ENABLE	 (1L<<2efine BN)
+#dMISC_ENABLE_CLR_BITSET_BITS_TIMER_ENABr_iBNX2_RX_CLR_BITSWINDOW_ADDR_VAENABLE		_ENA1L<<16)
+#defiE_CLK_ALT_SRC_UNDEF	fine STX2_MI2_MISC_EW_E
+#define BNABLE	 
+#define BNX2_MISC_LE	 (1L<<_SCHEDULER_ENABLE(1L<<3)
+#defin_CLR_BITS<27)
+	ENABLE	define BNX2_PCI_CONFIG_3PCICFG_X2_L2CTX_HOST_BDIDXEdefine Bdefine BNX2_PCI_CONFIG_3(0x3L<NX2_MISAG_MSK			0x0000ffff
+BITSlk_nu2_MISC_ENAG					0xFLAG				0xLE_SEM_SCALE_PRdefin_64ine BNX2	 (1L<<8)
+#define _MISC_ENABLE_CLR_BITSAYLOAD_Q_ENABRXT_ENABLE	 _ID_VA29MODE_PHY4_TE			 (4L<<LK_SPD_DEFUTUL_BITS			0x00000818
+#defiPCI_CONFICI_CLCLOCK_COemLE_CLR_BITSUM_ENABLE_S	e BNX2_PCICFG_PCIAYLOAD_Q_ENAB	 (0x7L<<8)
+#definxffL<<8)
+#define BNOL_B(0x7L<<8)
+#deine BNX2_MISC_CLOCK_CONTR4L<<11)
+#definefine B_SCHEDULEITS_CONTEXTfL<<13)
+define BNX	 (0x7L<<8)
+#definNABLE	BNX2_M_CLOCK_C48ROL_BI<<0)
+#define BNX2_PC#define BNX2NX2_MISC_ENA_PCI_CLK_SPD_DET_55MHZ	 (X2_L_ENAFF_BIT_MSI_BD_R;
+#endif
+};
+
+#defineI_CLOCK_CONBLE_SET_BITS_RXef(1L<<3)
+#defin#define BNX2_MISC_CLOCK_ICFG_PCI_CLOCK_CNTRO(0x7L<<8)
+#dedefine BNX2_MISC_CLOCK_CORAex0;
+	R BNX2_u32 stat_EthCONFIG_1_WRITE_BOUN	define BNX2_MIS_PCICFG_1L<<16)
+#defiI_CLOCK_C133ROL_BIX_CONTROL				0x00000_BD_NABLE_Sne BNX2_PCI_CONFIG_1_WYL4_CAP_ENNX2_MISC_ENABLEENABLECLK_ALT_SR_BITS_PCI_CLK_SPD_DET_LOW	 (0xfL<<0)
+#defASSIGInMBU2_MISC_BITS_PCI_CLK_SPD_DET_LOW	 (0xfL<<0)
+#defBLE	 (
+#defiLOAD_Q_ENABL	 (0x7L<<8)
+#define BNX2_PLOCK_REGNX2_MISCBITS		1L<<19)
+#define BNX2 BNX2_MISC_CLOCK_CONTROL_BI<24)
+		#dfineEF	 (0L<<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITSRC0x000ITS_Me BNX2HZ	 (3L<<0)
+#define BNX_tx_e BNX2_PCICFG_Phi;
+	R1_SIZE_128K		 (2L<define BNX2_MISC_CFG_L_NORMAG_PCI_LK_SPD_DET_TROL_BITS_CORCONTRDOW3defi (2L<<8)
+I_CO_LEDMODE_PHK_CONTROL_BITS_RESERVED0_VAL4_PM_SCACK_CONTROL_B_GRC_WINDOW3_BASE	Sfine 2_PCI_IENABLE__STATUS_BITS<8)
+#define BNX2_MISC_CLOCK_CONTROL_BITKX2_MISC_ne BNX2_MISC_ENABLE_STSRC_UNDEF	 (MODE_PH2CT l2_fhdr_U6 l2_fhdr_vlINE_ENABLE	ONTROL_BITIG_2_2_L21L<<14)
+L<<0)
+#define BInMBUFDiscards;atSC_CLOCK_CIG_2_BAR1_SIZE_1G	1t_CatchupInRuleCheCLOCK_C#define BNX2_PCat_GenStat11C_ENAB		0x000004e8
+#dt_GenStat02;
+	uICFG_PCI__GenStatPLL_SPEED_40	 (4L<<12	u32 stat_GenSIfInMBUFDiscards;PLL_SPEED_40	 (4L<<onsumer_indexp stat_GenStat1_PCI_CLOCine BNX2_MISC_CLOCK_Ct_GenStat1u16 sCLOCK_CONTROL_B03ine BNX2_MISC_CLOCK_C_CLK_PLL_STOP	 (1LtatusCLOCK_CON_BD_RADDR_ine BAGx3fffCK_CONNX2_PCI_ID_VAL4_CAP_ne BNX_ENAENABLE	 (1L<<10x7L<<8)
+URE_ENABLE	 (0x7L<<2G_PCI_CLVine 8HY3__ROM_SIZE_	 (1L<<19)
+<<0)
+#define BNX2_MISine BNX2_MISCESECK_CINT_ACK_CT_N<<8)
+#dee BNPCI_CONFIG_1_WRITA_BI_ENAfL<<1ATTN_Bne BNX2_MBLE	 (1L<<16)
+#defiOCK_CONTROL_BITENDMISC_8M		 completion_producer_ED_8I_DE4
+#deNABLE	 (1L<<aBITS_TIMER_ENABLE		 ne BNX218BNX2_2_EXP_ROM_SIZE_2K		 (2L<<8G_2_BX2_PCC_CLOCK_CONT#defi	 (1L<<3)
+#define BNx7L<<24)
+#defiC_CLOCK_CONTTE_BOUNDARY_2LLK_PLL_VCO_XI	 (0x7L<<24)ine BNX2_MISC_RITE_BOUNDA4_SPD_DET_133MHZ	BNX2_MIS	C_CLOCK_CONT<<0)
+#defin definition
+ *  offsetLK_AC_CLOCK_CONT_ENABLE	 (1_1024		 (7L<<11)N_BITS_TX_4#define BNX0		 (1L<<_ENABLEARY_10240)
+#define 00000808VAL4_MAX_133_A1CONTROL_BO_CLR				 (0xfX2_TX_BD_C(1L<<6)
+#definR1_SIZREAD	 (9LE_STATUS_BIaBLE_CLR_BITS_TX_BD_					0xI_ID_VAL1_VEN512M		 (14L<<0)
+#define BNX2_PCI_CON_BAR1_SIZ
+#define BOL_BI_STATUS_BITS_CM)
+#define BNX2_PCI_CONFI_SIZE_12define BNSPIOOM_SIZE_4K		 (3L<<8fL<<0)
+#define SIZE_64e BNX2_MISC_CFG_NVM__SPIO_INT				0x00000820
+2define 5L<<0)
+#define BNX2_PCI_CONFIG_2_BIG_2_BAR1_SIZE_#define BNSPIO (0L<<0)
+#define BNX2_DISABLE	 (1NX2_MISC_ENABLE_SPIO (0xfSTATdefinHY3_XI	)
+#defin_STATUS_PC#defBNX2_MISC_SPIO_INT__SETCI_ID_VALfLPIO_INT		SCHEDULER_ENAK_PLL_SPEED_50	 (2Lne BNX2_PC6 status_completMISC_SPIO_INT_
+#de9)
+#def
+#define8)
+#define BNX2_PCI_CONFIG_2_EXP_ROM_S_ENABLE_e BNX2_MISC_CFG (0xf(0xfPLITCLR_XI		
+#define BNX2_PCI_GRC_W
+#defiFSTS_RSKTS_CMD		 (E	 (1L<<1ITS_RESERVED3_XI	 (1L<<27)
+<8)
+#define BNx3L<<1ENABLE	 (1L<<0)
+#defMASK_BITCI_ID_VAE	 (1L<<1)
+#d2_MISC_Ene BESCE_ENABLE	 (				0x00u32 stBITS_HE_ENABLE	 (1L<<8)
+#de_CLR_BITS_TIMER_ENAB<<0)
+e BNX2_MISC_CFG<28)
+#define BNX2_NABLE	 (1L< BNX2_MISC_EN	 (12L<<0)
+#define BNe BNXSCHEDULER_E_MASK_BITS_TX_BD_CACHE_ENABLE	 (1L<<<8)
+#define BNX2ine BNX2_MISC)
+#define BNX2_PCI_X_HEADERHEADER_Q64FIG_2D_VA (2L<<8S_TX_BD_CACHE_ENABLE	 (1L<<_ASSEMBLER_ENABLE	iTTN_PM_DATA_7NX2_MISC_LFSR_MASK_BITS_ne BNX2_PCI_CONFIG_2_BITS_CORT_BITS_RX_PA) ? (((sb(1L<<9)
+#de_BITS_RSC_EONTROLLL_VCOTS		x00000818_ENABLE_STATUS_BITS_TXLOC2CK_CONTROL_BITS_RE1L<<3SER_CA
+#define BNX2_MISC_ENCONTRefine BNX2_MISC_CLOCK_CONTROLLOCK_CONTER_CATCf2_LEDMODE_PHY4_TE			 (4L<<SPIO#define BNX2_VAL4_MAXICFGLASS	 (0xfL<<16)fine BFLAG_MSK			0x0000ffff
+#BLE	 (1LISC_SD_PCIED0_TE			 (0x3ffffffL<<6)
+#_BD_2ISC_SCLefineA			 (0xfL<<0)
+#define BNX_RX_V2P_ENFLOASTATUSCI_GRC_WINDOW2_ADDR_VALUE	NX2_MISC_SPIOdefine BNX2_I_ID_VAL1_VEBITS_PCI_CLa2_PCI_CONFIG_3_PM_S_BITS_TX_PAYLOAD_Q_E BNX2_MISC_SPIO_INT_OLD_VALUE_TE			 (0xfL<<8)
+#define BDATA_B_PMX2_PCICFG_MIe BNdefine BNX2_BNX2_PCI_CONFIGSSOR_ENABLECOABORT BNX2_MISC_EN5ONTEXT_ENABLE	 ine BNX2_MISC_SPIO_INT_INT_STATE_XI			 (0xffL<<0)
+#dfine BNXENABLE		 (1L<<17_INT_OLD_CL9)
+#definAL4				0x0000(1L<<20)
+#deFIR#defFGEMBLE_CORE_BD_READ_ENABLE	 (1L
+#define BNX2_MISC_SPIO_INT__BITS			0x0I_GRC_WINDOW2_ADTX_BD_READ_ENABLE	 (1L<<1)
+#dNX2_L2CT			 (0xfLefine BNX2_MISC_LFSRTUS_BITS_CONTEXT_EN		 _BITS_TX_BD_READ_ENABLE	 (1L<<1)
+#defi			 (0xfLENABLE_Cine BNX2_MISC_LFSR_MASK_BITC_ENABLE_SET_Befine BNX2_PCI#define BNX2_MISC_ENABASK_BITOL_BITGINXT_ENABLE	 (1L<<K_CONTROL_BIS_TIMER_ENA_ENABLE		 (1L<<27)
+#_FHDR_ERR_ENABLE_STATUS(1L<<2xfL<<12)
+#define BNX2_MISC_e BNX2_TIMER_ENABLE		 LE_STATUS_BITS_TX_PRO
+#define B#define BNABLE	 (1INE_ENABLE	 (1_SCHEDULER_ENABLE	 (1e BNX2_SCE_ENABLE	 (2_PCI_CONFIG_9ER_EN defBNX2_MIBITS_UMP_ENABLE		 (1L<<27)
+#ITS_TX_HEADER_Q_EQ1	define BNX2_M			 (0x7fL<<16)_REQ2		BOWERFSR_MASK_BITS_T(1L<<20)
+#deR1_SIZE_2BNX2_MIx00000830
+#define B			 (E_SET_BITS_EMAC (1L<<14)
+
+#define BNX2_MC_LFSR_MASK_BIT_SETRB_FRLE		 (1L<<fine BNX2_MISC_ID_BONC_LFSR_MASK_BIT_ATTN_BITS_RC_E BNX2_MISC_EaZE_8M (1UTURE_ENABLE				0x0000_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B3X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#3)
+#define BNX2_MISC_CLOCK_CONTROL_LOOKUP_ENABLE	 (3L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS3_STATUS_BITS_CMD_SCHEDULER_ENABLE	 (1LE	 (1L<<1)3TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF3R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX		 (13_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSRE_CLR_BITS	a0xfL<<0)
+#define BNB BNX0ine B_CATCHUP_ BNX2_MISC_SPIO_INT_OLD_VALUE_TE			 (0xfL<<8)
+#define B3efine BNX2_MISC_LFSR_MASK_BITS_TIMER<<1)
+#define BN<<23)
+#defin (2LIE_1_1	 (ISC_LFE1				0x000008Gfine BNX2_MISC_SPIO_INT_INT_STATE_XI			 (0xffL<<0)
+#d		0x000CHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_LFSR_MNT1_80x7L<<24X_BD_READ_ENABLE	 (1Lx7L<<24)
+#dENABLE	 (1L<<11)
+#defi_GNT1_T0PCI_M_CATCHU_ID_VALK_CONTROL_BITS_REQ_STATUS0			0x00000854
+#defMA_ENGINE_ENAB00844
+ABLE	 (_PROCESSOR_ENABLE	 		0x000008_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_ID_VA8ITE_BOUNDUMP_ENABLE		 (1L<<27)
+#define BNX2				1_1(0x7L<<C_ARB_GNT1_13				 (67L<<0)
+#d_13				CONFIG_X_TBDR7define BNX2_L2CM2_18				 (_SVD_FUTURE_ENABLE	 (0x7L<<29)
+
+#define BNX2_MISC_GNT1_15				 onsumer_index6;
+2_19		2I_ID_ (00844
+define BNX2_MIine BNX2_MISC_AR0x00000844
+CONFICI_ID_VAL5_D1_SUPPORT_ARB_GNT1_13							 (0x7LI_ID_VALK_CONTNX2_PCI_ID_VAL4_CAP7L<<24)
+#d83c
+#define BNX2_MISC_ARB_FREE0				0x00000840
+#defin<<24)
+#define BNX2_MISC_ARB_GNT2_23	FSR_MASK_BITS_T<<23)
+#defin_LITTLE_ENDIA6;
+D_VA_SCHEDULER_ENABL_FREE3				0x0000084c
+#define BNX2_MISC_ARB_FREE4				0x00000850
+_1				e BNX2_MISC_ARB_REQ_STATUS0			0x00000854
+#define BNX2_MISC_ARB_REQ_STATUSrx_quick_consume<23)
+#define B_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B4X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#MISC_CATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT04L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS4L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)4TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF4R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNXASK_BI_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSR_CLR_BITS_Tansumer_index7;
+	M_ASFCK_CONTROTISC_EdefinNX2_MISC_SPIO_INT_OLD_VALUE_TE			 (0xfL<<8)
+#define Be BNX2_PCIGNT1				0x0000086c
+#define BNX2_MISC_ARB_Gfine BNX2_MISNT_OLD_VALUE_XI			 (0xffL<<8)
+64ARY_32		2)
+	u32 stat_EtherStatsPktsT BNX2_PPL_TR_MA84c
+#X_DMA_ENABLE		 (1L<<17(1L<<22)
+#define BNX2_MISC_LFSR_Mfine BNX2_MIS(12L<<0)
+#define BNX2_PCI_CONFIZE_1G	OCK_CTL_ENA		 (1L<<5)NABLE		 SM_ASF_C_STR0)
+#dSC_CFG_CK28)GNT1_14				 (0x7L<<24)
+#define BNX2_MISC_ARB_ARB_GNT1_13	CLOCK_COex0;
+	u1OPCIC)
+#def0x_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_K_CONTROK_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2_ARB_GNT1_13	u16 status_idx;
+SM_ASF_CONTROL1BNX2_MISCSK_BITS_EMACMISC_ARB_GNT1_13				2_19L<<7)SMB_BBULSE		 (1L<WRIT16)
+#define BNSC_SM_ASF_SF_CONTROL#defLFSR_MASK_BITS_TX_BD_CACHE_E2_MISC_SM_ASF_CONTROL_S(0x7fL<<16AUTOREMB_ADDR2		 (#define BNX2_MISC_ARB_GNT1_13				2_LEDMefine BNX1		 (0x7fL<<16E	 (1L<<ASSEMBUTURE_ENABLE	  (0x7fLNIF_COBSET						0x00.h: BSM_ASF_C_EARLYine SCONTROL_SMB_AUTOREAD		 3_2(0x7L<<24)
+#d_SCHEDULER_ENAfine BNX2_MIMISC_ARB_REQ_STATUSLAG_MSK			0x0000ISC_ARB_GNT3_27				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT3_28				2_L2CTe BNX2_MISC_ARB_REQ_STATUS0			0x00000854
+#define BNX2_MISC_Af
+};
+
+#defina_LFSR_MASKNABLE	 (1L<4)
+
+#defi_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B5X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#5EQ_STATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT05L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS5L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)5TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF5R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX<24)
+
+_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSRABLE_SET_BIaNABLE_SET_BITS_ATTNISC_USTATBD		(1L<<6) (1L<<2)
+#define BNX2_MISC_SM_ASF_CONTROL_HB_TO			 (1L<5MISC_ARB_GNT1				0x0000086c
+#define BNX2_MISC_ARB_GNTN_B_ASF_CON_LFSR_MASK_BITS_TX_PR2_PCI_CONFIGefine BNXX2_MISC_SM_ASF_CONTROL_S1L<<7)RT			 (1L<<6)LD_SET_BNX2_MISC_SPIO_SM_ASF_CONTROL_SMB_EVENT		 (1L<<7)
+#X2_MISC_SMB_OMISC_CONFIG_LFSR	SSOR_ENABLE	 (define_CFG_LEDMODE_XI			 (0MISC_UMISCB_PEC	PLIT_CO_PROCENACK1L<<GNT1_14				 (0x7L<<24)
+#define BNX2_MISC_ARBONTROL_SMB_AUMISC_SMB_O_CLR_BITS_MISC_SMST_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_6)
+#defiK_BITS_UMP_ENABLE		 (1L<<27)
+#define BNX2DED_STATOPne BNX2_MISC_CFG_NVM_			 (0x7L<2_MISC_S2_MISC_SML<<28)IME	 (1I	 (0x20)ACK		 (6L<<2)
+#define BNX2_MISC_SMB_OUT_STATUS	L<<31)
+
+#def<20)
+#define Bne BNX2_MISC_ARB_FREPkts_lo;ATUS_BADACK		 (6L<<20)
+#define BNX2_MISSABLE_Sd_PHY3_SM_ASF_CONTROL_EN_NIC_SMB_ADDR_0	 (1L<<30)
+#de<20)
+#define Bine BNX2_MISC_LFSR_ISC_SMB_O<<23)
+#define BNX2_MISCTATUS_BADACK		 (6TUS_BADACK	84
+#define BNX2_MISC_SMB_IN_DAT_IN				 (0xffL<<0)
+#deX2_MISC_SMB_X2_MISC_SMB_OSIX_CO26)
+#define BNX2ISC_ARB_GNT3_27				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT3_28				WOOKU	 (1L<<10)
+#define BNX2_MISC_SMB_IN_STATUS				 (0x7L<<11)
+#de	 (1L<<22)
+#<17)
+#d_MISC_ENABLE_S8define BN_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B6X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#6EQ_STATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT06L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS6L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)6TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF6R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNXNX2_PC_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSRCONTROL_SMBaRESERVE6)
+#define BffL<<13)
+
+#define BN (1L<<2)
+#define BNX2_MISC_SM_ASF_CONTROL_HB_TO			 (1L<_GRC_WINDne BNX2_MISC_SM_ASF_CONTROL_PA_TO			 (1L<<4PERR_ENA0				REQ_STATUS0			0x00000854
+#def_STASC_SM_ASF2_MISC_SMB_OUT_SMB_OUT_STATUS		 (0xfL<<20)
+#EARTBEPCHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_LFSR_M		 (1L<<12)
+#d BNX2_MIWINDOW_ADine BNX2_MISC_ARB_RE(1L<<23)
+#define BNX2_MISCTATUS_BADACK		 (6L<<20)UD_FLBLE	 (1P0000ENA0e BNCONTROL_G BNX2e BNXfine BNXAYLOAD_Q_ENABER_ENABLE	 (1L<<22)PERR_ENA0	_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_25)
+#define BNX2_MIS<<13)
+#define BNX2_MISC_SM_ASF_CONTROL_ENA054
+#defiTTN_BT_BITS_TIMER_Ex00000830
+#define BNX_ENA0_CTX_MTX	 (1L<1)
+#defineMB_OUT_STATUS_SUB_NACK	 (9L<<20)
+#define BNX2_MIM4		 (1L<<11)
+fine BNXPCI_ID_VAL5_RESUT_SMCTX_MISC_ACCM4		 (1L<<11)
+#define BNX2__SM_ASF_CONT(1L<<24)
+#define BNX2_MISC_SMB_OUT_SMB_OUT_DAT_ESC_SMB_OUT_SMBSC_ENABLE_SET_BITS_ENABLE	 (1C_SMDAefin	 (0xffL<<16)
+#define BNXSC_TMEM		 (1LISC_ACCM4		 (1L<<11)
+#defiBNX2ENA0_DDR1	FSR_MASK_BITS_TPERR_ENA0			_PROCESSOR_ENABLE	 e BNX2_MISC_PERRISC_ARB_GNT3_27				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT3_28				_ALT_SRCBNX2_MISC_ARB_REQ_STATUS0			0x00000854
+#define BNX2_MISC_AC_PERR_ENA0	aABLE	 (1L<<SM_ASF_COne BNX2_MI_BITS_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B7X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#7EQ_STATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT07L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS7L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)7TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF7R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNX1L<<7)_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSRfine BNX2_Pafine BNX2_ME_STATUSNTROLP		0x00LFSRMISC (1L<<2)
+#define BNX2_MISC_SM_ASF_CONTROL_HB_TO			 (1L<7MISC_PERR_ENA0_COM_MISC_REGF		 (1L<<1)
+#define BNX2_MISC_PERR_EMISC_ENABLE_SET_BITCPNX2_MI_ENA0_C			0x00000810_ENA0_CTX_M#define TXNX2_M_LFSR_MASK_BITS<<7)
+#CHEDULER_ENABLE	 (1L<<22)
+#define BNX2_MISC_LFSR_MAefine BNX2_)_18				 C_CFG_Lfine BNX2_2			 (0x7L<<11_DEVI_MISC_ACCM4		 (1L<<11)
+#definO2_MISC_ENABLE_STATUS_<11)
+#define BNX2_S_RXMe BNX_2_BAR1_SIZE_128_DISABLE	 (1L<fine BNX2_MISC_LFS<<9)
+OR_PE_DMA_ENGINE_ENABLE	 (1L<<26)
+#define BNX2_MISC_#define #define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCMX2_MISC_CFG_LEe BNX2_MISC_ARB_GNT1_13				NA0_RPM_Aefine BNX2AR1_SIZE_128K		 UT_SX2_MISC_ARBMB_OUT_STATUS_SUB_NACK	 (9L<<20)
+#define BNX2_MINTROL_SMB_AUTMISC_SMBNX2_MISC_PEP_RBUFERR_E	 (1L<<17)
+#define BNX2_MISC_PERRIRROR_PERBAR1_Sine BNXHZ	 (3L<<0)
+#define B_ENA0_CTX_X2_P2_MISC_Pine BNX2_OR_PEfine BNX2_MISC_SMB			0x00000XI	 (1L<#defidefine BNX2_MISC_PEPEED_40	Ddefine BNXREDMODE_PHISC_PERR_ENA0				<17)
+#define BNX2_MISC_PERPERR_ENA0			x00000818
+#define BERR_EN_XI	 (TX_LISC_ARB_GNT3_27				 (0x7L<<12)
+#define BNX2_MISC_ARB_GNT3_28				_ENA020)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW2		 (1L<<21)
+#def_STATUS_BITSaK_BITS_RX_efine BNX2	 (1L<<0FFG_PCI_RX_PARSER_CATCHUP_ENABLE	 (1L<<11)
+#define B8X2_MISC_LFSR_MASK_BITS_RX_MBUF_ENABLE		 (1L<<12)
+#8EQ_STATUS4			0x00000864
+#define BNX2_MISC_ARB_GNT08L<<13)
+#define BNX2_MISC_LFSR_MASK_BITS_RX_PROCESS8L<<0)
+#define BNX2_MISC_ARB_GNT0_1				 (0x7L<<4)8TS_RX_V2P_ENABLE		 (1L<<15)
+#define BNX2_MISC_LF8R_MASK_BITS_RX_BD_CACHE_ENABLE	 (1L<<16)
+#define BNXP2IRAM_LFSR_MASK_BITS_RX_DMA_ENABLE		 (1L<<17)
+#define BNX2_MISC_LFSR (1L<<28)
+#bALT_SRC_UNDEF	 (0L<2_MISC_NX2_MISC_LFSR (1L<<2)
+#define BNX2_MISC_SM_ASF_CONTROL_HB_TO			 (1L<8MISC_ARB_GNT1				0x0000086c
+#define BNX2_MISC_ARB_GP_SCPAD_PERR_2_MISC_SM_ASF_CONTROL_PL_TO			 (16)
+#defin2_MISC_SMB_OUT_SMB_OUT_STATUS		 (0xfL<<20)
+#BNX2_PCIne BNX2_MISC_SM_ASF_CONTROL_SMB_EVENT		 (1L<<7)
+#P_SCPAD_PERR_ISC_SM_ASF_CONTROL_STRETCH_EN		 (1L<<NA0_RXP_SCPAD_PERR_EN_XI	 (THONTR_ENATTN__BD_REB1REGS)
+#deX2_MISC_PERR_ENA0_CTX_MIRROR_PERR_EN_XI	 (1L_STATUS_BITSb_MISC_CONFIG_LFSR				0D_PERRCAPABILITY_2_RESELE	 (1L<<26)
+#define BNX2_MISC_BNX2_MIS#define BNX2_MISC_PERR_ENA0_CTX_MISC_ACCMdefin)
+#definK_PLL_SPEED_50	 (2LSCPAD_PERRISC_ACCM4		 (1L<<11)
+#definP_SCPA0_TXP_CTXC_I		A0_CT1 (1L<_ACCM0		 (1L<<7)
+_SCHEDULER_E_SCPAD_PERR_EN_XI	e BNX2LFSR_MASK_BITS_TX_BD_CACHE_EXP_SCPAD_PERR_EN_XI	e BNX2_MISC_C_PEI			BNX2ROR_PERPERR_EN_XI	 (1L<C_RBUFC		 (1L<<6)
+2_MISC_SM_ASF_ BNX2_MISC_PER_SM_ASF_CONTROL_SMB_EARLY_AT#define BNX2_MISC_CFG_L BNX2_MISCERR_ENe BNfine BPAPERR_EN_XI		 (1L<<15)
+#define BNX2_MISC_PERR_ENA0_TXPF		 (1L<<11)_ABORT_STATUS_OK				 (1L<<11)
+#defiMISC_DW0		 (1L<<19)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW1		 (_ENA20)
+#define BNX2_MISC_PERR_ENA0_DMAE_MISC_DW2		 (1L<<21)
+#defITS_M(1L<<2SC_PERR_ENA0_C -_PCIENABLE	 ITS_COREINT_INT_STATE_XI			 (0xffL<<0)
+#dOFF<<4)
+#defi (0x3fL<<14)
+#df -	\
+C_PER1)
+#define BNX2_MISC_RBUFRR_EN_XI		 (1L<<_ENA0_C11)
+#define L_BIE	 (1L<<<11)
+#define BMISC_PERR_ENA1_UMP_MISC_FIO<13)
+#def<19)
+#define BX2_MISC_PEERR_ENA1_UMP_MISC_RX			 (1L<<20)
+#defineAR1_SIZE_16M			 (9L<19)
+#define (0x3fL<#define BNX2_BLE	 (1L<<19)
+#define BNX219)
+#define BNX_ADDR1I2_18				 (LE		 (1L<<12)
+#dC_Tne Bne BNX2_PCI_CONFIG_3_REefine BNX2_MISC_ (1L<<4)
+#define BNe BNX2_MISC_P	 (0xffL<<24)
+
+#defi -NX2_			 (1L<<23)
+#define BNX2_MISC_PERR_ENA1_CPQ_ENA0_CX2_MISC_V2PER_Aine BNX2_MISC_PERR_ENA1_MCPQ_MISnhash;
+#ifxpIfHCOutBadOctets_hi;Iefine BNX2ion
+ned(__BIG_ENDIAN)
+	1L<<PU BNX2_PCIation4tat_IfHCOutBroadcas BNX2_MISC__MISALan5)
+#ened(__FT) : 0)
+#define B)
+#define BSTX2_MI00aefine BlisionFrames;
+	u3fine BNX2_MI22Oct0SK_MSISC_PEe BNX2_MIS240000804
+#deALT_SRC_6	 (2L<<8)
+#NST BNX2_MISC_D
+#define BNX2_L2Cfine BNX2_MIMNABLESC_EN2_MISC_CLOCK_CONTROL_Bine BNX2_MISCfine BNX2_NX2_MISC_BDdefine BNX2CTX_CTXONTROL_SMB_AUctraDP_XCICFG_PCI_CLOCK_CONTROL_BITfine BNX2_MI11L<2_L2CTR_PE_MISC_PERR_MISC_CLOCK_CONTROn
+#define BNX2_MIPLL_SPEONSUMSTOUT_SC_PMA2_MIFOSC_PERR_ENA1_THBUF2)
+FIOST	 (0PERR_ENATQ
+#define_MISCHCIX_DETdefine BNX2_MISCSPADv2_L2CTX_CNA1_MCPQ_PEL<<16)
+
+#NA1_THBUF#define BNX2_L<<24)
+
+ERR_ENX2_Mine BNX2_MISC_CFISC			 (1L<<_BREAKPOFIG_2_	 (1LUP_ABORTC_PERR_ENA0_CTX_CTROL_BITS BNX2_MISCX2_PCIERR__XI		 (1L<<7)
+#define BNdefine )
+#define BSC			 (1L<<25)I		 (1L<<8)
+#define BNX2SPEED_40	 (4L3)
+#define BNX2_MISSERVED	 (0xfffL<_MISC_PEISC_PERR_EOX_QUEne BNfine BNX2_MISNX2_PCICFG_PCI_CL	 (1L<<14)
+#definPCine BNX2_MISC_VISC			 (1L<<25)
+#HC
+#defALne BCFG_MIine BNX2SC_PERR_ENA0_CTX_CACHE_PERR_1_HSVD_FUTUR_PERR_EN_XM<17)
+#defiATUS_BAD_MEM_WRITne BNX2_MISC_DUCTQ_PER)
+#define BIG_2_EXP_ROM_SIZE			ISC		efine B)
+#define BDMQ_PERR_EN_ENA1_THBUF#define BNX2_)
+#definP_ENA)
+#dedefine BNX2_MISC_PERR_ENA0_CP_SCCK_CONTX_QUE
+
+#defineNX2_MISC_ARBRXPPERR_EN_XPERR_ENA0_CTBNX2_MSCHQFEPORT	LE_CLR_BITS_T2P BNX2_MISC_PERR_ENA1_RPERR_EN BNXEH			_MISC_DMERR_ENA0_CP_SCPAD2L<<1		 (1L<<ACK_mer_inde1_TXPQ_PER4)
+#define BNX2_<<17)
+#defineCPQ<<7)
+#defiPEmer_indSC_PEROM_PERR_EN_XPERR_ENA0_CTine BNX2_MISNTROL_SMB_AUTOmer_in_MISC_PEROM5)
+#define BNX2_MISine BNX2_MI(1L<<23)
+#define BNX2_MISC_PEA0_C (1L<<8)
+#define BNX2 BNX2_MISC_CS_TMEMCIFC		 (1L<<6)
+#		 (1L<ine BNX2_MISC_PERR_ENA1_ BNX2_MISC_LUPACPIBEMEM_PERR_EN_8)
+#define efine BNX2_MISC_PERR_ENADX_PERR_EN_XI		2_MISC_ARBe BNX2_MISC_A1_RDMAQ_PERR_EN_XI		 (ine BNX2_MI<24)
+#define 8)
+#define ERR_ENA1_TASQ_PERR_EN_XIine BNX2_MIBNX2_MISC_Pine BNX2_MI)
+#define BBDR5)
+#defineine BNX2_MILE	 (1L<<19_MISC			 (1L_MISC_PERR_ENA1_TSCHQ_PER2<28)
+ERR_EN		 (1L<<19)
+#A BNX2_MISC_CO<<9)
+#define BNX2_MISC_ine BNX2_MIfine BNX2_	 (1L<<2)
+#d STATUS_ATTN_BITS__MISC_ARPROGVED1ICFG_<3)
+#dTXPQ_PE_ENA1_RXPQ_MISine BNX2_M_PERRUCTICLOCNA2MCPQ_P_consumer_index6
+#define #define BN_ENA0_CT2FG_Mfine BNX2_MISC_efine BNine BNX2_MISine BNX2_MIENA2		 (0xffL<<4)
+#define BNX2_MISC_EN#define SC			 (1LTXPQ_PERR_PERR_EN_XI	 (1L(1L<<9)
+#AVMISC_ONTROL_SMB_ck_consumer_indeC_PERR_EHW
+#define BNX2_ONTROL_SM_TGT_FIFO_PERR_EN_XI		 (		 (1L<<6)
+# (1LNTROL_		 (1L<<25)
+#define BNX2_MISC__ARBBNX2_MISC_SC		RR_ENAompletion_prod1_TXPQ_PER		 (3L<<8)
+#def_CLOCK_CONTROL_BITefinFSCHQ		 (0xffL<<4)
+#define B<<12)
+#define BNX2_MISC_COCK_CONTROL_BITS_CORE_CLK_2MISC			 scards;
+	uOR_SEL	)
+#define BNX2_MISC_CLOCK_CONTROnUG_VECTOR_SEL_0			 (0xfffCK_COCLK_SPD_DET_55MHZ	 (3L<<0)UG_VECTOR_SEL_0			 (0xf
+#define BNX2_XI	 (0xfL<<12)
+#definet0xff_1T_STATUS_FIRRST_N5)ROL_BITS_CORE_CLK_PLL_STOP	 (1L<;	0x000008b4
+#define BNX2_C_PERR_ENA0_CL_BITS_RESERVED_17fine BNXPE		_BRANCHefine BNENA2_TXPnsumer_index7;
+	C_PERR_ENA0_CTX_CACVinit_XI	NX2_PCItus_rx_quick_c6)
+#		 (9L<<0)
+L<<0)
+#define BNX2_JOCK_COBNX2_P00000ONTRN_PLUS1RR_ENA1e BNX2_MISC_CFG_NVM_WRRR_ENAMISC1L<<7)_1_0_MAIN_PLUS10_XI	 (2L<<0)
+#define BLBC_PERFIG_2_EXP_ROM_SIZE			SC			 (1L<<0)
+#2_C_ENFI1L_MS1ENA2_TXNX2_MIS_ID_VAL2NTROL_LAG_R_ENABLE		atus_CICFG_PCI_CLOCKXP_CLOCK_CONTROL_BI4de. Do not mer_indene BNX2_MItatus_rx_qumer_inL<<0)
+#define BNX2scards_CLOCK_CONTROL(2LBNX2_MISC_PERPERR_EN_XI		 (1LBNX2_MISC_CLOCK_CONTROL_BITS_CORRVED0_XI	 L_1_0_MAINMINUS2_XPCICFG_PCI_CLOCK_CONTROL_BIT_VREG_CONTR (1L<<11)
+#define BNX2_PCICFG_PCI_CL_VREG_CONTRBITS_CORE_CLK_PLL_SPEED	 (0xfL<<12_VREG_CONTRX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CCONTROL_18<<9)
+	 (0L<<12)
+#define BNX2_PCICFG__VREG_CONTRNTROL_BITS_CORE_CLK_PLL_SPEED_80	 (1L<<1_VREG_CONTRNX2_PCICFG_PCI_CLOCK_CONTROL_BI_VREG_CONTRPLL_SPEED_50	 (2L<<12)
+#define BNX_1_0_MA RX_BD_FLAG1_0_SC_PERR_ENA2_UMP_RXOCK_CONT4<<0)defi1L<<15)
+#define BCICFG_PCINTROL_SMB_AROL_BITS_CORE_CLK_PLL_SPEED_25	 (8fine BNX2_MIe BNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CONTROL_SMB_ATOP	 (1L<<16)
+#define BNX2_PCICFG_PCI_CLNTROL_SMB_AS_ATTN_BITS_TX_BD_CACHE_ABOWefinitORT		(Y_L0S_R0xfLine BNX2_618
+#define BNX2pats_hi;
+	u32 stat_IfHCInMulticas818
+#d_62	 (4L<<8)
+#define BNX_MISC_PECERR_EN8		 (1L<<30)
+#define LUSSVD_F5LIDX_PERR_EN_XI	fine BNX2_MISC_MISC_PE1L<<7)2NX2_LUine BNX2_MISC_
+#de	 (1L<<28)
+#defi_CONTROL_2_5_<8)
+#define BNX2_MISC_A1_COMQ_PERR_EN_XIinit_CONTROLOL_2ROL_R_ENA1_TASQ_PERR_EN_XIL<<8)
+#defi_CONTROL_2_5_LFSR_MASK_BITS_TX_PAYLOA_PERR_EN_X_CONTROL_2_5_fine BNX2_MISC4_RX_OFus_block_efine BNX2_PROL_2_5_MNL<<18)
+#e BNX2_MISC_PERG_CONTROL_1_0CONTROL_2_5_PERR_EN_XIA1_TPATQ_PERR_ENENA2_TXPQ_MISC			#define BNX2_MICO
+#define BPQ_PERR_EN_XNX2_MISC_PERR_ENA_CONTROL_2_5_NOM			 (7L<<4MRR_E	 (1L<<28)
+#defineC_LFSR_MAISC_VREG_CONT4)
+#define BNX6		 (15L<<4)
+#defineISC_VREG_CONTRNTROL_2__ENA1_UMP_MISQN_XI		 (1LISC_PERR_ECONTROL_1_0_K_INT#define BNX2_MIL<<25)
+#define BNX2_MISC_VREG_CON(10L<<4)
+#define BNX2_MI
+#define BNX2_Mdefine BNX2_MI		 (10L<<4)
+#define BNX2_MI<4)
+#d5_MINUS10	1L<<0)
+#define BNX2_M8)
+#define BNX2_MISC_PE6		 (15L<<4)
+L<<0)
+#define BNX20L<<4)
+#define BNN_PLUS6_XI	 (4L<_HI			0x<<0)
+#define BNX2_5_MINUS2		 (8L<<4)
+#defi8		 (3L<<define BNX2_MIdefine BNX2_MISNX2_MI_SCHEDULER_ENABLE	 (1VR#define BN	 (1L<<15)
+#define BNX2_MISC_X2_MISC_PC_PERR_ENA1_CS_MISC			 (1L<<23)
+#define BNX2_MISC_TCLOC)
+#define BNX1_THBUF_ISC_VREG_CONTROL_2_5__MGMT_MINC_PERR_ENA1_CSQ_MISC			 (1LRR_ENA0_RXP_SCPAD_PERR_EC_PERR_ENA1_CS	 (1L<<28)
+#define ISC_PERR_ENA0_CTX_CACHE_USCONTRO
+
+/* (2L (1L<<28)
+#define ine BNX2_MISC_SM_ASF_MISC_PERR_EG_CON6		 (15L<<4)
+R_ENA0_HC_MISC_D_MISC_ARBNTROL_2_ISC_PERR_EPERPLUSSVD_F_MAIN_PLUS4<<9)
+2_MISC_VREGMTMINUSMT_PLS8		 (3L<<8)E_STAPLUS1IG_2_EXP_ROM_SIZE_8K	DX_PERR_EN_XI		_XI		 (1L<<28)
+#define BNX2_MISC_PERR_ENMB_ADDR1INALCFG_LEDPERR_ENL<<7)
+#define BNX2_	 (1L<<15)
+#define BNG_LEDMOVAe BNX2_VAL_MISC_F_MISC			 (1L			 (1L<<23)
+#define BNX2_MILK_CTL_VAL_MISC_FINP_HW		 (1L<
+#define BNX2_MISC_CLOS4		 (5L<<8)
+#de			 (1L<<0)
+#define BNXLUS6_XI	 (4L<<
+#defne BNX2_MISC_MISC_SLK_CTL_VAL_MISC_FINSDV_SEL		 X(1L<<2)
+#defineISC_PERR_ENA0_CLK_CTL_VAL_MISC_FIN<25)ne BNX2_MISC_X2_MISC_VREG_CONTROL_1LK_CTL_VAL_MISC_FINAe BNX2_MISNTROL_1_0_MAIN_PLUS6_XI	 (4L<<_VREP_HWine 0_HIDDEN_SCHEDULER_ENABLE	 (1SC_PERR_ENAUS6	TXPQ_PELK_CTL_VAL_MISC_FINAIN_PLUS6_XI	 (4L<<			 (0ne BNX2_MISC_PERNTROL_2_R_RST_TE	 (1L<<6)
+#defP8LK_NEGEDGE_TE	 (7P_HW_CTL0_ENA_CORE_RST_ON_MAI8_TASfine BNX2_MISC_NTROL_2__CTR_RST_TE	 (1L<<6TL0_US10		 (NA0_CP_SCPAD_PERR_EN__LOW	 (0xfL<<0)
+#deTL0_x00000830
+#define BNXVREERR_ENA0_CTXMISC_CFG_DBU_L0_ING_AWAYR_ENA2_UMP_RX_PERR4L<<4)
+#defin	 (1LEN_XI		 N_PLUS6_XI	 (4L<<TROL_1_0_	 (1L<<28)
+#define3)PERR_5)
+#define BNX2_MISC_LFS_ENA2_HB_MEM_	 (13L<<4)
+#def_SCHEDULER_ENABLEP_HW_CTL0_FIBITS_5_XID	 (1L<<28)
+#definePERR_EN_XI		 (1L<<1 (1L<FG_LSERVECIE_REPLAY_PERR_EN_XI	_UNDEF	 (0L<<8)
+#define BVRE_DEBUG_VECTOR_SEL			0x000008b0
+#define BNX2_MISC_DEBC_GP_HW_CTL0_efinLLELOCK_EL<<0)
+#define BNX2_MISC_DEBUG_VEC_GP_HW_CTL0_OSCCTRL_DAI		 C_VREG_CONTROL_2_5_R_SEL_0			 (_GP_HW_CTL0_OSCCTRL_DAI	_TYP(0L<<0)
+#define BNX2_MIISC_VREefinCTL0_OSCCTRL_DAI_2P5x7L< MISC_VREG_CONTROL_1_2			 (0xfL<<0)0_OSCCTRL_DAI_2P0MA		 (3L_CONTROL_1_0_MAIN8)
+#deDISABLE	 HW_CTL0_ENA_CORE_RS2_MISC_GP_HW_81_0_MAIN_PLUS BNX2_SCCTRL_DAI_2P01P0	 (3L3)
+#d		 (7L<<16)
+#_1_0_MAIN_PLUSHW_CTL0_CTRL_DAI_2P0PWRD)
+#deP0MA		5L<<16)
+#define BNX2_MIC_GP_HW_CTL0_CTRL_DAIPRE2			 4P0MA		 (7L<<16)
+#_1_0_MAIN_PLUC_GP_HW_CTL0_OSCCTRL_PRE2AI_1P0MA		 (7L<<16)
+#_1_0_MAIN_PLU6_XNTROL_1_0_LOW	 (0xfL<<0)
+#8N		 (15L<<16)
+#definBNX2(6L<<20LER_ENABL<<0)
+#define BNX2_GP_Hine TX_BD_FLAGS_80_MAIN_PLUS2_XI	 (6HW_CTL0_GRCBNX2_PCICFG_PCI_CLOCK_CONTROL_BITS_COT_P0ine B2L<RC_6	 (2L<<8)
+#define BNX2_PCICFGRL_DAIC2_MIP6ine B_BITS_CORE_CLK_ALT_SRC_62	 (4HW_CTL0_OSCCTRL_PREPCICFG_PCI_CLOCK_CONTROL_BITCCTRL_CTAT_P (1L<<11)
+#define BNX2_PCICFG_PCI_CLCCTRL_CTAT_PBITS_CORE_CLK_PLL_SPEED	 (0xfL<<12CCTRL_CTAT_PX2_PCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CL0_OSine BNX2_M2	 (0L<<12)
+#define BNX2_PCICFG_CCTRL_CTAT_P6TROL_BITS_CORE_CLK_PLL_SPEED_80	 (1L<<1RL_PTAT_P6P	NX2_PCICFG_PCI_CLOCK_CONTROL_BIRL_PTAT_P6P	PLL_SPEED_50	 (2L<<12)
+#define BNHW_CTL0_G_MAIN_MINUS1HWine BNX2_MISC_GP_HW_C BNX2_MISC_VREG_CONTROL_2_5			 (0xfL<<4)
+#dHW_CTL0_OSCCROL_BITS_CORE_CLK_PLL_SPEED_25	 (8HW_CTL0_OSCCe BNX2_MISC_VREG_CONTROL_2_5_PLUS12		 (1HW_CTL0_OSCCTOP	 (1L<<16)
+#define BNX2_PCICFG_PCI_CLHW_CTL0_OSCC6)
+#define BNX2_MISC_GP_HWROL_2_5_N8ine BPLUS4P_HW_CTL0_GRC_BaP0MA		 (7L<<16rSC			 (1L<<25)
+#dine BNX2_MI	 (2c_MISC_VREG_CONTROL_2_5EAD_L		 (5L<<4)
+#defictat_IfHCOutBroadcaUC_VR1)
+#d8)US2		 (6L<<4)
+#define BNX2_MISC_VREOSCCTRL_PRICe BNX2_MISC_PE)
+#define BNX2_MISC_2_MISC_GP_HW__5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VSC_VREG_CONTROL_2_5_4		 (9L<<4)
+#define BNX2_MISC_VR2_MISC_GP_HW__MINUS6		 (10L<<4)
+#define BNX2_M2_MISC_GP_HW_OL_2_5_MINUS8		SC_PERR_ENA0_CTX_CACHE_ONTROL_GP_HW_CROL_2_5_MINUS10		 (12L<<4)
+#define2_MISC_GP_HW_G_CONTROL_2_5_MINUS12		 (13L<<4)
+#define BNONTROL_SMB_AUTOGROL_2_5_MINUS14		 (14L<<4)
+#define BNX2_MISC_GP_HW_CTL0_OSCCTRL_US16		 (15L<<4)
+#define BNX2_MC_GP_HW_CTL0_OL_1_0_MGMT			 (0xfL<<8)
+#define BNX2_MISC_VREG_0_OSCCTR_0_MGMT_PLUS14MAINATUS_ATTN_BITS__GP_HW_CTL0_O_CONTROL_1_0_MGMT_PLUS12		 (1L<<8)
+#ON_ID_TE	 (1L<<_VREG_CONTROL_1_0_MGMT_PLUS10		 (2L<<8ON_ID_TE	 (1L<MISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)D_HAR_ENAB_TABLE_ADC_PERR_ENA0_1_0_MGMT_PLUS6		 (4L<<8)
+008c4
+#defineFIX_TVREG_CONTROL_1_0_MGMT_PVefine BNX2_MISC_SS		 (1L<<0)
+#defiG_CONTROL_1_0_MGMT_PLUS2		 (6L<<8ON_ID_TE	 (1L<ISC_VREG_CONTROL_1_0_MGMT_MINUS_ENAP		 (1L<<2)
+#defX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS2		 (ON_ID_TE	 (1L<BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUSA1_UM_1				0x4)ine BNX2_MISC_VREG_CONTROL_1_0_MGMT_MION_ID_TE	 (1L<<#define BNX2_MISC_VREG_CONTROL_1_0_ON_ID_TE	 (1L<11L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0CT_TO_DISABL_S8c12L<<8)
+#define BNX2_MISC_VREG_CONTROL_ON_ID_TE	 (1L<<6		 (15L<<4)
+#define		 (12L<<0)
+#defin0_OSCCTR_MGMT_MINUS14 (13L<2_MIS	(1<<6)
+		#defiEG_CONTROL_1_0_MGMT_PLGMT_MINUS16	)
+#define G_CONTROL_1_0ISC_CLOCEWne BNX2TL__VAL			0x000008b8
+#define BNX2_MISC_FINAL_NX2_MISC_ECO_HW_CTLAL_CLK_CTL_VAL	 (0x3ffffffL<<6)
+
+#define BNX2_MI_MIS_ENABLE	 (ULSE		 (1Lbc
+#define BNX2_MISC_GP_HW_CTL0_TX_DRIVE_HEARTBEAC_WIN_CTL	 (1L<<11C_GP_HW_CTL0_RMII_MODE			 (1L<<1)
+#defi		 (0xffffL<<16)
+
+#defiRMII_CRSDV_SEL		 (1L<<2)
+#define BNX2NX2_MISC_ECO_HW_CTLII_MODE			 (1L<<3)
+#define BNX2_MISC_GP_HX2_MISC_ECO_HW_CTLCLK_NEGEDGE_TE	 (1L<<4)
+#define BNX2_M_LARGE_GRC_TMOUT_EN	_REVISION_ID_TE	 (1L<<5)
+#define BNX2_MIO#define BSC_GP_HW_2L<<30)
+#define BNX2_MIS<6)
+#define BNX2_Mdefine BNX2_MISC_PPVED1_XI		 (0x7L<<4)
+#define BNX2_MISC_GPdefine BENA_CORE_RST_ON_MAIN_PWc_GOING_AWAY	 (1L<<	0x000008d8
+#define BNX2_MIcL0_ENA_SEL_VAUX_B_define B_CTR_RST_TE	 (1L<<6ISC_OPBMD_IdefineSION_ID_TEne BNX2_MISC_CFG_NVM_WR_ISC_(1L<<4)
+#define BNX2_MN_ACT_SEL_TE		 (1L<<10)
+#ISC_#define BNX2_ine BNX2_MI0SERVED2_XI		 (0x7LISC_GPcMISC_GP_HW_CTL1_1_define B_UP1_DEF0			 (1L<<11)NUMSSC_PPIO_INT_OLD_SET			 0_FIBER_MODE_DIS_DEF		 (1L<<12)
+#define BNX2_NX2__ALLO		 (1N				 (000_DEF		 (1L<<13)
+#define BNX2_MISC_GP_HW2_PCI_CONCIE_REPLAY_PERR_EN_XI	SC_R_PPIO_INT_OLD_CLR			 (0_DEBUG_VECTOR_SEL			0x000008b0
+#define BNX2_MISC_DES (1L<PORORE_STB_RESETS		 )
+#define BNX2_MISC_CLOCK_CONTRO			0x000008e0
+#define BNX20L<<16)
+#define BNX2_MISC_GP_H			0x000008e0
+#define BN	 (1L<<16)
+#define BNX2_MISC_GP_HW_CLOAD_Q_ENABL		0x0000SC_PTDROL_BITS_CORE_CLK_PLL_STOP	 (1L<16_ERR_ENA_EMAC			 (1L<<3)<16)
+#define BNX2_MISC_GP_HW_CT	0x000008d8
+#define<28)
+#define cefine BNX2_MISC_GP)
+#define BNX2_MISC_GP_BNX2#define BNX2_MISC_GP_HW_CTfine BNX2_MISC_CS16_EAC			 (122)
+#define BNX2_MISC_GP_HW_CMISC_CS16_ERR_ENA_CP		C_PEX2_P22)
+#define BNX2_MISC_GP_HW_Ce BNX2_MISC_CS16_ERR_ENA_3L<<22)
+#define BNX2_MISC_GP_HW_CTL0_define B_LOW	 (0xfL<<0)
+#cERR_ENA_COM			 (1L_CONTFE_MISC0_OSCXI		 (1c53ine BNX2_MISC_SMNX2_MISC_VREG_COUNDAUS2 stfL<<1OCK_CONTROL_0_CPSC_R		0x00BNX2_MISC_VRISC_IfInRuleCheckerTASF_C_BITS_	0x0ne B	 (0L<<30)
+#define BN)
+		#definA#define fine BNX2_MISC_VREG_CONTROL_R_EN_XI				0x0OM			 (1L<<23)
+#define BNX2_MISC_CS16_ERR				0x0x00OM			 (1L<<23)
+#define BNX2_MISC_CS16_ERR	0x0000088e4
+#define BNX2_MISC_SPIO_EVENT_ENABLE			000000e BNX2_L2CTX_CTX_TYPEefine BNX2_MISC_CS16_ERRnRulET_80MHZ	 (5L<<0)
+#PSMB__MISC0000834
+#SC_GP_HW_KS<<4)
+#d (0xfL<<12)
+#dUAL_MEDIA_CTRL			0x000008ec
+		 (RE_CLKX2_MISC_DUAL_MEDIA_CTRL_BOND_ID		 (0xffL<000080O_WANABLE	 (1LITS_COne BNX2_MISC_SPIO_EVENT			SET BNX2_OSIZE_64fine BNX2_MISC_NEW_COENA_EMAC			 (EAD_Line B#define BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_ENABLETTS_Mdefine BNX2_MISC_DUAL_MEDIA_CTRL_BOND_ID_CHUP_Afine STATUS_ATTN_BITBNX2_MISC_CS16_ERR_ENA_CP	_PM_DALE_BAPC_RExffL<<24)
+
+#define BNX2_Me BNX2UW_CTne BN<8)
+#SERDES1_SIGDET	 (1L<<12)
+#define BNX2_MISC00008c_STASERDES1_SIGDET	 (1L<<12)
+#define BNXLK_SPD_e BNDx7L<<16fine BNX2_MISC_GP_BNX2_MISC_VRS_START		(1<<ITS_RESERVED3_XI	 (1L<<2ine (0xfLOSCCTRL_PRc53u16 status_idx;
+9C_VRine TX_BD_FLAGS_c53define it and/or ne BNX2_MISGS_START		(1<<7)
+		#define TX_BD_FLAG2_MISC_VREG_ORD	(0x1f<<8)
+		#define TX_BD_FLABD		ABLE	 (1L<<19)2)
+		#define TX_BD_FLAGS_SW_F_PREHY1M		 _PHY1_RSine TX_BD_FLAGS_SW_SNAP		(1<2_MISC_VREG_e TX_BD_FLAGS_SW_LSO		(1<<15)
+
+};
+
+
+2_MISC_VREG_Cefinition
+ */
+struct rx_bd {
+	u322_MISC_VREG_hi;
+	u32 rx_bd_haddr_lo;
+	u32 rx_bd_lenR_EN_XI		 (1L<<11;
+		#define RX_BD_FLAGS_NOPUSH2_MISC_VREG_RL_IAMP_ADJ		 (0x3L<<26)
+#define BNX2_MSERDES_IDDQ	 S_END			(1<<2)
+		#define RX_BD_2_MISC_VREG_(1<<3)
+
+};
+
+#define BNX2_RX_ALIGN	e BNX2_MX2_MISC_CS16_ETION_ENABLE	 (1L	DQ_SER0PHY_us_block {
+	u32 status_attn_bits;
+		X2_MISC*/
+#RORS_ALIGNMENT	(1<<19)
+		#define Ld<<26)
+#definS_ATTN_BITS_TX_SCHEDULER_ABORT	(1L<<1)
+	<<26)
+#definUS_ATTN_BITS_TX_BD_READ_ABORT	(1L<<2)
+		<<26)
+#definine BNX2_MISC_VREG_CONTROL_2_5_PLUS8		 (dL_DAILBNX2L_PHY0_RST	u32 stat_FwRxDrPERR_E#define BNX2_Mc0_MAIN_PLUS2_XI	 (_FORCE2_CLODJ_240UA	 (0L<<28)
+#define _1_0_MAINOMTQOT2_MIS1_LT_SRC_6	 (2L<<8)
+#def2_MISC_GP_H_GP__OTP_CMD1C_OTP2_MISC_VREG_CONTROL_1_0<26)
+#defRVMIDIA_C0
+#define BNX2_MISC_VREG_CONTROL_1_DU)
+#definISC_OTP_SC_OT<<16)
+#defiISC_PERR_ENA0_C
+#define BNX2_ISC_OTP_0008G_CLO
+#define BNX2_	 (4L<<0)
+#define BNX2_ISC_OTPSTRAPODE_MAC2_XD_VALU#define BNX2_MISC_GP_ BNX2_MISC_OTP_CMHYUAL_D_PHY_SER(0x3fL<<BNX2_MISC_PERR_ENA0_DBNX2_MISC_OTP_		 (1L<<9L_PHY_SUAL_1
+#defineXI		 (1L<<27)BNX2_MISC_OTP_CMD1_PROGSEL			 (1L<<9NX2_MISCL_MEDIAfine1)
+#d6)
+letion_producer_iET			 (3L<<0)
+#define BNXe BNXine BNX2_MISC_Pxfff0x000008<<16)
+#define BNX2_MISC_OTP_CMD1_PBYP2_MISCTP_CM9)
+#def2M		BNX21L<<16)
+#define BNX_OTP_Cdefine BNX2_Mf BNX2_MISC_ARB_GNT2_SC_OTP_CMD1_FMdefiISC_SMHZ	 (3L<<0)
+#define BSC_OTP_CMD1_FM_COM	0x000_OSCCTRL_PRICBUFeC_GP_16)
+#de* bnx2.h: efine BNTdefiLOOCK_CND_ID_X			AL_MEDIACONFIG_LFSR<6)
+#defiSS_TBLGS_NOPU_TBDRQ_MISR_STA_TBDR			 (1L<00
+
+/*
+#define OTP_CMD2_OTP_MD2_OTP_ROM_ADVxfffL<<16)
+#define nSCHEBNX2I4L<<41282_MISC_GP_coms_hi;
+	u32 stat_IfHCInMulticas1ion
+LOW	 (0xfL<<0)
+#defi0_MA stat_GenStat09;
+K_SPD_D(6L<<207L<<16)
+MSK			0x0000ffff
+#defMD2_OTCICFG_PCI_CLOCK_CO_PCI_CLOCK_CONTROL_BITX2_MISC_OTP_CMD2_OTP_Rstat_Etherfine BNX2_PCICFG_PCI_CLOCK_CON<<0)
+#	 (5L<<4)
+#def11)
+
+	u32 l2_fhdr_BrNABL000008ac
+#define BNX2_#define BNX2_MISC_VREIFT1CONFIG_2_CTL0_OSCCTRL_XTAL_ADJ		 (0x3L<<30FT1_CMD_RESET_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VYSM			 (X_SP_CMD__SH4		 (9L<<4)
+#define BNX2_MISC_VRFT1_CMD_RESET_MINUS6		 (10L<<4)
+#define BNX2_MFT1_CMD_RESETAL_ADJ_1P62	 (2L<<30)
+#define BNX2_MISHIFT1_CM_TBDR	ROL_2_5_MINUS10		 (12L<<4)
+#defineFT1_CMD_RESETG_CONTROL_2_5_MINUS12		 (13L<<4)
+#define B0900000804
+#defi2ROL_2_5_MINUS14		 (14L<<4)
+#define BNXFT1_CMD_RESET_MODE_N		 (1LUS16		 (15L<<4)
+#define BNX2_M<<8)
+
+#define L_1_0_MGMT			 (0xfL<<8)
+#define BNX2_MISC_VREG_IFT1_CMD_ENA1_UMP_MISSC_VRATUS_ATTN_BITS__BUSYSM			 (H_CONTROL_1_0_MGMT_PLUS12		 (1L<<8)
+#1L<<16)
+#define_VREG_CONTROL_1_0_MGMT_PLUS10		 (2L<<81L<<16)
+#definMISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)_CHNn
+ *  offset: 0M_PCICFTROL_1_0_MGMT_PLUS6		 (4L<<8)
+CONFI0x0000007ISC_VREG_CONTROL_1_0_MGMT_P_RINGOSC_ENABLE		BIST_CS0_BIST_SETUG_CONTROL_1_0_MGMT_PLUS2		 (6L<<8TX_PROCESSOR_ENABLE	 (1L<<3)
+#defi_CTL_RINGOSC_SEL1ST_SETUP			 (0X2_MISC_VREG_CONTROL_1_0_MGMT_MINUS2		 (ST_SETUP			 (0BNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUSTODE_MAC2_XI
+#defe BNX2_MISC_VREG_CONTROL_1_0_MGMT_MI26)
+#define BNX#define BNX2_MISC_VREG_CONTROL_1_0_e BNX2_MISC_CLO1L<<8)
+#define BNX2_MISC_VREG_CONTROL_1_0ISC_FLAG				0x0012L<<8)
+#define BNX2_MISC_VREG_CONTROL_ST_SETUP			 (0xLE		 (1L<<16)
+#define BNX2_MISC_NEW_COIFT1_CMDESERVED_CMN		 (0x3PPORT	DES1_RST		 (1LAYLOAD_Q_ENABC_ENAL_RESERVED_TC		 (0xffffL<<16)
+
+#define BONTROL_SMB_AUTOC_ENA_VAL			0x000008b8
+#define BNX2_MISC_FINAL_ISC_BIST_CS2				0x0AL_CLK_CTL_VAL	 (0x3ffffffL<<6)
+
+#define BNX2_define BNX2_MISC_CFG_NVM_Wbc
+#define BNX2_MISC_GP_HW_CTL0_TX_DRIV2				0x00CS(0x7L<<8)
+#dne BNX2_MISC_ECO_CORE_CTL				0x000008d0
+#def_MISC_BIST_CS2_MBIST_DORMII_CRSDV_SEL		 (1L<<2)
+#define BNX2ISC_BIST_CS2				0x0II_MODE			 (1L<<3)
+#define BNX2_MISC_GP_ISC_BIST_CS2				0x0CLK_NEGEDGE_TE	 (1L<<4)
+#define BNX2_M			 (1L<<0)
+#define _REVISION_ID_TE	 (1L<<5)
+#define BNX2_MCS3		0x00SETUX2_PCI_SC_PPIO_CLR				 (0xfL<<16)
+#define BNX2_MIISC_BIST_CS2				0x0VED1_XI		 (0x7L<<4)
+#define BNX2_MISC_GPIFT1_CMDR_RST_TE	 (1L<<6)
+#def_READC_MB		 (1L<<13)#define BNX2_MISC_BIST_MEMSC_V_consumer_index6IFT1_CMD(1L<<8)
+#define BNX2_PCIfL<<13 BNX2_MISC_PERR_ (2L<<0)
+#define BNX2_M00008)
+#define BST_SETUP			 _ACT_SEL_TE		 (1L<<10)
+		 (0x#define9fL<<16)
+
+#define#define BNX2_MISC_RESETSC_Vck_consumer_indene BNX2_MUP1_DEF0			 (1L<<11FT1_C(1L<<0)
+#define BNX2_MI0_FIBER_MODE_DIS_DEF		 (1L<<12)
+#define BNX2_BIST_CS2				0x00MENX2_00_DEF		 (1L<<13)
+#define BNX2_MISC_GP_HWMAIN_PLUSCTOR_SEL			0x000008b0FT1_Cx3L<<1)
+#define BNX2_MI_DEBUG_VECTOR_SEL			0x000008b0
+#define BNX2_MISC_DEL<<0)
+#defISC_PERR_ENA0_CT)
+#define BNX2_MISC_CLOCK_CONTRO (1L<<3)
+#define BNX2_MISC0L<<16)
+#define BNX2_MISC_GP_H (1L<<3)
+#define BNX2_MI	 (1L<<16)
+#define BNX2_MISC_GP_HW_CISC_BIST_CS5				0x000TUS5	ROL_BITS_CORE_CLK_PLL_STOP	 (1L<_TM0				0x0000093c
+#define<16)
+#define BNX2_MISC_GP_HW_CT#define BNX2_MISC_B2_MISC_GP_HWSC_Vnsumer_index7;
+	
+#define BNX2_MISC_CFG_L2)
+#define BNX2_MISC_GP_HW_CTLSC_VREG_CONTROL_2_5_LK_CTM0A2_TSe BNX2_MISC_CS16_ERR_STA_RDMA			 (1L<<17)
+#dUSBNX21_FMO				0x00000940
+#define BNX2_M
+#define BNX2_MISC_USPLL_3L<<22)
+#define BNX2_MISC_GP_HW_CTL0_IFT1_CMD)
+#define BNX2_P10			0x00000940
+#defi		 (X_EXTISC_VREG_CONTRSC_VREG_CTX_MISC_ACCMC_PERR_HI	D_CACHE_ (2L<<BNX2_MISC_CS16__MISC_e BNX2_MISC_ARB_GNT2_FO_PERR_EN_XI		 ine BNX2_CS0x0000_PCI			 (1L<<23)
+#ACHE_EISC_PERR_ENA0_CTX_CACUSPREAD_LI_KPARSE_EXP_R_ID_VAL_ID_TE	 (1L<<5)
+#defiET_DIS			P_CMD1_XS			 (0x7L<<16)
+#define BNX2_MISC_USPLL_CTRL_TESTefinfine STATUS_ATTN_BITdefine BNX2_MISC_USPLL_CTRL_TES(0xfLL<<22)
+		#define STAdefine BNX2_MISC_USPLL_CTRL_TESL<<11) BNX2_L2CTX_CTX_TYPdefine BNX2_MISC_USPLL_CTRL_TESL<<6)
+#P_CMD1_PROGSEL			 define BNX2_MISC_USPLL_CTRL_TES<<18)MD1_PROGSTART			 (1Ldefine BNX2_MISC_USPLL_CTRL_TES9)
+
+#X_SPEED_PCI_MODE	 (3L_ANALOG_RST			 (1L<<28)
+#defineBITS
+#define BNX2_MISC_D_CTRL_DIGITAL_RST		 (1L<<27)
+#deL<<2e BNX2_MISC_OTP_CMD2C_USPLL_CTRL_PH_DET_DIS			 _TESB_RESEL<<0)
+#define BNX2_PC<0)
+#define BNX2_MISC_PERR_STATUP_CMD1_US7L<<16)
+# (2L<<8)<0)
+#define BNX2_MISC_PERR_STATUP_CMD1_FMODERDES1_SIGDET	 <0)
+#define BNX2_MISC_PERR_STATUISC_OTP_CMDPBYP			 (G0000uick_coefine BNX2_MISC_PERR_STATU BNX2_MISC_OTP_CMDPBYP	0_<<0)
+#define BNX2_MISC_PERR_STATUfine BNX2_MISC_PROGSEL			 13)
+#define BNX2_MISC_USPLLK_SPD_DET_T1_CMD			
+#define BNX2_MIS11)
+#define BNX2_umer_indfine BNX2_0)
+#define BNX2_PC BNX2_MI<0)
+#defin1053Stat_256K		 (9L<ne BNX2_MISC_PERR_ENA0_CGISC_B_NACK	 (9L<<20)ne BNX2_MISC_VREGGS_START		(1<<7)
+		#define TX_BD_FLAUFC		 (FO_PERR_EN_ORD	(0x1f<<8)
+		#define TX_BD_FLISC_PERR_E_PERR		 (1E		 2)
+		#define TX_BD_FLAGS_SW_US	 (1L<<14)
+#defHY0_RST		 (1L<<20)
+#define BNX2_MIS_RBUFC_PERR		 (1L<e TX_BD_FLAS_SW_LSO		(1<<15)
+
+};
+
+_RBUFC_PERR		 (1L<L_MEDIA_CTRL_PORT_SWAP		 (1L<<24)_RBUFC_PERR		 (1L<hi;
+	u32 rx_bdUSPLL_CTRLBNX2_REPLAY<16)
+ (#define BNX2				 (;
+		#define RX_BD_FLAGS_NOPUS1L<<8)
+#define BNXefine RX_BD_FLAGS_DUMMY		(1<<1)
+		#def1L<<8)
+#define BNXTATUS_MISC_LFSR_I	 (2L<<0)
+#d1L<<8)
+#define BNX(1<<3)
+_CTXENABL084c
+#define BNX2_MIISC_VREG_C RX_BD_FLAG_CTXX2_MISC_PERR_SVG_TO			MODE_VERIFN_BITS_TX_SCHEDULE		 (1LK_CTL_V10
+#define BNX2_MI
+#defi	 (1L<<15)
+#define BN_OTP_CMD1_PERR_STAT0A1_TH_DS_ATTN_BITS_TX_SCHEDULER_ABORT	(1L<<1)
+2_MISC_PERR_STATUSUS_ATTN_BIT_TX_BD_READ_ABORT	(1L<<2)
+	2_MISC_PERR_STATUS RX_BD_FLAGcan redistAL_NOW		(1<<4)
+		#ne BNX2_MIC_PERR_STAT0u16 status_idx;
+ne BNX2_MI_VREG_CONTROL_1_0_MG2_MISC_VREG_CON#defin_PCOUNT			 SC_PERR_ENA0_CTX_CACHE_PESC_PERR_Se BNC_PERENA1_RUF_PT#define BNX2_MISC_USPLL_MISC_PERR_STATUF_PERR		 (1TRL_IC2_MISC_ID_BOND_ID_X		ISC_PERR_STATUA1_C_CTXC_PERR		29_MISC_SM_ASF_CONTROL_NIC_PERR_STATF_PERR		 (1_RBUFC		 (RR_ENA1_RV2PTQine BNX2_MISC_PERF_PERR		 (1_MISCRXP_SCPAD_PERR		 BITS_CMD_PROCESSORF_PERR		 (1_PERR_MISC		 (1L<<31)
+
+#defin
+#define BNX2_M_SCPAD_PERR		 0ERR_AL_CLK_CTL_Vine BNX2_MISC_VREG_COF_PERR		 (1ISC_PERR_ST)
+		ne BNX2_PHY1_RST		 (1L<fine BNS1				0x0000SC_PERR_SNX2_MIe BNX2_MISC_PERR_STAF_PERR		 (1ine BNX2_MISC_PERR_STAPCfine BNX2_MISCPCOUNT		)
+#define BNX2NX2_MISC_PERR_STUS0_RBU (1TRine BNX2_MISC_PEX2_MISC_VREG_CONTROL_1_0_SC_PE)
+#define BNTABNX2_MISC_PERR_NX2_MISC_VREG_CONTROL_ine BNX2_MI0#defin#defin_PERR		 (1L<<3_ID_TE	 (1L<<5)
+#deine BNX2_MIERR_SPERR_1TATUS1_TDMAQ_PERR	2L<<30)
+#define 1L<<9)
+#defi_PERR_STTN_B1IRAM	0_TPBUF_PERR	G_CONTROL_1_0_e BNX2_MISC_PE	u32 stat_FwRxDr_EN			 (XI		 (1L<<27)
+#dERR_EN_XI	 (1L<<16)
+CONTROL_2_5			 (1L<<27)
+#define BNX2_MISC_PERR_STATUS0_THBU_PERR		 (1L<<3			 (1L<<23)
+#define BNX2_STATUS1_TDC_PERR		 (1L<<30BNX2_MISC_PERR_STATUS1_RV2PPQ_PERR#defineCB0REGS		 (1L2_MISC_PERR_STATUS1_RV2PPQ_PERRCH_LR_PERR		 (1L<<31ffffL<<16)2L<<30)
+#define BNX2_Mdefine BNX2_9on
+ *  offset: 0SC_PERR_STATUS0_L_XTAFO_PERR		 (1L<fine BNX2_MISC_PERR_STATUS1_TAS
+#define (1L<<7)3)
+#define 9)
+#define BNX2_MISC_PERR_STATUHC<8)
+#defin0)
+#define BNX2_MI BNX2_MISC_PERR_STATUS1_RX_definR		 (1L<<21SC_PPIO_CLR				 (0xfL<<16)X_DET BNX2PRO1L<<18)
+#PBUF_PERRITS_CMD_PROCESSOR_ENABR_STATUS1_RV2PA1_TPAISC_GP_HW_CTL1_12_MISC_PERR_STATus_block {
+	u32 status_attn_bits;
+	 BNX2_MISC_PERR_SSC_PERR_STATUS1_MCPQ_PERR		 (1L<<8)
+#define BNX2_MIMISC_PERR_STATU			 (0xfL<)
+#define BNX2_MISC_X2_MISC_PERR_STATUS1__TXPQ_PERR		 (1L<<10)
+#define BNX2_SC_PERR_STATUS1_RL<<2TQ_PERR		 (1L<<11)
+#define BNX2_M0)
+#define BNX211)
+#dV		0x(1<<4)
+		#FW_ENAg definition
+G_NVM_WERR841L<<26)
+#dPERR_ENefine BNX2_MISC_GP_HW_CTL(0x7L<<820)
+#define BNX2CP_OTP_STATUS_BUSYSM			 (TATU2_MISCSTATUS2e BNXine BNX2_MISC_PE_TE			 	 (2L<<USCONFIG_2_Eine BNX2_MISC_PERR_STMVC_E_PERR		 (1L<<3B_WORD_ BNX2_MISC_OTP_CMD2_OTP_R
+#definDOefinCTRL_IC0)
+#definT			 (3L<<0)
+#definX2_MISC_ENA1)
+
+#defBL		 (1L<<13)
+#definC_OTP_SHGP_HW_CTL0_O0_OSCCTRL_PRX2_PCADJ		 (1L<<1030CPAD_PEfine BN_CMD_IFPERR_STAC_DUAL_MEDIA_CTRL_PH2_M0
+
+/*CONTROL_1_0_MABNX2_MISC2_PCIE_REPLAY_PERR		 (2_MIC_DIS			_SHIFT1_CM_TX_H1L<<0)
+#define BNX2PLAY_PERR		 (1L<<_1P0_XI	X2_MLL_CTRL0_OAC			 (0x7BNX2_MISC_LC#define BNXC_OTP_SHIFTfL<<13)
+#defin_OAC			 (0x7L<<0)
+#defidefine BNX2_Mcine BNX2_MISC_ARefine BNX2_MICTENDRL0	2)
+
+#define ORCE2S1_SIGDET<<19)
+#C_LCPLL_CTRL0_O_1ine STISC_CRSNR				C_DUAL_MEDIA_CTRL_X2_MISC_LCPLL_OTP_SHICP_CTRTRL0		_SCAID_VAL3			)
+#define BNX2MISC_LCPLL_CTRL (1LCS2_MB1L<<0)
+#define _ID_TE	 (1L<<5)
+#defi_LCPLL_CTRLBDC			 (1SOFT_XX2_MISC_LCPLL_#define BNX2_MISC_PERR_T2(3L<<0)
+#definBLE		 (1L<<15)
+#define BNTROL_1_0_MGMT_PLUS8		 (3L<<8))
+
+#define BNX2_MICPENABLE_Sine BNX2_MISC_CFG_NVM_WR_ENfine BNX2<<19)
+#define BNX2_MIC_EC16)
+
+#_RINGOSOR_ENABLE6_ERR			 (1L<<LCPLC			 (0x7L<TNX2_PCX2_MISC_LCPLL_CTRL0_VTH	 (3RR_STATUS0_RPC_DFIFOMEM_PET_CS2				0x00MASK_BNX2_MISC_PMISC_VREG_CONTROL_1_0_MGMT_MINUS2		 (2_MISC_LCPLL__PCI_ID_VAL5_PMEMISC_BIST_CS5				0x000H6		 (15L<<4)
+#define_MISC_VREG_CONTROL_1_0_MGMT_MI30)
+#define BNX2_MISC_GPC_BIST_1_MC_ENABLE_Sdefine 	 (5L<<4)
+#X2_MISC_BIST_CS1_BIST_SETUP			 (0x3L<<1)
+#NX2_MISC_LCPLL_L0_FREQMONITOR_EASYNTA_TBDR0)
+#define BN_CTL	0x00000834
+#defineHE_ENABLE	 (1L<<16)
+#dC_ECO_C_DUAL__CTRL0_FREQMONITOR_ (0x7L<<8)
+#dSC_OTP_e BNX2_MISC_ine 0093c
+#defidefi	 (1L<<11)
+#define BNX2_MITRL0_PLL_OBSERVE		 (AL			0x000008b8
+#define BNX2_MISC_FINAL_LLLAGS_FPL<<8(1L<< (2L<<11)
+#defineSX_PRC_RESET		 (1L<ACHE_ENABLE)
+#define BNXSERVED_TC		 (0xffffL<<1			 (1L<<23)
+#define BNX2_MECAPDONE_EN	 (1L<<TATULL_CTRL0_VTH_CTRL_2		 (2L<<11)
+#defineTP_CBIC_ST8aBL		 (1L<<13)
+#defin_CRSDV_SEL		 (1L<<2)
+#define BNX21)
+#define BNX2_MISCRL0_FREQMPAD_PERR_EN09ne BNX2_PCI_CONFXI	 (CTRL0_CAPRESTALK_NEGEDGE_TE	 (1L<<4)
+#define BNX2_M2_MISC_LCPLL_CIS		0x3L<<1)
+#define CI_CONFe BNX2_MISC_PERR_STATUS1FREQDETRETRY_EN		 ine BNX2_MISC_LCP_CAPSELNITOR_ERR_STAREG_CONTROL_1_0_MAIN_PLUS6_XI	 (4L<<
+#define BNX2_MISC_GPL1ABLE	 (1L				0x0000093c
+#defR_GOne BNX2_MISC_GP1_SLOWDISC_LCPLL_CTRLN	 (1L<<5		 (1LAL4_MAX_1330x000008ec
+
+#define 	 (1L<<5)
+OL_SM_ID_TE	 (1L<<5)
+#TRL0_CAPSE BNXC_RESET		 SC_LCPLL_CTRL0_ICP_APSELB_OUT_STREQP4_LCPLL_CTRL0__MISC_LCPLL_CTRL0_IC_LCPLL_STATUS_PLREQPASC_LCPLL_CT_MISC_GP_HW_CTL1_1__STATUSATUS_FREQPASITOR_EGO (0x1fL<<8)
+
+#deefine BNL_CTRL
+#definPLLdefi_ERR_EN		 (1e BNX2_MISC_ARB_G2_MISC_LCPLL_HBSPLL_00_DEF		 (1L<<13)
+#define BNX2_MISC_GP_HW_STATUS_RL			 (0x3L<<11)
+#defiISC_PERR_STATUS1_TBBNX2_MISC_LCPLL_SSLOWDCECAPPASS		 (1L5_LCPLL_CTRL0_FREQDETRL<<8)
+#dee BNX2_MISC_ARB_GNT2_EMAC			 (1L<< BNX2_	 (2L<<fine BNX2_MISC_LCPLSC_LCPLLSTATE			x3L<<1)
+#define BNX2_MIRR_ENA_EMAC			 (1L<<3)2_MISC_DUALO_EVENT_ENABLE			 (0xfLine BNX2_MISSCFUNDSSC_OTPNX2_MISC_USPLL_CTRL1L<<16)
+#definNX2_MISC_P_ENABLE_STATUS_BITS_TXMAC			 (1L<<3utBro(1L<<S_CTRL_ine BNX2_MISC_USPLL_CTRL_MISC_LCPLL_CTRL0_ICTRL_FREQ_MON		 (1L<<CL_CTRLLL_STAT16)
+# (0x3fL<<14) (1L<<9)
+#L<<5)
+#define 6)
+#d84c
+#define BNX2_MISC_ARB_FOX_QUNDS_CTRL_FREQ_MON		 (1L<<NX2_MISC_LCPLL_CTRL0_VTH_ET_DI2_MISC_DUAL_	 (1L<<15)
+#define BN<<5)
+#defCFUNL_FREQ_MON		 1DS_CTRLTY_2			0x000004e8)
+#define BNX2_MISCDS_CT(1L<<10)
+#deffin<6)
+
+#deATQ_PERR_2_MISC_PEISC_OSCFUNDS_CTRL_ADJCM_3		 (3L<<6)
+#define BNX2_MISC_O#define BNX2_MISSC_STATUMISC_PERR_SXS			 (0x7L<<16)
+#dBNX2_MISC_OSCFUNL_FREQ_MON_ADJ_2		 CONTROL_1L<<4)
+#de BNX2_MISC_OSCFUNL_FREQ_MONT
+#de BNX2_MISCine BNX2_MIine BNX2_MISC_OSCFUNDS_CTRLL<<16)
+#defi<<19)
+#define ine BNX2_MISC_OSCFUNDS_CTRLe BNX2_MISC_DUAL_MEDIA_CTRine BNX2_MISC_OSCFUNDS_CTRLefine BNX2_MISC_ARB_GNT1UBNX2_MISC_PEDS_CTRL_FREQ_MONfine BNX2_MISC_USPLL_CTRL_#define BNX2_MISC_OSCFUNDS__USPLL_CTRL_PH_DET_DIS			 
+
+
+/*
+ *  nvm_reg definitionefine BNX2_MISC_PERR_SLO#define BNX2_MISC_OSCFUNDS_C_PERR_STATUS0_Tdefine BNX2ine BNX2_MISC_OSCFUNDS_CTRL_<2)
+#xfffR_ENA0_RDJCM_1		e BNX2_MISC_OSCFUN (1L<<0)
+#d_MISCAND_DOIT				 (1L<(1L<<4)
+#define BNX2_NVM_COMMANDPM_ACPIBEPERR_STATUS1_MCP)
+<4)
+#define BNX2_NVM_COMMANDfineUSets;C
+#defin)
+#define<4)
+#define BNX2_NVM_COMMANDefine GTBLPERR		 (1L<<22)
+#<4)
+#define BNX2_NVM_COMMANDL<<1_ABORERR		 (1L<<2G_CONT1L<<8)
+#define BNX2_NVM_COMMAMIFG_P)
+#define BNX
+#defindefine BNX2_MISC_OSCFUM_COMMRXP_SCPAD_PERR		 AR1_SIZE_1e BNX2_MISC_OSCFUNATUS_BITS_CMD_PROCESSOR_ENAPERR		 (1L0		 (0SC_PERR_STTL0_OMRL_CTA1_MCPQ_0		 (0L2	 (4L<<8)
+#defin_CTL0_OSCCTRL_PRC3L<<0)
+EN	 (1L<fine BNX2_MISC_PERR_STATUS1_TASQ_ATUSMISC_CFG_LEDMOL<<28)
+#define BNX2_MISC_PERR_STA<<19)
+#define BNL<<19)
+#define BNX2_MISC_PERR_STAS_CTRL_FREQ_MON_ON	NV)
+#define BNX2_MISC_PERR_STAMISC_CFG_LEDMOe TX_BD_FLAGS_SW_LSO		(1<<15)
+
+};
+
+NX2_PCI(9L<<0)
+#0948
+#define BNX2_MISC_PERR_STATUMISC_CFG_LEDMOL<<0)
+#define BNX2_MISC_PERR_STATUS1_R_FS			 X2_MSPCPLL_<2)
+#define BNX2_MISC_PERR_STATMISC_CFG_LEDMO		 (1L<<3)
+#define BNX2_MISC_PERR_STATUMISC_CFG_LEDMOTATUS_UDP_DATAGRAM	(1<<15)
+
+		_MISC_LCPLL_CTRX2_MISC_PERR_STATUS
+#define BNX2 Broadcom N (2L<<8)
+#define BNX2_MISCine BNX_STAUS_SPI__MISC_PERRGMT_MIN	 (0xfL<<12)
+#defindefine BNX2_NISC_PERR_STATUS1_MCPQ_PERR		 (1L<<8_XI	 (6L<<0)
+#SC_PERR_STATUS1_TDMAQ_PERR		 (1L<<9)
+#de_XI	 (6L<<0)
+#US_ATTN_BITS_TX_BD_READ_ABORT	(1L<<2)
+	ine BNX2_NVM_C_PERRBNX2_MISC_VREG_CONTROL_2_5_PLUS8		 (CONFL<<10)
+#define BCTRL0_60ne BNX2m	 (1L<<7)0_VTH_CTRL			 (0x3L<<11)define BNX2_MISC_PERR_SX2_MX2_MSC_ENABLE<0)
+#TA400rx_quick_consume#TUS_SPI_FSM_STASMBons;
+_PL_TO			 (DFIFOMEM_PERR	 (#define BNX2_NST	 (0xSus_r#define BNX2_NVM#define BNXTATE_SPI_CTE5)
+#dUS2_MCP_SCPAD_PA2_XATUS_ATTN_BITS_GRSM_STA<3)
+#CK_CONTRDID_DRV_DOORBEL		 (_DUMMY		(1<<1)
+		#defREAD_DATD_STATVM_STATUS_SX2_PCICF)
+#defiTRL_ICBUM_STATUS_SPI_FSM_STATAC_EBNX2_NVM_STATUS_S_SLOWDORBYTE		define BNX2_NVM_STATUS_S2_NVMHEARTBECTRL0_P_STATU
+#defCHE_ONTROL_1_0_MAIN__STAT BNX2_(1K_ALT_SRC_6ATE_SPI_CHECK_BTUS1_HC_S_SPI_FSM_STATUS_SPI_FSM_STAT_SPI_CHECK_BM_STAT0008bNX2_NVMmd_consumer_indeNVM_STAT_WR13L<<4)
+#8BITSI_ST_WREN_XI	ine BN0008b0
+#define BNX2_MISC_DE_READ_STATUS_RDID4_WAIT#defineAD_STATUS_RDID4_PI_FSM_STATE_SPI_ST_WREN_XI (0xff_LIN2BNX2_MCI_CLOCK_COuE_SPI_ST_WREN_XI	TE_SPI_CHECK_BUS0)
+#dempletion_producer_index;
+	u32 2_PCBANR_FLAGX2_MISC_LCPLL_CTRL_ZERE_VALUE			 (0xffffffffL<<0)AC_Eefine BNX2_NVM_WRITE_NVM_BD_FLFSM_STATE_SPI_READ_STATUS_RDNVM_STATU_BD_FLAGL<<12)LOCKL<<4)
+#define BNX2__FSM_STA_CLOCK_define BNX2_NVNVD_CLSCLFIG_2C			 (0xfL<<12)
+#defL<<12<<0)
+#define BNX2_S_BADACKBIT_MSEMISC_BIST_Cne BNX2_NVREAD_STATUS_RDID4_RE_producer BNX2_N#define BNX6408PktsT
+#define BNX2_NVM_L<<1EN	 E_CLK_PLL_SPEED_80	 (1L<<NVM_WRITE_VALUE_STE_V8dc
+#th20)
+#defin(12L<16L<<0)
+#define BNX2_NVM_NVM_WRITE_VA
+#defin_ADJ_240UA	_STATE_SPI_READ_STATUS_RDIBNX2_MI BNXITE_VALUE_SCL_XI	 (12L<< BNX2_NV#define BNX2 BNX2cALUE_SCLK		 (4L<<0)
+#define BT1)
+#ISC_PERR_ST4 STA_WRITE_NVM_WRIe BNX<0)
+#_FUN)
+#de8)
+#defineSTATE_SPI_READ_STATUS_RDICI_CLK_Shdr_pkt_leX2_PC<<0)
+#define BNX2_NV_STATE_SPI_SC_COMMAVM_COMM_RBUFumer_inSCLK_XEEE_SO		 NX2_MIDET_55MHZ	 (3L<<0)
+TRL_ICBUF_AEGS_PEick_consumer_indexC			 (0xfL<<12)OTHE (1LNVR_OLD_CL2_PCLK_XI
+#def3<<0)
+#deM_WRITE_NVM_WRI#defineUS_RDID0_XI	 (12#define BN BNXSCLK_XIE_SO		 (16L<<0)
+#defin)
+#define BN
+#defin_CONTL<<0)
+#define BCSfine B2M		 (14L<C		 (0xfffffM_ADDR_VALUEX2_NVM_ADDR_NVM_ADDNX2_NTUS_SPIK_XIRSER_CTAT_P6)
+#define BUE_SCLK		 (4L<<
+DRIVMASK		 (4L<<0<_ADDR_NVe BNX2_MISC_CLOCL<<0)
+#define BNX2_M_READ					0x0000<0)
+#define BNX2_NV	 (32L<<0)
+#define BNX2_READ_VALUE			NVM_ADDR_<<0)
+#define BNX2_NffL<<13)
+
+#define ATUS_SPI_6ID_VAL5_PME_IN_D2DR_V<3)
+#EAD_VALUE)
+#define BRR		 (1L<<7)
+#dL<<16)
+#define BNX_MISC_LCPLL_x000008fc
+#define BNX2_MISC_OTP_SHI_EE1L<<0)
+#2LCPL0_OSCCTRL_XTAL_ADJ		 (0x3L<<30D_VALUE_SCLK	_5_MINUS2		 (8L<<4)
+#define BNX2_MISC_VEECLK		 (1L<<ADDR_NVM		 (9L<<4)
+#define BNX2_MISC_VRD_VALUE_SCLK	_MINUS6		 (10L<<4)
+#define BNX2_MI_VALUE_SCLK	AL_ADJ_1P62	 (2L<<30)
+#define BNX2_MIST_OLD_CLNX2_NVROL_2_5_MINUS10		 (12L<<4)
+#defineREAD_NVM_READG_CONTROL_2_5_MINUS12		 (13L<<4)
+#define BM_READ_VALUE_EECLKOL_2_5_MINUS14		 (14L<<4)
+#define BNXD_VALUE_SCLK		 (4L<<0)
+#deUS16		 (15L<<4)
+#define BNX2_MM_READ_NVM_REAL_1_0_MGMT			 (0xfL<<8)
+#define BNX2_MISC_VREG__MISC_LCefinC48
+#RL_60TUS_CAPSELECT		 (0xUS_RDID0_XI	 (CONTROL_1_0_MGMT_PLUS12		 (1L<<8)
+#TUS_SPI_FSM_STATE_SPI_WRTROL_1_0_MGMT_PLUS10		 (2L<<8e BNX2_MISC_LCMISC_VREG_CONTROL_1_0_MGMT_PLUS8		 (3L<<8)_NVM_READ_CFG	 (1L<<4G_CONTROL_1_0_MGMT_PLUS6		 (4L<<8)
+US_RDID0_XI	 (12LSK_BITS_UMP_E1)
+#define BNX2_MISC_BIST_CS_NVM_CFG1_SPI_CLK_G_CONTROL_1_0_MGMT_PLUS2		 (6L<<8		 (1L<<13)
+#define BNX2_MISC_PERR_STATRINGOSC_SEL1e BNX2_MISC_LCCPLL_CTRL0_PLLSEQSTART		 (1L<<13)
+#define BNX2_MISC_LCBNX2_MISC_VREG_CONTROL_1_0_MGMT_MINUS	 (0xfL<<12)
+#d910
+#define BNX2_MISC_BIST_CS1				0x00e BNX2_MISC_LC BNX2_MISC_BIST_CS1_MBIST_EN			 (1L<e BNX2_MISC_LCX2_MISC_BIST_CS1_BIST_SETUP			 (0x3L<<1)
+#NVM_READ_NVM_REA12L<<8)
+#define BNX2_MISC_VREG_CONTROL_e BNX2_MISC_LCPLE		 (1L<<16)
+#define BNX2_MISC_NEW_COine BNX2_MISC0_FREQMONITOR_)
+#define 2L<<30)
+#<<8)
+efine BNXISC_L_RESERVED_TC		 (0xffffL<<16)
+
+#define BL<<5)
+LAG_MSK			0x00_VAL			0x000008b8
+#define BNX2_MISC_FINAL_C)
+#define BNX2_NVMAL_CLK_CTL_VAL	 (0x3ffffffL<<6)
+
+#define BNX2_VM_CFG1_S)
+#dAD_NVM_W)
+#def2_MISC_LCPLL_CTRL0_PLLFORCECAPPASS_EN	#define BNX2_L2C_CFG1_Sne BNX2_MISC_ECO_CORE_CTL				0x000008d0
+#def BNX2_NVM_CFG3_WRITE_CMX2_MISC_LCPLL_CTR(1L<<2)
+#define BNX22_NVM_CFG2_READ_ID	II_MODE			 (1L<<3)
+#define BNX2_MISC_GP_2_NVM_CFG2_READ_ID	RL1				0x00000954
+#define BNX2_MISC_LC2_NVM_CFG2_READ_ID		_REVISION_ID_TE	 (1L<<5)
+#define BNX2_M12L<W_18		000844
+_SESC_PPIO_CLR				 (0xfL<<16)
+#define BNX2_MI2_NVM_CFG2_READ_ID	N		 (1L<<6)
+#define BNX2_MISC_LCPLL_CTRL_MISC_LC_TM0				0x0000093c
+#defQ_PEING_AWAY	 (1L<<_MISC_LCECAPPASS		 (1L_ERR	ENA2ENA_SEL_VAUX_B_I0)
+#defL_STATUS_PLLSTATE_XI		2SET	_	 (1L<<7)
+4
+#define BS_FREQPASS_SM		 (1L<<_MISC_LCPLL_TUS2_UMUS_RDID0_XI	 (12L<LSEQDONE		 (1LN_PLUS6_XI	 (4L<<UMUS_RDID0_XI	 (12L<<LLSEQPASS		 (1LMAIN_PLUS6_XI	 (4L<D5_TE			 (1STATUS_PLLSTATE			 (0x7L<<4)
+#define ET2			ARBefine RR		 (DIS_DEF		 (1L<<12)
+#define BNX2_EQ2_21					 (1L<<15)
+#00_DEF		 (1L<<13)
+#define BNX2_MISC_GP_HWM_WRITE_NRL			 (0x3L<<11)
+#defi_MISC_PEREN	 (1L<<5B_REQ_SETREQ(1L<<30RST		L<<16)
+
+#define BNX2_MISC_CS16_ERR			TRL			0x0efine BNXBNX2_P_MISC_CS16_ERR_ENA_PCI			 (1L<<0)
+1L<<0)
+#define BNX2_NVM_RR_ENA_RDMA			 (1L<<1)
+#define B1L<<0)
+#define BNX2_NV	 (1L<<16)
+#define BNX2_MISC_GP_HW_CNVM_WFIG_SK_B2_NVMENABLE	 ROL_BITS_CORE_CLK_PLL_STOP	 (1L<MD			 (0xffL<<8)
+#define B<16)
+#define BNX2_MISC_GP_HW_CTefine BNine BNX2_MISC_USPLL_CTRL_1_0_MAIN_PLUS BNX2WRITE_CM4	 (1SHne BNX2_ ERR_ENA_COM			 (1L<<7)
+#definFLASH_SIZE_1MBI_1MB (2L (127L				0x00000940
+#define BNX2_MLASH_SIZE_2MB2T			 (1L<
+#defin				0x00000940
+#define BNX2_M4_FLASH_SIZE_2MBIT			 (1L3L<<22)
+#define BNX2_MISC_GP_HW_CTL0_efine BNTY_2			0x000004e8				0x00000940
+#def#define3_WRITE_OMMNX2_PCICFGPAD_PERR_ENNX2_NVM_CFG4_FLASH_WRITE_0_MAIN_PLURR_ENA1TO			 (1			 (1L<GS_START		(1<<7)
+		#define TX_BD_FLAASH_SIZE_2MBI28MBORD	(0x1f<<8)
+		#define TX_BD_FL_SIZE_VENDT_EN				 (13)2)
+		#define TX_BD_FLAGS_SW_VENDOR_ST_			 (ne BNX3x318e TX_BD_FLAGS_SW_SNAP		(1FLASH_VENDOR			 (e TX_BD_FLAGS_SW_LSO		(1<<15)
+
+};
+
+FLASH_VENDOR			 (L_MEDIA_CTRL_PORT_SWAP		 (1L<<24)FLASH_VENDOR			 (L<<0)
+#define BNX2_MISC_PERR_STATUS1_FG4_FLASHORCE2256_EMPUS0_CS_TMEM_PERR		 (1L<<17)
+#dMODE_256_EMPTY_BITfine RX_BD_FLAGS_DUMMY		(1<<1)
+		#defFLASH_VENDOR			 ( (1L<<4)
+#define BNX2_MISC_PEFLASH_VENDOR			 (	 (4L<<0)
+#define BNX2_NVM_STAT_FLASH_SIZE_120)
+#define 				0x (1NX2_PCICFGONFIGX2_PCI_7)
+OST_COAS_PHY_DECODE	(1<<18)
+		#definefine BNXe BNX2_MS_ATTN_BITS_LINK_STATE		(1L<<0)
+	LUE		 (0xfL<<0)
+#S_ATTN_BITS_TX_SCHEDULER_ABORT	(1L<<1)
+LUE		 (0xfL<<0)
+#US_ATTN_BITS_TX_BD_READ_ABORT	(1L<<2)
+	LUE		 (0xfL<<0)
+#ine BNX2_MISC_VREG_CONTROL_2_5_PLUS8		 (LUE_SFUTURE_<0)
+#tUca
+#define BNX2_NVM_WX2_MISC_LCPLL_CTSC_PERRTUS2				0x000SHM_Hne BNGNfine _MINNVM_READ_VA4
+#de_ID_VAL1_DEVIC) ? (((sbdma		#deBNX2d2;
+	u16 2_MISC
+#define BNX2_MISCS_RDID0_XI	 A1_C BNX2<0)
+#de35e BNX2_MISC_ARB_BLE				 (N
+#define 
+#deV0x00000L<<0 (0xfLfR				 (1A1_CTUS2_TGT_FTATE			 cMISC_C_SETX2_NVM_CDR_N1STATUS0_RP */
+#define BSC_OTP_CMDnition
+ *  offse + OPBACK_TE		 (1L<DR_NR_PERR_ENnsumne BNX2_DMA_STAT0000_STTUS2				OUNDA0x000DDR_Vine BS  _ERRO/* 	 (1ID1: 16 s 31-16; BNX2_MATE_SPI_15-0. _lo;
+	u32 st
+#deBCM5706 BNX2_Mefine BNXERROR_STATumer_RE_DMA20616_STATUS0_RPC_DFIF(id_SCPAD		 MA_STATUS_BIG_REAAUS_NVM_W6			 (&L<<0)
+#TAT	_PCI_CONFI (0L<EVMODE_VERIFY			 (5L<<0)
+#MA_STATUS_BWRTR0000044c
+ISC		 5708 Serdes008a8 RTL codsBITSREAD_TRANSFS_CORS_BMCR#define250	 (1L2_STATUS0_RP3NX2_MI	 UPlk_num;bfine BNX2_DMA_STNVM_WR_2GABLE_SITS_AD_TAT	 _BIG_WRI(LK2_MISC_GP_1f#define BNX2_DMA_STNVM_WRRE_DD_VALUEA1_CRI_LINKS_BIG_Wine BNX2_PCI_CON1_MCPQ_PE2STATUS_GLOBAL_ERR_XI			 (1Lx318ine DONE_S5S_STADigital Bmple_lo;
+	u32 sta_BIG_WRI_GLOX#defLCPLL_1_DATA_STAT	 (1L<<25)ITE_DELAY_PCTL0STATUS_O2_DMA1BNX2_PONFIG_CLO0_VTH_CTRL			 )
+#dDE_B_ET			 (1L<IG_DATA_WORD_SWAP			 (1L<<1BITS_PinitioMA_STATUS_BIG_RSWAP			 (1STATEL
+#define_PERR_E (1L<<0)
+#n
+ *  offset: LE_SET_BNVM_RECONFIG_RBLE			PCI_I0x000x7L<_SGMIIe BNX2_DMA__LINK_TARGET_GRDJCM_1SC_SNT_RX_TUS_WRITE_DELAY_PCI_CLKSBMfine BNX2_DMF	 (1ROL_1_PCI_PM_DATA_A_PMe BNX2_DMA_NFIGPEDLE_XI	 (CFG1_0NTLC_REG_PONGFIG_CNMISC_PERR_ENA0_RXD_WRe BNX2_DMA_COGLOBALRR_ST_DLCONFIG_2_define B_WRITE_N1L<<10)
+#dine BNXMPANS_IN_USE		 (0xfL<G_DMA		 (1FIG_CNTL_PCI_COMP_DLY		 (1L<<11)
+#d<<0)
+#		 (1L<<10)
+#dMA_CONFIG_NO_WCHANS_I_FREEUne B#defTRNTL_PING_PONG_DMA		 (1L<<10PCIRBNX2_D_FBNX2C4GS_PERR	TS		 3TARGET_BYine BNX2_DMA_CONFIDBNX2_MISSC_PERR_ENA<20)
+TA_WORD_umer_SIR_MASK0L<<3G_CONTRO/* Tx/Misc24)
+#define BNX2_DMA_CONFIG0xfL<TS		 (0x75NG_PONG_DMA		 (1L<<X2_DMA_B<<0)
+#deVCM2_PCIE			 (0x0L<<24)
+#def<24)
+#de_MCPQ171L<<15)
+#defi_4-200DSP_RW_P
+	u32 #defi_DMA		 (1L<<10ne BNXZX2_MISC_B7)
+#defin)
+#define BNX2_DMAEX_ENASE_TRANS0)0fX2_DMA_CONFINFI0)
+#define	 (1L  (2_MISC_GP12K		 (4L<<0)e | #define BNXL_WBE_CNTNX2_MI_RUDIN_XI	CIT_MS_INDE_RESERXI			 (0x71L<<5NX2_(16L<#defin2L<<30)
+#define TS		 ()
+#define BNfine BNX2defi_SHAD
+#def0x		0x0000092CONTROLDW8)
+#deMISC_Ddefine BNXOCK_CONTEXTENORT	_XI_NOSYZERO		_CONFIDMA_CONFIGPONG_DMA		 (1L<<1)
+#deL<<2L<<12)		 (1CONTROL_2_5			 (0xIG_CALUE_FIG_2_0x7u16 l2_fhdr_ne BNX2_DMA_CONFIGBNX2_MALUE__CORE_C			 (0x0L<fine BNX225)
+#defmentAF				EAD_LRS_MODONFIWAP			 (_PERR)
+		#e BNX2_DMA_CONFAP_MODE_XI		 EAD_LGED_000 statC_CFefine BNX2_DMA_4-200GefinPORT	S_ATTNENAB7fffbFG3_BUFCHE_ENTL_PING_PONG_DMAFG4_FLUSE		 _MA3		 (1L<<10)T_MAX_VREG_CO
+#define BNX2efin	<<9)
+#d_CONFI048B_XI		 (4L<<16)
+#define BNX2_MIfine BNX2(3L<<8)
+#deA_CONFISIZE_65L<<16)
+#deG
+#definePERR_STATUS2_64C_CONFICONFIG_MAX_NSFE2_5
+#define 3_PERR_ENANOCKOUT				0x00000c0c
+#defi
+
+KV
+#defineL<<0)
+#dne BNX2_	0x00000c0c
+#d1LE			fine 			 (0x0L<define BNX2_DMA_CO_CONFIGASYNC_<<4)LACK7fff BNX2mentBABLEBLACKOUWHANS_Ie BNX2A_BLA16)
+
+#deS_RX_BD_CACHRST_Nefine 2_EXP_ROM_SIZDf def(0xfTTCNTLM_CO(1L<<0)
+D_VALICFG_PCIR_SETTif defD_MASTER_SETTINNX2_NVM_ACdefiMA_S2_DM_TE			 (0x3ffffffL<SDMASTER (5L<<0)
+#TS		 (0PING_PONG_DMA		 (1L#define BNX2_MI2_DMA_CONFIG#define BNX2_DMA1L<<RV2Po255OYK_SP1L<<0)
+#define BNX2_DMA_REDMA_BLACK	 (02_NVM(0xf4ONFIG_MAX_RRS_EN_XICONSUMSTfineLA_BLA9ING_PONG_DMA		 (1L<<10_DMA_BAMBITSPWNX2_TRYIT		 (0x3L<_VAL4)
+
+#ddefine B (127L<<2MA_SF_CPQ(2L<<8P	 (1L<L<<3)
+#defi8)D_MASTET0_TBDne BNX2_DMA_READ_)
+#deRE BNX2NFIG_2_<7)
+#define BNX2_DMA_READ_CL(1L<<2RdefinNG_0nsumer_indeCKOUT				2_MISNE_Se BNX2_DMA_Re BNX2_DMA_RER_SETTNX2_DMA_Rx_bd_hSETTINX2_DMA_READ_OUT_2ND_NX2_DMA_RCFUNDGRIfInMBDMA_<<30efine BNX2_DMA_REefinMSPEEDNPLO			UA	 ()
+#define2_DMA_R(1L<<9)
+#defiDMA_READ_IDDQ	 _MISC_MISC_PERR_EKOUT				BANG	D_MAST15)
+#definRELAX_ORDESC_PERR_S7ORT	MX_BD__PERR__CONTROL_2_5		ER_SETTING_efine OMBO_PERRL_CTRL0ffe_DMA_BLACKOUTN_EAD_V1L<<3)CKET0)
+#deonsumer_ind2_NVM_ASTER_SETTING_0		 (15xfL<<7)
+#de
+#define BNX2JU0_TBTER_SETTING_9
+
+/*
+ *  misc_CMD1TfinePY_THRE8)
+#d_SCP  offseHEADER_PEEDTING_0<0)
+#defie BNX_CLKS_READ_TRANSFERS_ck_coUNI<0)
+#PERR_ENA2CMD_	ATUS_ATTN_BITS_	u8 8)
+#define BNX2_MITS						 (0x7L<NX2_DMAXEAD_fine _SETTINE_CLKSNX2_
+#deA_READ_AD_MASTER_SEBNX2_DCO_MG			 (0x3L<<1_ARB_REQ0				0x0000082c			 + BNX2G2_ERASE BNX2_MISTATUSL4_CG2_ERASs;
+	uSC_ENAL<<5)
+#defiUse CPU native page efin up to 16K fo(0x1f<ring_CTX_sAY_XI		if (22Octe1L<<2> _ICBUF_ADJ_400UX2_NVM_READfine lsNG_0_CTX_PL<<9)
+#define #define BN1L<<4)LL_STFG_BIS<<9)
+#deNX2_DMA <<EAD_MASTER_SE)SPEED_100	316)
+(L_CTRL  (ine BNX2_DM1_ /_CTX_I				0x00_CFG4_
+#defBNX2_DMAXdefi
+#define L5_PME_INTS		-TING_0_OLD_SECFG4RT_80MHBNX2_DMf defETTING_PGG_1_COM16N	 (1L<<3NT		#define BNX2_DMA_R_SETTINGCOMMA_READ_MASr_MASTER_SET2L<<30)
+8)
+#defPRD_R(1_CP_RELAX_OASTER			 (0xffL<<0O_CTRLAD_MASTER_Sefine_RELA_DMA_RE*SETTING_0_(1LTING_0_RBDC_PRI<7)
+#def_ENAB (1L<<8)
+#defP
+#define BNX2_DMA0ID_V<<3)
+#de_1_COM_P2Octe		 (D(x) (MASTE&G_1_CP1L<<9)
+#define B) ==	L4_C18RAFFI1L<<10)
+#defISC_PE?	 (1\
+	ine + 2 : 8)
+#define BNX2_MX2_NND_DINXine BNG_1_CSETTING_0_CTX_P BNX2_DMA_READ_MR#define BNX2_DMTRAFFID_MASTER_Sine BNNX2_MISC_OTP_CMDNX2_DMA_READ_HREAD_MTER_SETTING_0_TBDCn
+ *  offset: 0ne BNX2tatus_fine BNX2bp->rx_max_RITE_idSTATUS_BITS_CONTROL_2		 (1L<<5)
+#define Dot3SRIpgPARA2)
+#def1_RV2P(0x7L<<28)X2_DMA_WRITE~C_DUAL_MEDIA_CT) >><9)
+#defineine B- 4MASTER_SETTRXRITE_MASTEMASTER_SETER_SETTING_#defiC			0x0ne BN._lo;
+	u32 st_DMAefine BOOLOCK_CTL
+#defin			 (0x7L<definPARAARAM_EO_SNOOPCLKNX2_METTIdefinNONX2_PCI_L<<12)
+18ASK9)
+#define BNX2_DMX_OR<25)
+#dB_XI			 (0L<<1GE_MISC_2_MIS_c_VERIFY			 (5(CTL0_RESMA_READ_MASTER_Sine B_PERR_EN_XI	_x_bddefine BNX2_DMTE_(1L<<2)>>A_READ_MASTER_SED0		 (6L<X_ORDER	 OOP	 (1L<<8)
+#d)
+#define AD_MASTERHC_PARAM_EN	 (1L<<7X2_DMAAD_MASTER_SET_STATUS1_TPATQ_)
+#define BNX2_DMRITE_M(TTING_0_)
+#dedefinTTING_0_HC_T1)
+#2_MISC_p)
+#define BN(STER_SETMA_WRITE_MASTER_SD_XI		 (0xffffL<<NX2_DME		 (1L<<10)
+#EN	 (1LTX_NO_SNOOTX_RELAX_ORDER	_WRITE_NVMB_K2L<<MISCD_MASTER_SETPEEDBNX2_MISC_L#define BNX2_DHC_PARAM_EN	 X2_DMAA_WRITE_MASTER_SETTefine BNX2_MISC_PERDot3Sdefine BNX2_DM(XADDRVL_BOUNDARAMEMEN	 (1L<<5)
+#dB_READ_MA2_MISC_PERR_STATUD_CAPADONE+0_CTX_NO_SNOETTING_0_)
+#define B8)
+#define_DMA_X_PA0_TBDABLE	 (1L<STATUCONT_DMA_READ_MA (1L<<10)
+#ER_SETTING_1		NG_0_CTX_PARAM_E BNX2_MISC_PASTER_SETTA_READ_ (0x7L<<12)
+#dNVM_CFG4producer_)
+#define BNXx8;
+	_SETTING_1	ABLE_AX_NVM3e BNX2_DMA_CLAD_VADMA_READ_MAEN	L<<28)
+<20)
+#ne BRR_SE
+#defi_MISC_P		 (0x7L<e BNX2_D1_COM	AD_MNX2_DMA_W_ID_ETTING0000c1cTINGCFG4_SION_ID_TE	 (1L<<5)_SETTINSTER_SETD_MASTER_SETTINGDMA_WRITE_MAST3MBSCCTR_PARAM_	FIC_CLASS	ETTING)
+		#defM_EN	 (1L<<B_GNT0_SETTING_MASTER_SETTIN<9)
+#d)
+
+EAD_MASswne RX_BG_1_CP_Nk_buff		*skb;
+	DECLAREPCI_IL_WB BNX2_(mapping)
+};_SETTING_1		pg_CP_PRIORIT_WR_RE*M_PERR	 (1L<<2RITE_MASTER_SETTINGNX2_DMA_WRITE_MASTRITER_S_CP_PRIORITY	ETTING_0_RDMA_unsigned short		is_gsoNX2_DMA_WRITE_MASTRnr_fr<<0)DMA_WTUS2				S094cBDdefineWRITE(fine BNX2_DMA_fine ) *_WRITE_MASNOEAD_MASTERING_13L<< BNXITE_MASTDMA_WRITE_MASTEpgE_MASTER_SETTINtatusRBITENX2_DMA_WRITE_MAST1L<<10)
+#def<7)
+#dR_NUM_READS			 (0x7L<<0)R		
+#define BNX2_DMA_ARBITER_WR_A<<1TER_SE *_SETTING_1_CEAD_MASTER_Sdefine BNX2_DMA_ARBITER_WR_A BNXfine BNX2_DMA_CONFdefinuffer2 rxlash (Atmel: AT45DB011B) specific informa	#defio;
+	u32 stSE BNXR_SETTING_1	I			PARAM_ENCSETTINL<HY(0x3ffffL<<13X2_DMAARBITER_R
+#definedefine BNX2RBITER_NX2_MSTATU2;
+	u16(ne BNX2UT		0008ORCE2R-_DMA_ARBITE(1L<<5)
+#defiLE_STATNG_1_COM_CN	 (2L<<5<7)
+#dE_STAT6553tat_IfHCOu	uUFFEREY_DETAT	)
+#define BID				 (1LC_PERR_STATUS2_M<5)
+#define NDCLASS	 _PERR_STATUS2_MCP_tatus_PCI_CONFIG_PERR_STATUS2_5)
+#defineWGT_RN(defin BNX2_MISC<<19)
+#defineL<<8)
+#deARBBN	 (2LOUSTNX2_DMAR	 (1L<P			 (2L<<8)
+A	 (1L<<27)
+#defin (0x7L<<00x2NFIG_#define BNXINDS_CTRL_XTAL__TIMERS(0xffL<NFIG_CONTROL_2_5		ER_OUSTD_READ_REQ			_CONTROL_2_5			 (0xDMEP_W (0x7L<<CONTROL_2_5	PEEK			0e BNX2S		ML<<4)
+#define_SPLIT		 (01L<<8)
+#de		0x00000c2c
+#de0)
+#deE_STAT25NG_1_CP_CS1L<<0)
+SC_LCPLAER_SMA_D_0_CMINR_ID_S0x00000c21L<<3CRMB_OUT_CLK_E<0)
+#deX2_DMA_D_0_C10xfff6)
+#defiefine BNX2_PCI_	 (1L<<_DEBUG_VECT_PE_CONTROLT_PEEK			0x<16)
+#define B	 (0xfL<<12)
+#scardefineds;
+	u32 sK_2 (1L<<0)7ffL<<0)
+#def<16)
+#define BNX2_D(1L<<8)G_VEISC_EK_EG_VECT00				ND_FLAGS_COA<27)
+#defineds;
+	u32 sDMA_CO9_NUM_READS			 (0x7L<ne BNX2_DND_ID_X		 (0)
+#ER_OUSTD_READ_REQ			AD_DAine BNX2_PCICFG_PCI_CL2)
+#defin_DMA_TAG_RAfine BNX2_DMA_DEB	)
+#define BNX2<0)
+#define BNX2_DMA_TAG__0_0_MG_1_CRBDNX2_DMA_DEBUG_VE		 (2L<<2V_MASTVM_WRI BNX2_DMA_COMMASC_COMMA49)
+#defSTRdefiMERS	DASS	 (0VMREAD_ITY			0xBOR   |DMA_DEBUc2c
+#define TAGN_OFF		MA_TAG_AL_ADJCMdefi2L<<30)
+#defiPROT00064_TAGM_00_MASTER_TDMA			 (5L<<define3IZ_BITMISC_OTPe BNX2_MCKUED_0R_TDMA			 (50xfC_CL_MISCEAD_MAS0x000NX2_NTE_M0)
+#derTAG_RA (2L32 cOUNDA (3L<<0)
+e BNX2_D
+#define BN32_DMA_Twrite				 (1LfPE_TYPTUS2				0x000NXI			AND_DRDMA_DFI		 (1L<<7)
+#dR_CTX		BNX2_ne BNXX2_NCTIO#define BNXne BNX2_D_DMA_TAGDMA_D4_DMA_T0008c0008c_DMA_Te BNne BN1				0xne BNmask1				0xtotal0cM			 (08  *nam<4)
+#T		 (0xffL2_DMA_TAGdefinHWX2_DN	 (2L<27)
+	)
+#def00000AUG_VG_1_DAT_IN				 (<<18)
+MAST		 (0xffL<C_GP_HLG_1_CCP_ADJ		 (0ine BOCK_FG_LEDBAR1_SIZE_64KASS	 -200PCBSWAPNX2_NV<28_CFG1_Do not_HC_PARAAD_MASn re_irqTE_Mdefihandler_t	<<4)
+#d_1_CP_NO_SNOint	vectoBNX2_8		requestN)
+	uchar0000L<[IFNA(0x1BNX2]SETTIN_MASTER_CO
+#t_SETTINGnfo)
+#defi0000x_prod_bseq (2LINK_CL_FREQ_1				0DC			 bidLITYAM_04)
+#define seqne BNX2P_PRIORITTER_S		*tx_descSETTI;P_PRIORITYMA_CON4_01_SWbufTARGET_2L<<30)
+#deconNX2_SEE_CLhTER_R_DMA_T
+efini1_0_MA
+#defiPefinTAG_RA#define BNX2_DMA_Ar4)
+#define 01A_TAG_RAr_FREQ_MONX2_D				0x00TAG_RAMISC_PERR_STATUS2_MCDMA_TAGFUe BNX2NX2_PCI_I3efine2_MISC_PERR_DMA_TAGFUNg_DLY		 (1L<
+ISC_PERR_STAgDC			 (1L<<4)
+#TApgX2_DMA_TAdefine BNX5)		* BNX	 (0x3L<<ne BNX2_D (0L<X2_MIS_SWA#def[1L<<10)
+#def]L		 (1L<<_ENApg	 (0x7LTTING_0_CTne BNX2_DMA_TAG_Rpg			 (0xffL<<0)
+#de2)
+#defi]RAM_02_CHANNefinASTER_SEP_CONTRTAG_RAM_02_CHANN_CONFI0_HC_PRIORI#defineX2_DMA_T#define		 (1L<<23)A_WRITE_MAS (1L<nap<<16	 (1L<<10)
+#_		 (2L_TAG_		____cachel1L<<al BNX2<<4)
+#defiUS8		 *bp_1_CP<5)
+{
+TS_CORE_CLCP_CTXCRGET_B*msi;TION			 (1L<<9)
+TE_MASTmsix		 (0umer}<<20)
+#defie BN2L<<4*DES_IDDQ	 (ptne BN_RAME_CNTe BNX2_		 (1L<<320c18last5_MBIST_idA_TAG_RAM	 (3	 (9defin_ALT_1_CPCNIPI_F_ENABcnic_te BN4
+#deISC_VREpres)
+#dR_CTX					 (0x3L<<7)
+A_WRITE_MASTE				0x0		 (1L<<9)
+<<4)
+#define BNION			ine BN_MAX_RRVICE_CAPA	ou caFields usefine1L<<8tx anG_MAXr/X2_DMper	 (2Lnc		 (ths .
+ *groupedRB_MOTAGtogeStat(1L<<0)
+beginnITE_of1L<<8		 (2Lur
+#definvoid __iomem33_ADgviewAM_02_CHANNnet_device	*dev<<4)
+#defipc_READISC_RL_CTATaPCI_OLSEE_CLr_sNX2_MC_GP_HW_1L<<23)
+#define BND		(1		 (SM_ST_TAG_RAMNX2_DMA_TAG_RAM0ine BNVAUXBSWAP BNX2_DMA_T0USE_INT_SIX_Tine definCAfinition
+ *  o (0x3L<efine BNX2_NO_W_VALA_TAG_RAM_DES1_RST		 (1L#defiU0000cMSOFIG_CN	ID		
+#define BNX2_N#defiASDN_XOR(1L<<3e BNX2SIZE_256K		 (9L< BNX2_PCI4)
+#define BNu16 status_idx;
+#defi20
+#definNCTION			 (1MA_CONFIG_NOG_RAM_02_CHAN1L<<9)
+#de2_DMA_TAG_BLA<4)
+2_DMA_TR BNX2_MX0)
+
+#defi4#define BNX2_L2CSWAP_CONTROL		_OSC_CS1RXP_MISC_AP_CONTROL		G_RAM_03_SM_03_SE_CNT2_MISC_CS1_PCI_CONFIG_1_W3_SWA_BIR			ROKTE_MASTER_S_ALT_SRC_UNDEF	 (#definANPCI_POVERR_E
+#definefinM_00_MASTER_CTX		TM_04_2_SEL	PCIation
+ efine4)
+#define BNRAL_AX2_DMA_TA[			 (0xffL<<0)
+#dWORD_	 (0x3L<<7_CH<<28)
+
+#_ERRN_FAU1_VAL *vlgrp	 (0x3L<<7)define BNX2f_us0CHANNE)
+#duseablG_RAM_00x7L<ER_TDMA			 (ER_TBDC			with	 (1L<X2_L_CONT		 (1L<<2copy_threshA_TAG_RAefinjumbo
+
+#define BNX2_BNX2_R_SETTING_1_<4)
+3L<<fine BPdefine BNX2fine BNX2__VAL0000088TAGBNX2 (stantTE_VALUE7)
+	 (0x3L<HANNEL		ine BNXwake
+
+#defineL<<4)
+#define )
+#d		 (2L<BNX2_ops		*_TARGET_;2_DMA_COSWBNX2_/
+
+/	 (0x3L<<7)/* Endefinf<4)
+#LECTM_EN		 (c2_DMA_TAG_RAcod03_SCHAM_EN	fine B (0x7L<3L	current	 (3ervalX2_DMA_TAG_RAM_ne BDMA_TEPLL_CLHZREAD_TRANSFERS_CONFIGAN2_NVM_STA	(HZ /TY	 MASTER_TBDC			TAG_RA	(1<<AM_0M_WRIT24
+#de0008_WRITE_MASTti10;
+	ist CHANNTAG_RAM_02009 RAM_02_M	 (0t_t	 (0x3FG_PURAM_to synchron	 (0phy accessDER	G_RAspindefint		phy_RGET<4)
+L<<4)
+#defiindirect05ne BNX4_MASTE_TAG_e BNX2_DMA_TAG_RAM_2_DM3_SWADMA_TA04_MASTER_CER_TDMA			 (5L<<2_MISC_ENCBITSM_04_MASTER_CLCOM			 (3L<<4)
+2_MISC_ENE_NO<10)
+
+#dEC_03_SWAP_CON03_SWAP_CON6)
+#2_MISC_ENX2_DMA_TA<<10)
+
+#definBNX2_DMA_TAG_RA32_MISC_EN_PERR_DR_VAG_RAM_03ine ne BNX2_PCICFG_PM_fine BNCONTROL		11)
+#BILITE_MAMA_TAG_RAne BNX2
+#defin_RAM_05_SWAP			 (0MERSX2_DMY02_MASTER_TBDC			_RABNX2_PHY_FLAG_DIS_EARLY_DAC		0x0 dri400
+#define /* bnx2.h: BroREMOTEght (CAPworkdrivv8r.
+ *
+ * Copyright (c) 20FORCED_DOWNom Corpo10tion
+ *
+ * This program iNO_PARALLELom Corpo2 can
+	u32			mii_bmcr; terms of the sNU General Public 1License as puadvLicense as pubpaLicense as puup1;e Generalchip_id;
+	/* icha num:16-31, rev:12-15, metal:4-11, bond_id:0-3 */on
+ *
+ * CHIP_NUM(bp)			((data->(mchel ) & 0xffffdriv)2_H
+
+/* Hardware _5706	om Co* gdrivons automatically *
+ 8ense ted8from RTL code. Do not mod9fy.
+ */
+9/*
+ *ons automaticaREVctur structures and registerdrivfinim RTL code. Do REV_Axense orpor*
+ *  tx_bd defin		#dB * CoTX_BDu the redistrL		(14)
+	C32 tx_bd_vrPubliag_flags;
+		#METALdr_hi; term tx_bd_haddr_loine TX0ff_FLAmss_nbytes;
+BONDINGdr_hi;tx_bd_vh: BrS_TCP6_OFF0_MS00f)CONN_FAULT
+		#<IDdr_hi;
+	u32 tx_bd_haddr_lo;
+	uef*
+ *m RTL code. Do ID *
+ g_A0fy.
+ */
+ /*
+ *  tx_bd defin)	(1<*
+ *1e TX_BD_FLA1S_VLAN_TAGTCP_U<3<3)
+		#eralX_BD_FLA2AGS_COAL_NOW		(1<<4)
+832 tx_bd_v_
+/
+ *
+ _BD_FLD_FLinCRCW		(1B<3)
+		#denlan_tNN_FAULT		(1<OW		(16)
+32 tx_bd_810_SHL	COAL_NOWOW		(14)
+9<5)
+		#defi_BD_FL0_SHL	SW_OPTION_WORD	(32 tx_bd_9h: Br<<1		#define tx_bdUDP_CKSUM	u32 tx_bd_haddr_lo;
+	) autoA serdes (mchawill havePublifirst bit of
+		#d_H
+# id set./* bns automaticaine TX__SERDES_BITom Co1ten by: Mphy_add License a{
+	ul Ch
+	u1genebus_speed_mhzLiceify.wole TX_x_bdpane TX_rD_FLfw_wr_seqLiceLT		(1<ddrv_pulse*
+ * CoRX
+	int			rx_max_ring;1<<0)
+		#_BSHL	_sizee TX_BD_F1<<1FF0_pg_SHL	DUMMYOW		(11D str1<e RX_BD_FOFF0_Stx_quick_cons_tripFLAGS_ENA	(1<<4
+};
+
+ *
+ * C_int BNX2_RX_rLIGN			16
+
+/*
+ *  /* bnRX_S_END	ition
+BNX2st status_blockcomp_pro */
+struct stat_FLAGS_
+ * CoSatus_attn_bittx_ticks	(1L<<0		#define s_attattn_bits;
+ *
+ * CoSTATUS_R_ABORT	(S_TX_SCHEDULERmdfine SSTATefine S_f<<8)
+	tus_attn_bit d(1<<0)
+	<<1)
+		TS_TX_BT
+		#de Generaltus_sD_CACHN_
+	dma_flag_t1<<4)
+attn_k_mapp(1<<2
+	;
+	u32<<3)
+isticPROCock	*<3)
+		blk;ITS_TX_BTNn
+ *	(1L STAESSO#define SX_BD_Fctx_pax_bd Svoid			*RT		blk[4]TX_DMAdefine 	(X_BD_RE#define <7)
+	 Generalhc_cm ChaeneralLAGSod TX_TAe STAreq_line_TCP6_flags;
+	ORT	duplexnine TX_rxhy_pine us_x_bdlink_upd_flags;
+		(1LRXmodiSER_MAC_BD_READ8A_ABORflow_ctrl;an  actual <1)
+ _ABO		(1tings/* b	_LINK/* may be differentFLAGS_KUP_ITS_LINK_STBORT	X_DMA_ABO ifL codnegdefineeneraladvertisefine S(1L<<efine_DMA_ABORT		(UFefine ST	#defineemCHUPBORT	(1L<<11_READ_0)
+or forcedUP_AAD_READ_<<4)
+		#ATTN_BIEAD_defiTS_LINKTCHUPx_bdA_ABORT;32 tx_bd_AUTONEG_SPEED		1HUP_	#define STA1FLOW_CTRL	2_READ_2)loopbackCHUP_	#def1L<<LOOPBACKfine TX_BD_Fht (TTN_BITS_TOMPLELAGS TX_BD_an_pendX_BD_READ_2)mac		#de[8ASSEMBLER_Ashmem_basS_ATTNharFLAGS_version[32ILBOXX_BD_Fpm_catruc	(1LCONcixEXT_AB
+	6
+
+/
+		#N_WORflash_TCPc	*BORT		infoSTAT7
+		#BORT		(RX_BD_FLAGS_E	(1L<PR
+		#de		#defindefine ight_irq		irq_tbl[pyrigMAX_MSIX_VEC6)
+	X_BD_F<21)nvecN_BITS_TX_num_tD_ABORTN_BIX_BD_READD_ABORdefineneralidle_chkORT		US_Ad<<8)#iLAGS BCM_CNIC)
+		#defimutex		cnicX_BD_;)
+		#defiD_REAeth_devUS_AL<MA_ABOR;
+#BORTfBORT	(1L<<1)
+		ATirmcall	*mipsSTATfine ;<25fine TX_BD_F#define STrv2pTS_FLSH)
+		}_BD_
+ *
+ * REG_RSW_F, offse_hi;
+		\
+	readl(bp->regview +TS_LINK_R2)
+		#d_BITS_WRRT	(1_ABORT, val
+		#definwritel(val, 	(1LEPB_ERROR_BITS_<3US_ATTN_BIT
+		#d16DMA_ABORT		(1LPARITY_tus_attnw<<31)
+ne TX_tus_attSCHEDULER__ABORT	(pu_reg {S(1L< if defnsumer_in_value_halATUS_ine 16mer_indessteUP_ABO32S_ATTndex1ine s_txtus_attclearnsumer_igpr0_quick_evmas
+		#tus_pc;
+	u16 ins3)
+
+};
+
+bonsumer_inpadBD_READ_8};
+
+#n
+ *tatuBD_READ_GRC		#define STfw_file_seck {
+	u16 _be32 flags;
+)
+
+};
+
+lense_ix_qu3;_ABORT
+
+};
+
+#d;
+	u16 dexRT		(1_consumentryr<<3)
+
+};
+
+start_flags;
+sumer_index42_consumer_indertexATUS16 status_rx_quick_consumer_datdati16 status_rx_quick_consumer_ro16 sta_consumer_index4_FLSH_consumer_<<3)
+
+}x7quick_consumer_<<3)
+
+};
+
+#dv2truc)
+
+};
+
+fixupMAILBconsumer_index44_consumer_in6 statu9_consumex9;
+	u16 status_rx_comdex4ex9;
+	u16 ss_rx_quick_co;
+	u16 trucx9;
+	u16 status_rx_quick_co;
+	urxndex413x13;
+	u16 status_rx_quick_cotpaex6_consumer_ind6 status_rx_quick_co16 sdex8x9;
+	u16 status_rx_quick11;
+	u16 status_atus_rx_quick_consuproched er_index4_consumer_indeid	u8 s8mer_2TSk_co
+		#definV2P_P1_FIXUP_PAGE_SIZE_IDX		X_BD_FLAGB_ENDIBDmer_indetx_MSKBORT	_SHLonsumer_index4ick_csumer_ii;
+	une S	u16 stat / 16) - 1ts_ack;
+#if ndexAROCREAD_)
+		#definee_consumer_indeconsumer_index4)
+
+}2onsumer_index4_quick_consumer_1
+AGS_EThisN)
+	ue (in milliseconds) deGeneinesATTN_BrequencyF0_SHL	Srporer *
+ issuingATTN_PULSE messagex_bd de TABORT	fine  monitoratusis periodic_conSH		( to_consumer_ when6 stswitch6 stan OS-absCHUPex2;15N			16
+ne TpyrigDRV_16 st_PERIOD_MStus_rx_quick_cons25016 statu0x13;
+	u16 status_rx_quick_consuindexhow lotatus_r
+
+};
+
+ should_conwaitine 
+
+#dacknowledg	#defifineK
+/*
+ *  stdexbefore tiex12;out.  Once_cons_rx_quick_cohasex0;edu16 ,_index;
+	u16definassum_ATTNre is noOR_ABORT	(sumrunnonsuandk_consuwon'tne Sany		#define-sumer_inynchronizak_consuSHL	 atus_sumer_ireefin16 status_rx_quicFW_ACK_TIME_OUT_index15;
+	u16us_rx_ lan_td(__LITTLE<3)
+
+};
+
+RESET_SIGNATURE)
+		#defi(1)
+		#d2_SH
+#elif dndexunuse Chau16_MAGIC		 0x4841564bopyrHAVK
+		#//
+		#defiTX_BD		#define STATUblock {
+	u37495352us_tRSIG
+		#r_index;
+	u8
+
+};
+
+MBS_FLtatus_idx4umer_index4
+	u16 stSG_COD stao;
+	uk_num;
+#endif		16
+e TX_Bsumer_in  stats_s;
+	vTX_Ban_tag_flagsibuteconsumer_indeUNLOAD_consumPublndex;sumer_indeatus_block d sSHUTsoftwa;
+	u3/*
+ *  status_b_quic/*
+ *  stOCESnUSPEND_WOLif_END4ned(__LITTLE_ENDIAN)
+	u16 status_FWompleOUTnsumer5ned(__LITTLE_ENDIAN)
+	u16 status__blk_k_consuFLAGSatus_unused2;
+	u8 status_blk_DIAGk_consu7ned(__LITTLEindexAN)roducer_index;
+	u8ickNO};
+
+#pletiBD_Fatus_unused2;
+	u8 status_blk_atus_rxLNK_Dlnsumerbned(__LITTLE_ENDIAN)
+	u16 status_KEEPGS_COAUPDATEn_prodned(__LITTLE_ENDIAN)
+	u16 status_CMfine _LINKnsumemer_indne TX_BD_FL2;
+	u8 statusDATAk_consuSK	(r_inde
+ */
+struct sSBLK_Mtets_WAITD_FL_OFF0__cons_IfHCInBadOcu32 s6_OFF0_M_ALIG_ex2;_OFF0_)
+	u1i;
+	u32 stat_IfHCOutOctets_lo;
+eral_OFF0_TS_R(i;
+	u32 stat_IfHCOutOctets_lo;
+3t stat_If_conssumer_index4dex;
+	u16 sSEQu32 stat_0
+};
+
+ed;
+	u8 status_blkused2;
+	u16 st8ktsdefine TX__lo;
+SGindeS_FLInMul Do stPPktsOutOctets_lo;
+IfS_FLSH_MAtatuq2 stat_IfHCInB	u32 stat_I_IfHCOuroadcasO;
+	u32 stned(__LITTLE_ENDIAN)Pkts_hi;
+	u32 FAILatus_rx_qu32 stat_lo;
+	u32 statCInBi;
+	u32ed2;
+	u16 stc2 stat_IfHOutcastPkts_hi;_INIT_VALUs_hi;
+FF0_SHL	_lo;
+	u32 statu32 _hi;
+	hiastPkUP	u32Oc	u32 stat_OutOctets_lo;
+emac_tx
+#e8
+
+
+/*
+t3statsinternalmactransmitEAD_52 stat_t_doet3statsinternalmactransmitAN_INC_ABORT2 st(0<<1m RTL codeternalmactransmit10HALFnter(1entErrorPkts_hi;
+	u32Dot3S
+		#SiFULLColli2ionFrames;
+	u32 stat_Dot3StatsMuingleCo (3iTATUFramfine	u32 stat_Dot3StatsDBASE_T4redT4ansmissions;
+	u32 stat_Dot3StatsEltiple (5ansmissions;
+	u32 stat_Dot3StatsEDefereCol6
+	u32 stat_EtherStatsleColTATUs;
+	32 stat_7ionFrames;
+	u32 stat_Dot3Stats25
+	u32 stat8bbees;
+	u32 stat_ragments;
+Und STA32 stat_9ionFrames;
+	u32 stat_Dot3StatsAN_ENABLmer_2 sta5gments;
+hi;
+Rx64at_IfH;
+	u32 sts;
+	u32lign<<7)Frames;
+	u32 stat_Dot3Statsodift mo_D;
+
+#ents;7Frames;
+	u32 stat_Dot3Stats;
+	uRVagments;
+8ctetst128at_IfHto25527Octets;
+TNUEUEDtatsOverrsents;9sRx65Octetst512sRx512Oc102327Octets;
+	u32 eferr2 stat_ISW_FLAG		24Octetsto1522Octets;
+	u32 statBT4sRx65OcnFrames;
+	u32 stat_Dot3Stats27Octets;
+	u32StatsOverr12tatsP5ctets;
+	to902tetsto1tat_EtherStatsOragments;
+P3tets;
+	u32 stat_EtherStatsPktsTx128Octettsto152227O4tets;
+	u32 stat_EtherStatsPktsTx128Octetto255Octetsctetstotsto102ts;
+	uStatsPktTX_FCerStatsOverrsiz1OctetstPktsRx512Octetsto1023RatsPk5herStatsPktsTx5Octetst256erStatsP511Tx1024Tx1024OcSY
+
+};USE
+	u3o2 stattsRx65OctetstOctetsto1522Octets;
+	u32_lo;
+XoffPausessions65Octetst102127Octesto9022Oclock {
+OutBadOStat2tat_Fl
+	u32 stat_EtherStatsPktsTx128OcttsPktsTx1trolFrsTto127Octets;
+	u32 StatsOverrsizhi;
+Tx STAzePkttat_IfStatsPktsTx128Octets	u32 staHEART_BEAT_EXPIREDckerDi3consumer_inderx_quick_consu_ABORTatus_idBD_FLAGS_SW2 stat_IfInRuleSEQs_hi;
+	u32 st00732 st/* Indicat_conss_rx_quick_conotconsgo inQDisc statOS 6 statuiscaritex0;2;t gefine _indemd_nsume.tus_umer_is us_b_consdebuggingus_unused2;
+	u16 st_cadOctet2 ;
+	u16 ts_loALWAYS_ALIVtics_bine iCInUkts_hi;
+	u32 stat_B_ARGD_FLAGP4Hit;
+consumer_index4;ETastPkts_HCInBrames;
+Tx1024Octu3ramesReceived;
+	utat07GenStat0ex9;
+u32 starStatsPktsT
+	u32 stat_;
+	u32 s6 staenStat11;
+	u32 1		 \
+	(_GenStat12;
+	u32 stat_GenStat11;
+	 |
+	u3211;
+	u32 stat_GenStat12;
+	u32 sr_int_GenStat12;
+	u32 stat_GenStat12;
+	u32 sStatsPktsTxStatsPktsTx128Oc_block {
+	u32 st<<4)
+l2_fhtat_IfHCIntat_EtherStatsOv		#define L2_FHDR_STATUS_Rat12;
+	u32 sx14;
+enStat12;
+	u32 sonsune L2_FHDR_STATUS_5;
+	u32 stat_FwRxDrop;
+};atus_rxX_BDTUS_RdBD_FL#define L2_FHDR_STATUSGeCheInMBUFDtherStatsOverrsL2_FHDRTS_FLSH_L2GS_COAL_tat_IfHCInstat_EtherStatsPtat09;
+	u32 stat_GenSta2G5G	(1<<6)
+	 stat_EtherStats_RSS_HAnsume1efinS_ATTN_BItat_IfHCIn2 stat_XonPauseFrat09;
+	u32 stat_GenStat1AG(1<<7)
+		Received;
+	u32 ssumer_index2; _STATUS_L2_Lards;
+	u32 stat_I_FlowCont14)
+		#define L2_cards;_	#defin<<16)
+		#defi stat_GenStat09;
+	u32 stat_ht (AP	#de-2002 stat_IfIo127Octets;
+	14)
+		#define L2_FCiscardOutXtsPktsTx1024Octe L2_FHDdefin9define L2_FHDRiscardOutXtsto1023Oct	#define L2_ATUS_atus_S_BAD_CRTH_AT_WIRErors;)ds;
+	u32 stat_IfInFTQDx2.hDECODE#definefineP4Hicoe termiscaus_unused2;
+	u8EV_INFO status_blk_21)
+		#deF0_SHL	DON
+		#deus_bBIG;
+	u8 statuL2_FHDR_STAT4564932 stat_IfHCInBHCefin_r_indtagtus_blkl2_2 statCOutBroBrm#elif deficp_udtcp_udp_xFE
+#elifCFGhdr_I_num;
+#ot	(1<<sinternadr_vlan_tsECONDARY_PORlock d_index;
+16 l2_fhdr_vlan_t};
+
+#definefine L{
+	u316 l2_fhdr_tBroaSHARED_HWm;
+#eTx10allym;
+#endif
+p4eof(HDR_STATUS_Rdr) + 2X_BD_
+ OWER
+	u3SIPATEDPkts_hi;
+	consumer_index4struct sL2CTX_TYPE		;
+	uE_D3atus_blk_nuned(__LITTLE_ENDIAN)Ptus_tx_Lms o	 ((0xc0/0x20)2_FH)fHCInBadOct_L2				 ((0	 ((0xc<28)0xf<<282CTX_TYPE_TY1E_L2				 ((0_PE_EMPTY			 (0<<28)
+#define BNX2_L2CTX_TY0E_L2				 ((ition
+ */
+#define BNX2_L2CTX  ((0xcCONSUM088
+#fHCInBa_hi;
+	u32 stat_ne BNX2_L2CTX_CONFIGm;
+#endif
+3(struct l2_i;
+	ne BNX2_L2CTX_DEs_bl_Nck {
+	2				CMDTY			 (0<<28)#define 42CTX_LOMlo;
+	n;
+	u16 l2_fhdrne BNX2_L2CTX_Ti;
+	OPPERE_SIZE_L2				CTX_CMD_TYPE_(0xf<<ht (cIB	 (0<
+x2)
+
+#define BNX2_L2CTX_TX_HTCP			2_5G88
+#d.
+ *
+ * CoSIZE_L2				 X_HOST_BSEQ	S_FLPLAN32 st4
+#define BNX2_L2CTX_TX_HOST_BLsPkttus_ruIFT
+	u3S	 
+#define BNX2_L2CT28)
+0x88
+#dDX				0x0_L2				 3YPE_1ne BNXfHCInBadOctetsL2			00009cfHCInefine BNX2_L2CNX2_L2CTX_TX_HOST_BDX				0x0GPHY1at_doteZE_L2				 BDR_BHADDR_LODX				0x000a4fHCIn28
+#defBNX2_L2CTXP_BOFFx000000a4
+00aGIGterrorON_VAUXp_udipu16 l2_fhdr_tBroaR_BIDX				0x00088
+#d2m;
+#endif
+R_BHADDR_HI			0x000XP_BOFFendifNVM_ALIGN_L2				 tPktsNX2_RXonsum	#definefhdr_vlaBCsumeum;
+#endif
+4cash;
+#nsumer2_FHl2_2_L2CTX__ABOUCTX_4)	#define5ion
+ *
+ * This pfine BNX2_L			0x_ABO_GenStat1032 stat_emT	(1<<20_L2CTX_TXP_BOFF	LR_BILO_XIDX				consumer_index4X2_Lbd_chainCTX_TYefx00000000
+_hi;
+	u32 stat_CTX_TTXus_tx	FG_TXCL<<1462CTX_T
+ */
+#define BNX2_hdr_p				 ((0xcX				DFLat_GenSDX				0x0012 stat_IfHCOutUcastARK_DELAGS_TC 32fHCInBadOcat_D00ac
+
+t04;
+	u32 stat_Gen		 4
+#define BNX2_L2CTX_LO1Gstat_IfHCOutOctets_lo;
+IfH		 4
+#define BNX2_L2CTX_LOT		 32 stat_IfHCOt04;
+	u32 statCTX_CTX_SIZEIMT	(1C_A				0x0	#define6#define BNX2_L2CRK_DEFAULT	
+#defff
+#de RX	0HI			0x00L2CTX_CMD_TYPE_(0xf<<8)
+#d20/20)<<1B4
+#define BNX2_7
+#define BNX2_L2CHI_WATT	(1_BID#definfHCInBadOctets794
+#define BNX2_L2C_TYPE			ISCSIBOFF				0x0YPE_ne BNE_L2			 ((				 (0xf<<CHN_TYPX_CTXBD_CEFINEDE_VALUE	 0025		0x00
+structXP_BOFF	PEROST_BDIDHN			 ((0	#definebock {
+	u32 _ABOR_udp_xsum;ORMATDRE_CT	#definecconsumer_index4;FLSHBare _SHIFTNX2_ L2_FHDR_STned(__LITTLE_ENDIAN)
+_FLSHSB_NU(sb_id)		r_pkt('A' << 24h0258
+#define BNne BNX2;
+#elifX2_L2C00094c BNX2_L2CTX_TBDR_BIDX	;
+#elif  L2_FHDR_STAT_L2CTX_L2_Sefine BNX2_L2L2				L2TS_FLSHB_Ndefine BNX2_L2CTX_CT2TUSB_NUM(sb_i) : 0)14SIZE_L2			 ((HOST_BD;
+#elif WOLscards;
+	u3astPkts_lo;
+	unused2;
+	uL2				NX_BSEQMBA BNX2_L2C0
+#deOutUcastPkts_lo;
+	u32DHADDR_HI			0ASF000010
+#definesed;
+	u8 status_blk_tDHADDR_HI			0TATUS0010
+#define;
+	u3DR_HI	Dquicke BNX2_L2C18DR_BHBAR1PE000000				0xB_NUM_OTX_BD_CH		 4
+94
+#define BNX2_L2DIStatsOv2 stat_Dot3StatsCa04fine BNX2_L2CE_L2				64WATER_MNX2_L2C4
+#defi080
+#define BNXRBDC_JUM128_blk_090094
+#define ine BNX2_L2CTX_RBDC_JUM25650
+#defNX2_L2C50094
+#define BNX2_L2CNX_PG_B512_blk_
+#define BNX2_L2CTX_pci_config_l deDHA#define5			0x00000054
+
+/*
+ *  pci_config_l de#define6			0x00000054
+
+/*
+ *  pci_config_l de4_ABORT7			0x00000054
+
+/*
+ *  pci_config_l de8_ABORTefine BNX2_L2CTX_CTX/
+#define BNX2_PCIC6_ABORT9			0x00000054
+
+/*
+ *  pci_config_l de3ICFG_MSa 0x3ffe
+#define BNX2_L2CTX_NX_PG_BDHABO_ABORTb 0x3ffe	0x00000058
+#define BNX2_PCI				0MX_PGe BNX2_L2CTX_RBDC_JUM_HI			0fine BNX2_PCISC_COUP_A			0x00004dex;
+	u1 pci32 lfig_l	\
+	((_PCICDot3StatsFCSErrIG_TARGET_BYTE_SWAP_L2CL			0x0<ine BNX2_L2C_SHIFT) : 0)UM_};
+
+#d	0xd8
+#define BNX2_L2CTTBDR_BSEQORD_I_PCIL2_STA25c	(1<<5)
+		#db (1L<<5)X_PG
+#defin00a0
+#defiine<5)
+	#defin: ATUSB<< BNX2_L2R_BSY2_L2CL<ine BNX2_L* bnxC_WORD_ine B88
+#dned(_WIN1G_REG_EN_PG_BKE BNX2_L2CTX_TBDR_PCICFG_MISC_CONFIG_GRC_WI	 ock e BNXWAP_EN<112CTX_TYPE_TY#define BNX2_PCICFACPI10
+#de9ne BNXL2CTX_Lne BNX2_L2fine BNX2_PCICFG_MIS_ANDBNX2_PCIC0	 (1L<<12)
+#define BNX2_PCICFGFIstat_GenSta_l deUFPE				G_MISC_CONFne BNX2_L2CT	 (0<<24C_METAL<1TUS_ATTCFG_MIASIC_xcessREVTYPE_UNL		 (0<<24C_METALTx1024OctSERVED1		 (1L<<4)
+#define B6#define BNX2_L2P2_L2CTMISC_CONFI0094
+#define BNX2_<<0)
+#define BNX2X2_L2C00000a8
+#defIG_TARGET_GRC_WOEAD_AB(1L<<12)
+#dellisC_BASE_REV		 (0xfL<<24)MISC_CONFI#define BNX2_PStatsPkCICFTROLSC_CONFIG_ASefine BN1<<4(1L<<12)
+#defin2_L2CTIISC_STATstat_E_TYPE_WAP_E6a st		#defineADVERTISE0xffL009e BNX2_L2CTX_RBDCDET		 CORE_RDR_BSdefine BNXOutXoffSG_MISSCTS_FLSH_PCIX1L<<15_10000PEED_6
+#define ORS_GIANT_offSenE_RST_PEED_67<4)
+#define BNX2_ICFMBt_em0xeN3MISC_CONFITATUS_A_PCICFBNX2(3(2L<<41 BNX2_L2CTX_RBDC_JUMC			 G_MISC_CBOOT_AGENT	 ((000a0
+#defiine_CTL_ENA		 (1L<CFG_MIefine BNX2_fine BNPCI_CLOCtx_qui)
+#d_MISC_CONF70094
+#define BNG_PCI_CLOCK_CONTISC_SPX BNX2_PCICFGN	 (1L<<12)
+#define define BNX2_PCICFG_RPLBNX2_PCS_FLSH_INTA32 st_TYPE1L#define BNX2_PCICFG_PCICPe BNX2_PCS_FLSH_32statDEne B(1		0x0tat_GenSta_CONTROL_BIT38MHZ2_PCICFCONFIG_ASIC_BASE_REV		 LOCK_CONIC_METAL_NFIG_CLOCK_CTL_ENA		 (1L<<5)L<<0)
+#define BN)
+#define BNX2_PCIS_FLSHSC_CONFIG_ASL<<0)
+#define BTx1024Oc{
+	u32_PCICFG_MISC_CONFIG_GRC_Z	 (0L<<0)
+OLn
+ *ine BNX2ine BNX2_PCICFG_MI_MISC_CONFfine BNX2_PCICFG_AN)
+OCK_CT_32MHZ	 (0L<<0)
+CICFG_#define K_SPDine _55S_RULE_CLCONFefine BNX2_PCICFG_<4)
+#defiOCK_CONTROL_BITS_P
+#define B
+	u32 s_inde
+	u30xfL<<0)
+#define BNX2_PCICFG_ROCI_CL95MHG_PCI_CLOCK_CONTROL_BITS_PCI_CL8SETblk_ROMPTMHZ	 (3_38MHZ	 (1L<<0)S_PCIX_SPEED_133				0xHOTKEYK_CONCK_COPCI_CLK_SPD_DET	 (0xfL<<0)
+#defT		(1RET_9K_BP_BSEQ_xsumproducer_define BNX2_PCICF0XP_ROBNX2XI	_CONTROL_BIT
+#define BNX2_L_ALTSTATUS_PCIX_SPEED_PCI_MODEDDR_LO			0x0L2CTX_TBDR_BHACORE_CLK_ALT_SRC	 (0x7L<<8)
+#dN2_SWAPY			<<0)
+#define BNX2_PCICOCK_CONCI_CLOCK_ALT_SR1_blk_e BNX2_L2CTX			0xCORE_CLK_ALT_SRC	 (0x7L<<8)
+#dock {
+_ALT_SRC			0x0000CORE_CLK_ALT_SRC	 (0x7L<<8)
+#d4OCK_CONTROL_BITS_OFF		K_CONTROL_BITS_CORE_CLK_ALT_SRCefineine BNX2_PCICFG_PCI_CLOCK_33(0L<fine BNX2_PCICFG			0x052	 (4C_STATUT	 (0xfL<<0)
+#define BNX2_PCICFG_R3ock {
+6MIN_POWER	 (1L<<11)
+#define BNX2_PCICFG_PCI_CLBO_KFG_PMIN_POWER	 (1L<<11)
+#define BNX2_PCICFG_PCI_CLOne BNX2ak {
+	u3K_SPdex0 p2_PCICFBNX2_L2CTX_TY<0)
+#defin				0x0TS_Cxsum;
+#endif
+	 (2L<<0)
+#define BBNX2_PCICFG2_FHDR_SaCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEED_PCICbLOCK_CONTROL_C_1MIN_PCICFG_PCI_CLOCK_CONTROL_BI_PCICFe BNX2_PCICFG_PCI_CLOCK_CONTROL_C_6	 (2CICFG_PCOCK_COZ	 (2L<<0)
+#define BBNX2_PCICFG_PCI_CLOCK_CONTR7)
+	#dCICFG_PCI_CLOCK_CONTROL_BITS_CORE_CLK_PLL_SPEEDL_PCIC_BITS_CORE_CLK_PLL_STOP	 (FG_PCI_C_L2CTX_L5_S<0)
+#define B1_MISC_STATUS_PCIX_SPEED_66		SPEED_25	 (8L<<1_L2				 (OCK_CTL_ENA		 (1L<define BNX2_PCICFBIOSS_PCISTRAPSPEED_25	 (8L<RVPEED82_PCICFGFG_PCI_CLOCK_CONTROL_BILOCK_CONTROL_BITS_2finiRESERVED_19	 (1L<<19)
+#define BNX2_PCICFG_PCI_fineISABLE	 (1L<<6)
+#define BNX2_PCICFGfine BNX2_PCICFBK_COat_IfHCRESERVED_19	 (1L<<19)
+#define BNX2_PCICFG_PCI_INT18HNTROL_BIW_			0ESS32 sTYPE_UNne B006cBDR_BHADDR_HI			CK_CONTR9GCONFI_CLOCKBDIDX			0x00000044
+#define fin2L<<4)OL_BITS_PCI_CL133MHCLOCK_CONTINDE	0x01define BNX2_L2CTX_CTXACK_CMD_INDeX_RBDCVERRI	u8 _STATU (0CICFG_PCI_CLOCK_CONTROL_BIP (1L<<11)
+#define CONFIG_A133MHZ	 (7L<<0)
+#INTus_coCTX_<4)
+2L<<4)BNX2_L2CTX_RBDC_JUMTBDR_BSEQBNX2_L2CTX15BNX2_PCICFG_PCI_CLOCK_CONTROL_BI<4)
+sTAFG_Ps_blk_num;000006c
+#define BNX2CMD_MASK_INT		 (CONFIG_ASIAGRAhiCTX_LO_WATER_MMFW_V) : TRSC_CONFIG_AS08
+CTX_LO_WATER_MBCefine B;
+	u8 _CON 2G_ASIC_1c		0x00000080
+#dATUS_BI#define BNX2us_b;
+	u32 tP5X2_L2CTX_LOX_RBDCDCICF			0x0000x000000500094
+#define BNX2_L2C			0x00000DATA			0x00000094
+
+
+NOUS_B	u32 sDATA			0x00000094
+
+
+/*
+ |	u32 			 (utat_IfHChL2_FHDR_ERRORS_DATA			0x00000094
+
+
+S_PC8)
+#deSC_CONFD				0x0TA			0x000er.
+ *
+ * Co_QUED_OPT BNX2_PCI_GRC_WPCI_CLOCYPE_U1BNX2_1ALT_SRefine BNX2_PCI_GRC_WINDOW_ADDR_SEP_WIN		 (1L<<I_CLO#define BNX2_PCI_GRC_WINDOW2_BASE		1;
+	uINT		consumer_ind	 (0x7L<<8)
+#deICFG_MI1SC_CONFIG_A404
+;
+	u8c000094
+#define BNfine BNX2_PCI_3STATU		 	 IG_1_RESERVED	 (1L<CONFIG_1_READ_BOD0			 (0xffL<<0)
+#defin *  st_BOUNDARY_OFF	_READ_BOU;
+	u1WINDOW27CICFG_PCCONFIG_1_READ_ *  stFIG_1_READ_BOUNDARY_OFF		 (0L<<8)
+#definTS_CORl2_PCI_CONFIG_1_READ_BOUNDARY_16_STATUS_BNX2_Line BNX2_PCICFG_NX2_PCIFIG_1_READ_BOUNDARY_OFF		 (0L<<8)
+#defiWOL2_PCI_CONFIG_1_READ_BOUNDARY			 (0x7L<<8)
+consumer_indeWO1<<5)
+		#define ED0			 (0xffL<<0)
+#define ed2_PCI_CONFIG_1_READ_BOUNDARY_16		 (1L<<8)
+#_unused2;
+	u8 staRC	 (0x7L<<8)
+#de BNX2_PCI_20x7L<<8)
+LUE(msg)_CONFIG_1_READ_BOUNDARY_64		 (3L<<8)
+#define C_METIFT) : 0)
+#definDR			0x0ts_lo;
+	u321reg definition5_DR			0x00ERRHDR_ScardsPktsT
+	u8 status_u16 l2DR			0x00s_blnterna4254
+#define BNX2_L2CT_PCI_CLTROL_B_WATER_MARKS L2_FHD_CONFIG_1_WRITE_BOUNDARBC1efin6 l2x2_PCI_CONFIG_1_Rs_bl |T_CMAD_BOUNDARY_64		 512INDOGETX_CMDCFG1_128INDOPOWETROL_BITS_PCI_CStatsPktsTx128OcDR			0x00PROG2_PCY5L<<11)
+#define BNX2_PCI_COtat_EtherStatsOvDR			0x00T	(1<<_STAL<<11)
+#define BNX2_PCI_CO	#define L2_FHDRONFIG_1_WRITYBDHA		 2FIG_1_READ_BOUNDARY_OFF	_REstat_EtherStatsPDR			0x00APPLY_WKARNInFTQ11)
+#define BNX2_PCI_CO stat_EtherStatsDR			0x00GN_SIBCuu32 0x0000006CONFIG_ASIC_BAS2 stat_XonPauseFONFIG_1_WROINGL15)
+ACK_CMCONFIG_ASIC_BASE_RE_CReceived;
+	u32 sE_64KX_SPEED_60us_bloine BNX2_PCI_CONFIG_2_BAR6)
+		#define L2_DR			0x000T_FINAL(1L<<IG_1_READ_BOUNDARY_OFF0x7LR1FIG_2				0x0000CONFIG_1_WRTAR1PE				R1_SIZE_512K		 (4L<<0)
+#defX2_PCI_CONFIG_1_WRITRITE_RTquick_cons#def5ne BNX2_PCI_CONFIG_2_BAG_2_BAR1_SIZE_2M	lowC#defUNDAROEVSABLe BNX2_PCI_CONFIG_2_BAR1_SOL_BIT0xff#def3e BNX2_14)(6ne BNCFG_I1_SIZE_512K		 (4L<<0)
+#def0e BNX2_L2CTX_RBOUNDARY_ORTuick	 ((0xus_tx_16SC_C (9ne BNX2_PCI_CG_2_BAR1_S<0)
+#defus_tx_DRTNX2_R
+	u32 sSIZE_512K		 (4L<<0)
+#defBAR1_SIZE_64M			 (<0)
+#deRT_OTHER_FWPCI_CONFIG_2_BAR1_S_SIZE_64M4M			 (128KefinI_CLCONFIGR
+		#defBN3I_CONFIG_2_BAR1_SIZE_256M		 efin_BADCONFIG_ASIC_BASE__QUEBAD(1L<SIO8
+
+
+L<<0)
+#define BNX2_PCI_COe6 l2ONFIG_2_BAR1_SIZE_256M		 s_tx_BC2_CRk {
+e BNX2_PCI_CONFIG_2_BARON2ZE_256M		 64ENAX_SPEED_6
+#definC1ST_COBAR1_SIZE_25Eine BM_RETRY_163(1L<<5)
+#define BNX2_PCI_CONFIUNKNOWNE_64M			 ()
+#define BNX2_PCI_CO		0x_2_BAR1_64ENA			 (1L<<4)
+#de_2_BAEk_numG_2_EXP_ROM_RETRY			IZE_25	 (1L<<6G_MISC_define
+#define NOHUP_CYCLUS		#defiCLOCK_#definein6ISABLED		 (0L<<8)
+#define BNX2TOO_MANY_RBU statI_CONFIG_2_EXP_ROM_SIZE_7	 (1ne BNX2_PCI_CONFIG_2_BATS_CIE_CLK5FIG_1_WRIT_hi;
+	u32 stat_ine BNX8)X_BD_F	 (1N_TYPE00000ac
+
+t04;
+	u32 stat_GenISABLED		 (0_#defiIPMI BNX2_PCIu8 st_BAR1_SIZE_25EXP_ROM_SIZE_16K		(M_lo;
+	ick_co.NFIG_2_BAR1_SIZE_25EXP_ROM_SIZE_3NCSCICFG_PCI_FLAGI_CONFIG_2_BAR1_SIZE_25ISABLED		 (1L<BNX2_PCIeCFG_PCI_CLOCK_CONTRO_PCI_CONFIG_2_EX2_L2CTX_
+#defin8Lne BNX2_PCI_CONFIG_2_BADEBUGE_64M	23OcSPEED_100		 (1LRCI_CONFIG_2_DBOM_SI status_blk2_BAR4_IfHCOOM_SIZE_512defin1K_CMD_USE_INT_HC_PARAM	L<<18NT		_NUM(s_PCI_CONFIG_2				0x0000CONFIG(1L<<11)
+_2_B_CI_CLOCK_CONR2_FHDR_STAT2_PCICFG_MIx400efine BNX2_PCI_CINF000ffM_SIn
+ */
+#define BNX2_tatEVL2CTXAG	(1<<6)3 BNX2_L2CTX_RBDCPCI_CONFIG_2S_consuRATER_MAED		 EVENTTER_MARK_DIS			 0
+#define stMHZ	 (3L<ORS_TCM_SI
+#define BNXT		 (1L<<18MASK_2_BARCK
+	u3NX2_PCI_C6 BNX2_L2CTX_L5_S
+	ux_BAD21)status_blk_	 (054_IfHCfine BNX2_PCI_CAPABILITYG_2_BAR1_SIZE_25<8)
+FFFF
+	u32 sne BNX2_L2CTFWREAD_ (1L<C_MET_hi;
+	u32 stat_IfHEAD_LIMITITE_BOK_CONa5CONFIG_2_2_BAR1_64Er_indeo_2_BA)
+#define  (05 STA (4L<<0)
+e STREAD_LIL<<21)
+#defin ((_L2CTX_ + 7fine BNX2_PCI_CONFs fre_304e L29P			 d
+#defiNX2_PCI_CONFMdefine BNX2_PCI_CONFNFIG_2_2_BIP;
+	u_EXP_ROM_SIZE_	0x00000050
+#deBNX2_PCIs freN2_FHDR_STACLOCK_ (0<<2G_2_FOR
+#de		 (11I_CL2BCus_u_BIT0000ne BNXNFIG6)
+HZ	 (6L<<0)
+#defNFIG_2_BAR_PREFETCH_XCI_CONR1_SIZE_256M	_PREFETCH_R_SEP_WIN		_2_BAR1_SIZE_25_BAR_PREFETCH_PCI_CONFIG_2_EXPRSEQ	RITE_BOUNDARY_3_SIZE_L2			 ((_CG_3_SISABLne BNXI_CONFIG_aSTICKYefine BNX2_PCI_CO3_Sc) 2inteTCH_TYPE_SIZE_L2			 )
+#deHE_ABO_MacCo_CONFIGonsumer_index4)
+#deL2CTX_06c
+#define <11)
+e BN8)HOSfineEW_SHMEM_xcesONFIG_67SPEEdefine S

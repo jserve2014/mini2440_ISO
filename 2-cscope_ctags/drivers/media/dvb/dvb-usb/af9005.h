@@ -1,0 +1,3349 @@
+/* Common header-file of the Linux driver for the Afatech 9005
+ * USB1.1 DVB-T receiver.
+ *
+ * Copyright (C) 2007 Luca Olivetti (luca@ventoso.org)
+ *
+ * Thanks to Afatech who kindly provided information.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * see Documentation/dvb/README.dvb-usb for more information
+ */
+#ifndef _DVB_USB_AF9005_H_
+#define _DVB_USB_AF9005_H_
+
+#define DVB_USB_LOG_PREFIX "af9005"
+#include "dvb-usb.h"
+
+extern int dvb_usb_af9005_debug;
+#define deb_info(args...) dprintk(dvb_usb_af9005_debug,0x01,args)
+#define deb_xfer(args...) dprintk(dvb_usb_af9005_debug,0x02,args)
+#define deb_rc(args...)   dprintk(dvb_usb_af9005_debug,0x04,args)
+#define deb_reg(args...)  dprintk(dvb_usb_af9005_debug,0x08,args)
+#define deb_i2c(args...)  dprintk(dvb_usb_af9005_debug,0x10,args)
+#define deb_fw(args...)   dprintk(dvb_usb_af9005_debug,0x20,args)
+
+extern int dvb_usb_af9005_led;
+
+/* firmware */
+#define FW_BULKOUT_SIZE 250
+enum {
+	FW_CONFIG,
+	FW_CONFIRM,
+	FW_BOOT
+};
+
+/* af9005 commands */
+#define AF9005_OFDM_REG  0
+#define AF9005_TUNER_REG 1
+
+#define AF9005_REGISTER_RW     0x20
+#define AF9005_REGISTER_RW_ACK 0x21
+
+#define AF9005_CMD_OFDM_REG 0x00
+#define AF9005_CMD_TUNER    0x80
+#define AF9005_CMD_BURST    0x02
+#define AF9005_CMD_AUTOINC  0x04
+#define AF9005_CMD_READ     0x00
+#define AF9005_CMD_WRITE    0x01
+
+/* af9005 registers */
+#define APO_REG_RESET					0xAEFF
+
+#define APO_REG_I2C_RW_CAN_TUNER            0xF000
+#define APO_REG_I2C_RW_SILICON_TUNER        0xF001
+#define APO_REG_GPIO_RW_SILICON_TUNER       0xFFFE	/*  also for OFSM */
+#define APO_REG_TRIGGER_OFSM                0xFFFF	/*  also for OFSM */
+
+/***********************************************************************
+ *  Apollo Registers from VLSI					       *
+ ***********************************************************************/
+#define xd_p_reg_aagc_inverted_agc	0xA000
+#define	reg_aagc_inverted_agc_pos 0
+#define	reg_aagc_inverted_agc_len 1
+#define	reg_aagc_inverted_agc_lsb 0
+#define xd_p_reg_aagc_sign_only	0xA000
+#define	reg_aagc_sign_only_pos 1
+#define	reg_aagc_sign_only_len 1
+#define	reg_aagc_sign_only_lsb 0
+#define xd_p_reg_aagc_slow_adc_en	0xA000
+#define	reg_aagc_slow_adc_en_pos 2
+#define	reg_aagc_slow_adc_en_len 1
+#define	reg_aagc_slow_adc_en_lsb 0
+#define xd_p_reg_aagc_slow_adc_scale	0xA000
+#define	reg_aagc_slow_adc_scale_pos 3
+#define	reg_aagc_slow_adc_scale_len 5
+#define	reg_aagc_slow_adc_scale_lsb 0
+#define xd_p_reg_aagc_check_slow_adc_lock	0xA001
+#define	reg_aagc_check_slow_adc_lock_pos 0
+#define	reg_aagc_check_slow_adc_lock_len 1
+#define	reg_aagc_check_slow_adc_lock_lsb 0
+#define xd_p_reg_aagc_init_control	0xA001
+#define	reg_aagc_init_control_pos 1
+#define	reg_aagc_init_control_len 1
+#define	reg_aagc_init_control_lsb 0
+#define xd_p_reg_aagc_total_gain_sel	0xA001
+#define	reg_aagc_total_gain_sel_pos 2
+#define	reg_aagc_total_gain_sel_len 2
+#define	reg_aagc_total_gain_sel_lsb 0
+#define xd_p_reg_aagc_out_inv	0xA001
+#define	reg_aagc_out_inv_pos 5
+#define	reg_aagc_out_inv_len 1
+#define	reg_aagc_out_inv_lsb 0
+#define xd_p_reg_aagc_int_en	0xA001
+#define	reg_aagc_int_en_pos 6
+#define	reg_aagc_int_en_len 1
+#define	reg_aagc_int_en_lsb 0
+#define xd_p_reg_aagc_lock_change_flag	0xA001
+#define	reg_aagc_lock_change_flag_pos 7
+#define	reg_aagc_lock_change_flag_len 1
+#define	reg_aagc_lock_change_flag_lsb 0
+#define xd_p_reg_aagc_rf_loop_bw_scale_acquire	0xA002
+#define	reg_aagc_rf_loop_bw_scale_acquire_pos 0
+#define	reg_aagc_rf_loop_bw_scale_acquire_len 5
+#define	reg_aagc_rf_loop_bw_scale_acquire_lsb 0
+#define xd_p_reg_aagc_rf_loop_bw_scale_track	0xA003
+#define	reg_aagc_rf_loop_bw_scale_track_pos 0
+#define	reg_aagc_rf_loop_bw_scale_track_len 5
+#define	reg_aagc_rf_loop_bw_scale_track_lsb 0
+#define xd_p_reg_aagc_if_loop_bw_scale_acquire	0xA004
+#define	reg_aagc_if_loop_bw_scale_acquire_pos 0
+#define	reg_aagc_if_loop_bw_scale_acquire_len 5
+#define	reg_aagc_if_loop_bw_scale_acquire_lsb 0
+#define xd_p_reg_aagc_if_loop_bw_scale_track	0xA005
+#define	reg_aagc_if_loop_bw_scale_track_pos 0
+#define	reg_aagc_if_loop_bw_scale_track_len 5
+#define	reg_aagc_if_loop_bw_scale_track_lsb 0
+#define xd_p_reg_aagc_max_rf_agc_7_0	0xA006
+#define	reg_aagc_max_rf_agc_7_0_pos 0
+#define	reg_aagc_max_rf_agc_7_0_len 8
+#define	reg_aagc_max_rf_agc_7_0_lsb 0
+#define xd_p_reg_aagc_max_rf_agc_9_8	0xA007
+#define	reg_aagc_max_rf_agc_9_8_pos 0
+#define	reg_aagc_max_rf_agc_9_8_len 2
+#define	reg_aagc_max_rf_agc_9_8_lsb 8
+#define xd_p_reg_aagc_min_rf_agc_7_0	0xA008
+#define	reg_aagc_min_rf_agc_7_0_pos 0
+#define	reg_aagc_min_rf_agc_7_0_len 8
+#define	reg_aagc_min_rf_agc_7_0_lsb 0
+#define xd_p_reg_aagc_min_rf_agc_9_8	0xA009
+#define	reg_aagc_min_rf_agc_9_8_pos 0
+#define	reg_aagc_min_rf_agc_9_8_len 2
+#define	reg_aagc_min_rf_agc_9_8_lsb 8
+#define xd_p_reg_aagc_max_if_agc_7_0	0xA00A
+#define	reg_aagc_max_if_agc_7_0_pos 0
+#define	reg_aagc_max_if_agc_7_0_len 8
+#define	reg_aagc_max_if_agc_7_0_lsb 0
+#define xd_p_reg_aagc_max_if_agc_9_8	0xA00B
+#define	reg_aagc_max_if_agc_9_8_pos 0
+#define	reg_aagc_max_if_agc_9_8_len 2
+#define	reg_aagc_max_if_agc_9_8_lsb 8
+#define xd_p_reg_aagc_min_if_agc_7_0	0xA00C
+#define	reg_aagc_min_if_agc_7_0_pos 0
+#define	reg_aagc_min_if_agc_7_0_len 8
+#define	reg_aagc_min_if_agc_7_0_lsb 0
+#define xd_p_reg_aagc_min_if_agc_9_8	0xA00D
+#define	reg_aagc_min_if_agc_9_8_pos 0
+#define	reg_aagc_min_if_agc_9_8_len 2
+#define	reg_aagc_min_if_agc_9_8_lsb 8
+#define xd_p_reg_aagc_lock_sample_scale	0xA00E
+#define	reg_aagc_lock_sample_scale_pos 0
+#define	reg_aagc_lock_sample_scale_len 5
+#define	reg_aagc_lock_sample_scale_lsb 0
+#define xd_p_reg_aagc_rf_agc_lock_scale_acquire	0xA00F
+#define	reg_aagc_rf_agc_lock_scale_acquire_pos 0
+#define	reg_aagc_rf_agc_lock_scale_acquire_len 3
+#define	reg_aagc_rf_agc_lock_scale_acquire_lsb 0
+#define xd_p_reg_aagc_rf_agc_lock_scale_track	0xA00F
+#define	reg_aagc_rf_agc_lock_scale_track_pos 3
+#define	reg_aagc_rf_agc_lock_scale_track_len 3
+#define	reg_aagc_rf_agc_lock_scale_track_lsb 0
+#define xd_p_reg_aagc_if_agc_lock_scale_acquire	0xA010
+#define	reg_aagc_if_agc_lock_scale_acquire_pos 0
+#define	reg_aagc_if_agc_lock_scale_acquire_len 3
+#define	reg_aagc_if_agc_lock_scale_acquire_lsb 0
+#define xd_p_reg_aagc_if_agc_lock_scale_track	0xA010
+#define	reg_aagc_if_agc_lock_scale_track_pos 3
+#define	reg_aagc_if_agc_lock_scale_track_len 3
+#define	reg_aagc_if_agc_lock_scale_track_lsb 0
+#define xd_p_reg_aagc_rf_top_numerator_7_0	0xA011
+#define	reg_aagc_rf_top_numerator_7_0_pos 0
+#define	reg_aagc_rf_top_numerator_7_0_len 8
+#define	reg_aagc_rf_top_numerator_7_0_lsb 0
+#define xd_p_reg_aagc_rf_top_numerator_9_8	0xA012
+#define	reg_aagc_rf_top_numerator_9_8_pos 0
+#define	reg_aagc_rf_top_numerator_9_8_len 2
+#define	reg_aagc_rf_top_numerator_9_8_lsb 8
+#define xd_p_reg_aagc_if_top_numerator_7_0	0xA013
+#define	reg_aagc_if_top_numerator_7_0_pos 0
+#define	reg_aagc_if_top_numerator_7_0_len 8
+#define	reg_aagc_if_top_numerator_7_0_lsb 0
+#define xd_p_reg_aagc_if_top_numerator_9_8	0xA014
+#define	reg_aagc_if_top_numerator_9_8_pos 0
+#define	reg_aagc_if_top_numerator_9_8_len 2
+#define	reg_aagc_if_top_numerator_9_8_lsb 8
+#define xd_p_reg_aagc_adc_out_desired_7_0	0xA015
+#define	reg_aagc_adc_out_desired_7_0_pos 0
+#define	reg_aagc_adc_out_desired_7_0_len 8
+#define	reg_aagc_adc_out_desired_7_0_lsb 0
+#define xd_p_reg_aagc_adc_out_desired_8	0xA016
+#define	reg_aagc_adc_out_desired_8_pos 0
+#define	reg_aagc_adc_out_desired_8_len 1
+#define	reg_aagc_adc_out_desired_8_lsb 0
+#define xd_p_reg_aagc_fixed_gain	0xA016
+#define	reg_aagc_fixed_gain_pos 3
+#define	reg_aagc_fixed_gain_len 1
+#define	reg_aagc_fixed_gain_lsb 0
+#define xd_p_reg_aagc_lock_count_th	0xA016
+#define	reg_aagc_lock_count_th_pos 4
+#define	reg_aagc_lock_count_th_len 4
+#define	reg_aagc_lock_count_th_lsb 0
+#define xd_p_reg_aagc_fixed_rf_agc_control_7_0	0xA017
+#define	reg_aagc_fixed_rf_agc_control_7_0_pos 0
+#define	reg_aagc_fixed_rf_agc_control_7_0_len 8
+#define	reg_aagc_fixed_rf_agc_control_7_0_lsb 0
+#define xd_p_reg_aagc_fixed_rf_agc_control_15_8	0xA018
+#define	reg_aagc_fixed_rf_agc_control_15_8_pos 0
+#define	reg_aagc_fixed_rf_agc_control_15_8_len 8
+#define	reg_aagc_fixed_rf_agc_control_15_8_lsb 8
+#define xd_p_reg_aagc_fixed_rf_agc_control_23_16	0xA019
+#define	reg_aagc_fixed_rf_agc_control_23_16_pos 0
+#define	reg_aagc_fixed_rf_agc_control_23_16_len 8
+#define	reg_aagc_fixed_rf_agc_control_23_16_lsb 16
+#define xd_p_reg_aagc_fixed_rf_agc_control_30_24	0xA01A
+#define	reg_aagc_fixed_rf_agc_control_30_24_pos 0
+#define	reg_aagc_fixed_rf_agc_control_30_24_len 7
+#define	reg_aagc_fixed_rf_agc_control_30_24_lsb 24
+#define xd_p_reg_aagc_fixed_if_agc_control_7_0	0xA01B
+#define	reg_aagc_fixed_if_agc_control_7_0_pos 0
+#define	reg_aagc_fixed_if_agc_control_7_0_len 8
+#define	reg_aagc_fixed_if_agc_control_7_0_lsb 0
+#define xd_p_reg_aagc_fixed_if_agc_control_15_8	0xA01C
+#define	reg_aagc_fixed_if_agc_control_15_8_pos 0
+#define	reg_aagc_fixed_if_agc_control_15_8_len 8
+#define	reg_aagc_fixed_if_agc_control_15_8_lsb 8
+#define xd_p_reg_aagc_fixed_if_agc_control_23_16	0xA01D
+#define	reg_aagc_fixed_if_agc_control_23_16_pos 0
+#define	reg_aagc_fixed_if_agc_control_23_16_len 8
+#define	reg_aagc_fixed_if_agc_control_23_16_lsb 16
+#define xd_p_reg_aagc_fixed_if_agc_control_30_24	0xA01E
+#define	reg_aagc_fixed_if_agc_control_30_24_pos 0
+#define	reg_aagc_fixed_if_agc_control_30_24_len 7
+#define	reg_aagc_fixed_if_agc_control_30_24_lsb 24
+#define xd_p_reg_aagc_rf_agc_unlock_numerator	0xA01F
+#define	reg_aagc_rf_agc_unlock_numerator_pos 0
+#define	reg_aagc_rf_agc_unlock_numerator_len 6
+#define	reg_aagc_rf_agc_unlock_numerator_lsb 0
+#define xd_p_reg_aagc_if_agc_unlock_numerator	0xA020
+#define	reg_aagc_if_agc_unlock_numerator_pos 0
+#define	reg_aagc_if_agc_unlock_numerator_len 6
+#define	reg_aagc_if_agc_unlock_numerator_lsb 0
+#define xd_p_reg_unplug_th	0xA021
+#define	reg_unplug_th_pos 0
+#define	reg_unplug_th_len 8
+#define	reg_aagc_rf_x0_lsb 0
+#define xd_p_reg_weak_signal_rfagc_thr 0xA022
+#define	reg_weak_signal_rfagc_thr_pos 0
+#define	reg_weak_signal_rfagc_thr_len 8
+#define	reg_weak_signal_rfagc_thr_lsb 0
+#define xd_p_reg_unplug_rf_gain_th 0xA023
+#define	reg_unplug_rf_gain_th_pos 0
+#define	reg_unplug_rf_gain_th_len 8
+#define	reg_unplug_rf_gain_th_lsb 0
+#define xd_p_reg_unplug_dtop_rf_gain_th 0xA024
+#define	reg_unplug_dtop_rf_gain_th_pos 0
+#define	reg_unplug_dtop_rf_gain_th_len 8
+#define	reg_unplug_dtop_rf_gain_th_lsb 0
+#define xd_p_reg_unplug_dtop_if_gain_th 0xA025
+#define	reg_unplug_dtop_if_gain_th_pos 0
+#define	reg_unplug_dtop_if_gain_th_len 8
+#define	reg_unplug_dtop_if_gain_th_lsb 0
+#define xd_p_reg_top_recover_at_unplug_en 0xA026
+#define	reg_top_recover_at_unplug_en_pos 0
+#define	reg_top_recover_at_unplug_en_len 1
+#define	reg_top_recover_at_unplug_en_lsb 0
+#define xd_p_reg_aagc_rf_x6	0xA027
+#define	reg_aagc_rf_x6_pos 0
+#define	reg_aagc_rf_x6_len 8
+#define	reg_aagc_rf_x6_lsb 0
+#define xd_p_reg_aagc_rf_x7	0xA028
+#define	reg_aagc_rf_x7_pos 0
+#define	reg_aagc_rf_x7_len 8
+#define	reg_aagc_rf_x7_lsb 0
+#define xd_p_reg_aagc_rf_x8	0xA029
+#define	reg_aagc_rf_x8_pos 0
+#define	reg_aagc_rf_x8_len 8
+#define	reg_aagc_rf_x8_lsb 0
+#define xd_p_reg_aagc_rf_x9	0xA02A
+#define	reg_aagc_rf_x9_pos 0
+#define	reg_aagc_rf_x9_len 8
+#define	reg_aagc_rf_x9_lsb 0
+#define xd_p_reg_aagc_rf_x10	0xA02B
+#define	reg_aagc_rf_x10_pos 0
+#define	reg_aagc_rf_x10_len 8
+#define	reg_aagc_rf_x10_lsb 0
+#define xd_p_reg_aagc_rf_x11	0xA02C
+#define	reg_aagc_rf_x11_pos 0
+#define	reg_aagc_rf_x11_len 8
+#define	reg_aagc_rf_x11_lsb 0
+#define xd_p_reg_aagc_rf_x12	0xA02D
+#define	reg_aagc_rf_x12_pos 0
+#define	reg_aagc_rf_x12_len 8
+#define	reg_aagc_rf_x12_lsb 0
+#define xd_p_reg_aagc_rf_x13	0xA02E
+#define	reg_aagc_rf_x13_pos 0
+#define	reg_aagc_rf_x13_len 8
+#define	reg_aagc_rf_x13_lsb 0
+#define xd_p_reg_aagc_if_x0	0xA02F
+#define	reg_aagc_if_x0_pos 0
+#define	reg_aagc_if_x0_len 8
+#define	reg_aagc_if_x0_lsb 0
+#define xd_p_reg_aagc_if_x1	0xA030
+#define	reg_aagc_if_x1_pos 0
+#define	reg_aagc_if_x1_len 8
+#define	reg_aagc_if_x1_lsb 0
+#define xd_p_reg_aagc_if_x2	0xA031
+#define	reg_aagc_if_x2_pos 0
+#define	reg_aagc_if_x2_len 8
+#define	reg_aagc_if_x2_lsb 0
+#define xd_p_reg_aagc_if_x3	0xA032
+#define	reg_aagc_if_x3_pos 0
+#define	reg_aagc_if_x3_len 8
+#define	reg_aagc_if_x3_lsb 0
+#define xd_p_reg_aagc_if_x4	0xA033
+#define	reg_aagc_if_x4_pos 0
+#define	reg_aagc_if_x4_len 8
+#define	reg_aagc_if_x4_lsb 0
+#define xd_p_reg_aagc_if_x5	0xA034
+#define	reg_aagc_if_x5_pos 0
+#define	reg_aagc_if_x5_len 8
+#define	reg_aagc_if_x5_lsb 0
+#define xd_p_reg_aagc_if_x6	0xA035
+#define	reg_aagc_if_x6_pos 0
+#define	reg_aagc_if_x6_len 8
+#define	reg_aagc_if_x6_lsb 0
+#define xd_p_reg_aagc_if_x7	0xA036
+#define	reg_aagc_if_x7_pos 0
+#define	reg_aagc_if_x7_len 8
+#define	reg_aagc_if_x7_lsb 0
+#define xd_p_reg_aagc_if_x8	0xA037
+#define	reg_aagc_if_x8_pos 0
+#define	reg_aagc_if_x8_len 8
+#define	reg_aagc_if_x8_lsb 0
+#define xd_p_reg_aagc_if_x9	0xA038
+#define	reg_aagc_if_x9_pos 0
+#define	reg_aagc_if_x9_len 8
+#define	reg_aagc_if_x9_lsb 0
+#define xd_p_reg_aagc_if_x10	0xA039
+#define	reg_aagc_if_x10_pos 0
+#define	reg_aagc_if_x10_len 8
+#define	reg_aagc_if_x10_lsb 0
+#define xd_p_reg_aagc_if_x11	0xA03A
+#define	reg_aagc_if_x11_pos 0
+#define	reg_aagc_if_x11_len 8
+#define	reg_aagc_if_x11_lsb 0
+#define xd_p_reg_aagc_if_x12	0xA03B
+#define	reg_aagc_if_x12_pos 0
+#define	reg_aagc_if_x12_len 8
+#define	reg_aagc_if_x12_lsb 0
+#define xd_p_reg_aagc_if_x13	0xA03C
+#define	reg_aagc_if_x13_pos 0
+#define	reg_aagc_if_x13_len 8
+#define	reg_aagc_if_x13_lsb 0
+#define xd_p_reg_aagc_min_rf_ctl_8bit_for_dca	0xA03D
+#define	reg_aagc_min_rf_ctl_8bit_for_dca_pos 0
+#define	reg_aagc_min_rf_ctl_8bit_for_dca_len 8
+#define	reg_aagc_min_rf_ctl_8bit_for_dca_lsb 0
+#define xd_p_reg_aagc_min_if_ctl_8bit_for_dca	0xA03E
+#define	reg_aagc_min_if_ctl_8bit_for_dca_pos 0
+#define	reg_aagc_min_if_ctl_8bit_for_dca_len 8
+#define	reg_aagc_min_if_ctl_8bit_for_dca_lsb 0
+#define xd_r_reg_aagc_total_gain_7_0	0xA070
+#define	reg_aagc_total_gain_7_0_pos 0
+#define	reg_aagc_total_gain_7_0_len 8
+#define	reg_aagc_total_gain_7_0_lsb 0
+#define xd_r_reg_aagc_total_gain_15_8	0xA071
+#define	reg_aagc_total_gain_15_8_pos 0
+#define	reg_aagc_total_gain_15_8_len 8
+#define	reg_aagc_total_gain_15_8_lsb 8
+#define xd_p_reg_aagc_in_sat_cnt_7_0	0xA074
+#define	reg_aagc_in_sat_cnt_7_0_pos 0
+#define	reg_aagc_in_sat_cnt_7_0_len 8
+#define	reg_aagc_in_sat_cnt_7_0_lsb 0
+#define xd_p_reg_aagc_in_sat_cnt_15_8	0xA075
+#define	reg_aagc_in_sat_cnt_15_8_pos 0
+#define	reg_aagc_in_sat_cnt_15_8_len 8
+#define	reg_aagc_in_sat_cnt_15_8_lsb 8
+#define xd_p_reg_aagc_in_sat_cnt_23_16	0xA076
+#define	reg_aagc_in_sat_cnt_23_16_pos 0
+#define	reg_aagc_in_sat_cnt_23_16_len 8
+#define	reg_aagc_in_sat_cnt_23_16_lsb 16
+#define xd_p_reg_aagc_in_sat_cnt_31_24	0xA077
+#define	reg_aagc_in_sat_cnt_31_24_pos 0
+#define	reg_aagc_in_sat_cnt_31_24_len 8
+#define	reg_aagc_in_sat_cnt_31_24_lsb 24
+#define xd_r_reg_aagc_digital_rf_volt_7_0	0xA078
+#define	reg_aagc_digital_rf_volt_7_0_pos 0
+#define	reg_aagc_digital_rf_volt_7_0_len 8
+#define	reg_aagc_digital_rf_volt_7_0_lsb 0
+#define xd_r_reg_aagc_digital_rf_volt_9_8	0xA079
+#define	reg_aagc_digital_rf_volt_9_8_pos 0
+#define	reg_aagc_digital_rf_volt_9_8_len 2
+#define	reg_aagc_digital_rf_volt_9_8_lsb 8
+#define xd_r_reg_aagc_digital_if_volt_7_0	0xA07A
+#define	reg_aagc_digital_if_volt_7_0_pos 0
+#define	reg_aagc_digital_if_volt_7_0_len 8
+#define	reg_aagc_digital_if_volt_7_0_lsb 0
+#define xd_r_reg_aagc_digital_if_volt_9_8	0xA07B
+#define	reg_aagc_digital_if_volt_9_8_pos 0
+#define	reg_aagc_digital_if_volt_9_8_len 2
+#define	reg_aagc_digital_if_volt_9_8_lsb 8
+#define xd_r_reg_aagc_rf_gain	0xA07C
+#define	reg_aagc_rf_gain_pos 0
+#define	reg_aagc_rf_gain_len 8
+#define	reg_aagc_rf_gain_lsb 0
+#define xd_r_reg_aagc_if_gain	0xA07D
+#define	reg_aagc_if_gain_pos 0
+#define	reg_aagc_if_gain_len 8
+#define	reg_aagc_if_gain_lsb 0
+#define xd_p_tinr_imp_indicator	0xA080
+#define	tinr_imp_indicator_pos 0
+#define	tinr_imp_indicator_len 2
+#define	tinr_imp_indicator_lsb 0
+#define xd_p_reg_tinr_fifo_size	0xA080
+#define	reg_tinr_fifo_size_pos 2
+#define	reg_tinr_fifo_size_len 5
+#define	reg_tinr_fifo_size_lsb 0
+#define xd_p_reg_tinr_saturation_cnt_th	0xA081
+#define	reg_tinr_saturation_cnt_th_pos 0
+#define	reg_tinr_saturation_cnt_th_len 4
+#define	reg_tinr_saturation_cnt_th_lsb 0
+#define xd_p_reg_tinr_saturation_th_3_0	0xA081
+#define	reg_tinr_saturation_th_3_0_pos 4
+#define	reg_tinr_saturation_th_3_0_len 4
+#define	reg_tinr_saturation_th_3_0_lsb 0
+#define xd_p_reg_tinr_saturation_th_8_4	0xA082
+#define	reg_tinr_saturation_th_8_4_pos 0
+#define	reg_tinr_saturation_th_8_4_len 5
+#define	reg_tinr_saturation_th_8_4_lsb 4
+#define xd_p_reg_tinr_imp_duration_th_2k_7_0	0xA083
+#define	reg_tinr_imp_duration_th_2k_7_0_pos 0
+#define	reg_tinr_imp_duration_th_2k_7_0_len 8
+#define	reg_tinr_imp_duration_th_2k_7_0_lsb 0
+#define xd_p_reg_tinr_imp_duration_th_2k_8	0xA084
+#define	reg_tinr_imp_duration_th_2k_8_pos 0
+#define	reg_tinr_imp_duration_th_2k_8_len 1
+#define	reg_tinr_imp_duration_th_2k_8_lsb 0
+#define xd_p_reg_tinr_imp_duration_th_8k_7_0	0xA085
+#define	reg_tinr_imp_duration_th_8k_7_0_pos 0
+#define	reg_tinr_imp_duration_th_8k_7_0_len 8
+#define	reg_tinr_imp_duration_th_8k_7_0_lsb 0
+#define xd_p_reg_tinr_imp_duration_th_8k_10_8	0xA086
+#define	reg_tinr_imp_duration_th_8k_10_8_pos 0
+#define	reg_tinr_imp_duration_th_8k_10_8_len 3
+#define	reg_tinr_imp_duration_th_8k_10_8_lsb 8
+#define xd_p_reg_tinr_freq_ratio_6m_7_0	0xA087
+#define	reg_tinr_freq_ratio_6m_7_0_pos 0
+#define	reg_tinr_freq_ratio_6m_7_0_len 8
+#define	reg_tinr_freq_ratio_6m_7_0_lsb 0
+#define xd_p_reg_tinr_freq_ratio_6m_12_8	0xA088
+#define	reg_tinr_freq_ratio_6m_12_8_pos 0
+#define	reg_tinr_freq_ratio_6m_12_8_len 5
+#define	reg_tinr_freq_ratio_6m_12_8_lsb 8
+#define xd_p_reg_tinr_freq_ratio_7m_7_0	0xA089
+#define	reg_tinr_freq_ratio_7m_7_0_pos 0
+#define	reg_tinr_freq_ratio_7m_7_0_len 8
+#define	reg_tinr_freq_ratio_7m_7_0_lsb 0
+#define xd_p_reg_tinr_freq_ratio_7m_12_8	0xA08A
+#define	reg_tinr_freq_ratio_7m_12_8_pos 0
+#define	reg_tinr_freq_ratio_7m_12_8_len 5
+#define	reg_tinr_freq_ratio_7m_12_8_lsb 8
+#define xd_p_reg_tinr_freq_ratio_8m_7_0	0xA08B
+#define	reg_tinr_freq_ratio_8m_7_0_pos 0
+#define	reg_tinr_freq_ratio_8m_7_0_len 8
+#define	reg_tinr_freq_ratio_8m_7_0_lsb 0
+#define xd_p_reg_tinr_freq_ratio_8m_12_8	0xA08C
+#define	reg_tinr_freq_ratio_8m_12_8_pos 0
+#define	reg_tinr_freq_ratio_8m_12_8_len 5
+#define	reg_tinr_freq_ratio_8m_12_8_lsb 8
+#define xd_p_reg_tinr_imp_duration_th_low_2k	0xA08D
+#define	reg_tinr_imp_duration_th_low_2k_pos 0
+#define	reg_tinr_imp_duration_th_low_2k_len 8
+#define	reg_tinr_imp_duration_th_low_2k_lsb 0
+#define xd_p_reg_tinr_imp_duration_th_low_8k	0xA08E
+#define	reg_tinr_imp_duration_th_low_8k_pos 0
+#define	reg_tinr_imp_duration_th_low_8k_len 8
+#define	reg_tinr_imp_duration_th_low_8k_lsb 0
+#define xd_r_reg_tinr_counter_7_0	0xA090
+#define	reg_tinr_counter_7_0_pos 0
+#define	reg_tinr_counter_7_0_len 8
+#define	reg_tinr_counter_7_0_lsb 0
+#define xd_r_reg_tinr_counter_15_8	0xA091
+#define	reg_tinr_counter_15_8_pos 0
+#define	reg_tinr_counter_15_8_len 8
+#define	reg_tinr_counter_15_8_lsb 8
+#define xd_p_reg_tinr_adative_tinr_en	0xA093
+#define	reg_tinr_adative_tinr_en_pos 0
+#define	reg_tinr_adative_tinr_en_len 1
+#define	reg_tinr_adative_tinr_en_lsb 0
+#define xd_p_reg_tinr_peak_fifo_size	0xA093
+#define	reg_tinr_peak_fifo_size_pos 1
+#define	reg_tinr_peak_fifo_size_len 5
+#define	reg_tinr_peak_fifo_size_lsb 0
+#define xd_p_reg_tinr_counter_rst	0xA093
+#define	reg_tinr_counter_rst_pos 6
+#define	reg_tinr_counter_rst_len 1
+#define	reg_tinr_counter_rst_lsb 0
+#define xd_p_reg_tinr_search_period_7_0	0xA094
+#define	reg_tinr_search_period_7_0_pos 0
+#define	reg_tinr_search_period_7_0_len 8
+#define	reg_tinr_search_period_7_0_lsb 0
+#define xd_p_reg_tinr_search_period_15_8	0xA095
+#define	reg_tinr_search_period_15_8_pos 0
+#define	reg_tinr_search_period_15_8_len 8
+#define	reg_tinr_search_period_15_8_lsb 8
+#define xd_p_reg_ccifs_fcw_7_0	0xA0A0
+#define	reg_ccifs_fcw_7_0_pos 0
+#define	reg_ccifs_fcw_7_0_len 8
+#define	reg_ccifs_fcw_7_0_lsb 0
+#define xd_p_reg_ccifs_fcw_12_8	0xA0A1
+#define	reg_ccifs_fcw_12_8_pos 0
+#define	reg_ccifs_fcw_12_8_len 5
+#define	reg_ccifs_fcw_12_8_lsb 8
+#define xd_p_reg_ccifs_spec_inv	0xA0A1
+#define	reg_ccifs_spec_inv_pos 5
+#define	reg_ccifs_spec_inv_len 1
+#define	reg_ccifs_spec_inv_lsb 0
+#define xd_p_reg_gp_trigger	0xA0A2
+#define	reg_gp_trigger_pos 0
+#define	reg_gp_trigger_len 1
+#define	reg_gp_trigger_lsb 0
+#define xd_p_reg_trigger_sel	0xA0A2
+#define	reg_trigger_sel_pos 1
+#define	reg_trigger_sel_len 2
+#define	reg_trigger_sel_lsb 0
+#define xd_p_reg_debug_ofdm	0xA0A2
+#define	reg_debug_ofdm_pos 3
+#define	reg_debug_ofdm_len 2
+#define	reg_debug_ofdm_lsb 0
+#define xd_p_reg_trigger_module_sel	0xA0A3
+#define	reg_trigger_module_sel_pos 0
+#define	reg_trigger_module_sel_len 6
+#define	reg_trigger_module_sel_lsb 0
+#define xd_p_reg_trigger_set_sel	0xA0A4
+#define	reg_trigger_set_sel_pos 0
+#define	reg_trigger_set_sel_len 6
+#define	reg_trigger_set_sel_lsb 0
+#define xd_p_reg_fw_int_mask_n	0xA0A4
+#define	reg_fw_int_mask_n_pos 6
+#define	reg_fw_int_mask_n_len 1
+#define	reg_fw_int_mask_n_lsb 0
+#define xd_p_reg_debug_group	0xA0A5
+#define	reg_debug_group_pos 0
+#define	reg_debug_group_len 4
+#define	reg_debug_group_lsb 0
+#define xd_p_reg_odbg_clk_sel	0xA0A5
+#define	reg_odbg_clk_sel_pos 4
+#define	reg_odbg_clk_sel_len 2
+#define	reg_odbg_clk_sel_lsb 0
+#define xd_p_reg_ccif_sc	0xA0C0
+#define	reg_ccif_sc_pos 0
+#define	reg_ccif_sc_len 4
+#define	reg_ccif_sc_lsb 0
+#define xd_r_reg_ccif_saturate	0xA0C1
+#define	reg_ccif_saturate_pos 0
+#define	reg_ccif_saturate_len 2
+#define	reg_ccif_saturate_lsb 0
+#define xd_r_reg_antif_saturate	0xA0C1
+#define	reg_antif_saturate_pos 2
+#define	reg_antif_saturate_len 4
+#define	reg_antif_saturate_lsb 0
+#define xd_r_reg_acif_saturate	0xA0C2
+#define	reg_acif_saturate_pos 0
+#define	reg_acif_saturate_len 8
+#define	reg_acif_saturate_lsb 0
+#define xd_p_reg_tmr_timer0_threshold_7_0	0xA0C8
+#define	reg_tmr_timer0_threshold_7_0_pos 0
+#define	reg_tmr_timer0_threshold_7_0_len 8
+#define	reg_tmr_timer0_threshold_7_0_lsb 0
+#define xd_p_reg_tmr_timer0_threshold_15_8	0xA0C9
+#define	reg_tmr_timer0_threshold_15_8_pos 0
+#define	reg_tmr_timer0_threshold_15_8_len 8
+#define	reg_tmr_timer0_threshold_15_8_lsb 8
+#define xd_p_reg_tmr_timer0_enable	0xA0CA
+#define	reg_tmr_timer0_enable_pos 0
+#define	reg_tmr_timer0_enable_len 1
+#define	reg_tmr_timer0_enable_lsb 0
+#define xd_p_reg_tmr_timer0_clk_sel	0xA0CA
+#define	reg_tmr_timer0_clk_sel_pos 1
+#define	reg_tmr_timer0_clk_sel_len 1
+#define	reg_tmr_timer0_clk_sel_lsb 0
+#define xd_p_reg_tmr_timer0_int	0xA0CA
+#define	reg_tmr_timer0_int_pos 2
+#define	reg_tmr_timer0_int_len 1
+#define	reg_tmr_timer0_int_lsb 0
+#define xd_p_reg_tmr_timer0_rst	0xA0CA
+#define	reg_tmr_timer0_rst_pos 3
+#define	reg_tmr_timer0_rst_len 1
+#define	reg_tmr_timer0_rst_lsb 0
+#define xd_r_reg_tmr_timer0_count_7_0	0xA0CB
+#define	reg_tmr_timer0_count_7_0_pos 0
+#define	reg_tmr_timer0_count_7_0_len 8
+#define	reg_tmr_timer0_count_7_0_lsb 0
+#define xd_r_reg_tmr_timer0_count_15_8	0xA0CC
+#define	reg_tmr_timer0_count_15_8_pos 0
+#define	reg_tmr_timer0_count_15_8_len 8
+#define	reg_tmr_timer0_count_15_8_lsb 8
+#define xd_p_reg_suspend	0xA0CD
+#define	reg_suspend_pos 0
+#define	reg_suspend_len 1
+#define	reg_suspend_lsb 0
+#define xd_p_reg_suspend_rdy	0xA0CD
+#define	reg_suspend_rdy_pos 1
+#define	reg_suspend_rdy_len 1
+#define	reg_suspend_rdy_lsb 0
+#define xd_p_reg_resume	0xA0CD
+#define	reg_resume_pos 2
+#define	reg_resume_len 1
+#define	reg_resume_lsb 0
+#define xd_p_reg_resume_rdy	0xA0CD
+#define	reg_resume_rdy_pos 3
+#define	reg_resume_rdy_len 1
+#define	reg_resume_rdy_lsb 0
+#define xd_p_reg_fmf	0xA0CE
+#define	reg_fmf_pos 0
+#define	reg_fmf_len 8
+#define	reg_fmf_lsb 0
+#define xd_p_ccid_accumulate_num_2k_7_0	0xA100
+#define	ccid_accumulate_num_2k_7_0_pos 0
+#define	ccid_accumulate_num_2k_7_0_len 8
+#define	ccid_accumulate_num_2k_7_0_lsb 0
+#define xd_p_ccid_accumulate_num_2k_12_8	0xA101
+#define	ccid_accumulate_num_2k_12_8_pos 0
+#define	ccid_accumulate_num_2k_12_8_len 5
+#define	ccid_accumulate_num_2k_12_8_lsb 8
+#define xd_p_ccid_accumulate_num_8k_7_0	0xA102
+#define	ccid_accumulate_num_8k_7_0_pos 0
+#define	ccid_accumulate_num_8k_7_0_len 8
+#define	ccid_accumulate_num_8k_7_0_lsb 0
+#define xd_p_ccid_accumulate_num_8k_14_8	0xA103
+#define	ccid_accumulate_num_8k_14_8_pos 0
+#define	ccid_accumulate_num_8k_14_8_len 7
+#define	ccid_accumulate_num_8k_14_8_lsb 8
+#define xd_p_ccid_desired_level_0	0xA103
+#define	ccid_desired_level_0_pos 7
+#define	ccid_desired_level_0_len 1
+#define	ccid_desired_level_0_lsb 0
+#define xd_p_ccid_desired_level_8_1	0xA104
+#define	ccid_desired_level_8_1_pos 0
+#define	ccid_desired_level_8_1_len 8
+#define	ccid_desired_level_8_1_lsb 1
+#define xd_p_ccid_apply_delay	0xA105
+#define	ccid_apply_delay_pos 0
+#define	ccid_apply_delay_len 7
+#define	ccid_apply_delay_lsb 0
+#define xd_p_ccid_CCID_Threshold1	0xA106
+#define	ccid_CCID_Threshold1_pos 0
+#define	ccid_CCID_Threshold1_len 8
+#define	ccid_CCID_Threshold1_lsb 0
+#define xd_p_ccid_CCID_Threshold2	0xA107
+#define	ccid_CCID_Threshold2_pos 0
+#define	ccid_CCID_Threshold2_len 8
+#define	ccid_CCID_Threshold2_lsb 0
+#define xd_p_reg_ccid_gain_scale	0xA108
+#define	reg_ccid_gain_scale_pos 0
+#define	reg_ccid_gain_scale_len 4
+#define	reg_ccid_gain_scale_lsb 0
+#define xd_p_reg_ccid2_passband_gain_set	0xA108
+#define	reg_ccid2_passband_gain_set_pos 4
+#define	reg_ccid2_passband_gain_set_len 4
+#define	reg_ccid2_passband_gain_set_lsb 0
+#define xd_r_ccid_multiplier_7_0	0xA109
+#define	ccid_multiplier_7_0_pos 0
+#define	ccid_multiplier_7_0_len 8
+#define	ccid_multiplier_7_0_lsb 0
+#define xd_r_ccid_multiplier_15_8	0xA10A
+#define	ccid_multiplier_15_8_pos 0
+#define	ccid_multiplier_15_8_len 8
+#define	ccid_multiplier_15_8_lsb 8
+#define xd_r_ccid_right_shift_bits	0xA10B
+#define	ccid_right_shift_bits_pos 0
+#define	ccid_right_shift_bits_len 4
+#define	ccid_right_shift_bits_lsb 0
+#define xd_r_reg_ccid_sx_7_0	0xA10C
+#define	reg_ccid_sx_7_0_pos 0
+#define	reg_ccid_sx_7_0_len 8
+#define	reg_ccid_sx_7_0_lsb 0
+#define xd_r_reg_ccid_sx_15_8	0xA10D
+#define	reg_ccid_sx_15_8_pos 0
+#define	reg_ccid_sx_15_8_len 8
+#define	reg_ccid_sx_15_8_lsb 8
+#define xd_r_reg_ccid_sx_21_16	0xA10E
+#define	reg_ccid_sx_21_16_pos 0
+#define	reg_ccid_sx_21_16_len 6
+#define	reg_ccid_sx_21_16_lsb 16
+#define xd_r_reg_ccid_sy_7_0	0xA110
+#define	reg_ccid_sy_7_0_pos 0
+#define	reg_ccid_sy_7_0_len 8
+#define	reg_ccid_sy_7_0_lsb 0
+#define xd_r_reg_ccid_sy_15_8	0xA111
+#define	reg_ccid_sy_15_8_pos 0
+#define	reg_ccid_sy_15_8_len 8
+#define	reg_ccid_sy_15_8_lsb 8
+#define xd_r_reg_ccid_sy_23_16	0xA112
+#define	reg_ccid_sy_23_16_pos 0
+#define	reg_ccid_sy_23_16_len 8
+#define	reg_ccid_sy_23_16_lsb 16
+#define xd_r_reg_ccid2_sz_7_0	0xA114
+#define	reg_ccid2_sz_7_0_pos 0
+#define	reg_ccid2_sz_7_0_len 8
+#define	reg_ccid2_sz_7_0_lsb 0
+#define xd_r_reg_ccid2_sz_15_8	0xA115
+#define	reg_ccid2_sz_15_8_pos 0
+#define	reg_ccid2_sz_15_8_len 8
+#define	reg_ccid2_sz_15_8_lsb 8
+#define xd_r_reg_ccid2_sz_23_16	0xA116
+#define	reg_ccid2_sz_23_16_pos 0
+#define	reg_ccid2_sz_23_16_len 8
+#define	reg_ccid2_sz_23_16_lsb 16
+#define xd_r_reg_ccid2_sz_25_24	0xA117
+#define	reg_ccid2_sz_25_24_pos 0
+#define	reg_ccid2_sz_25_24_len 2
+#define	reg_ccid2_sz_25_24_lsb 24
+#define xd_r_reg_ccid2_sy_7_0	0xA118
+#define	reg_ccid2_sy_7_0_pos 0
+#define	reg_ccid2_sy_7_0_len 8
+#define	reg_ccid2_sy_7_0_lsb 0
+#define xd_r_reg_ccid2_sy_15_8	0xA119
+#define	reg_ccid2_sy_15_8_pos 0
+#define	reg_ccid2_sy_15_8_len 8
+#define	reg_ccid2_sy_15_8_lsb 8
+#define xd_r_reg_ccid2_sy_23_16	0xA11A
+#define	reg_ccid2_sy_23_16_pos 0
+#define	reg_ccid2_sy_23_16_len 8
+#define	reg_ccid2_sy_23_16_lsb 16
+#define xd_r_reg_ccid2_sy_25_24	0xA11B
+#define	reg_ccid2_sy_25_24_pos 0
+#define	reg_ccid2_sy_25_24_len 2
+#define	reg_ccid2_sy_25_24_lsb 24
+#define xd_p_dagc1_accumulate_num_2k_7_0	0xA120
+#define	dagc1_accumulate_num_2k_7_0_pos 0
+#define	dagc1_accumulate_num_2k_7_0_len 8
+#define	dagc1_accumulate_num_2k_7_0_lsb 0
+#define xd_p_dagc1_accumulate_num_2k_12_8	0xA121
+#define	dagc1_accumulate_num_2k_12_8_pos 0
+#define	dagc1_accumulate_num_2k_12_8_len 5
+#define	dagc1_accumulate_num_2k_12_8_lsb 8
+#define xd_p_dagc1_accumulate_num_8k_7_0	0xA122
+#define	dagc1_accumulate_num_8k_7_0_pos 0
+#define	dagc1_accumulate_num_8k_7_0_len 8
+#define	dagc1_accumulate_num_8k_7_0_lsb 0
+#define xd_p_dagc1_accumulate_num_8k_14_8	0xA123
+#define	dagc1_accumulate_num_8k_14_8_pos 0
+#define	dagc1_accumulate_num_8k_14_8_len 7
+#define	dagc1_accumulate_num_8k_14_8_lsb 8
+#define xd_p_dagc1_desired_level_0	0xA123
+#define	dagc1_desired_level_0_pos 7
+#define	dagc1_desired_level_0_len 1
+#define	dagc1_desired_level_0_lsb 0
+#define xd_p_dagc1_desired_level_8_1	0xA124
+#define	dagc1_desired_level_8_1_pos 0
+#define	dagc1_desired_level_8_1_len 8
+#define	dagc1_desired_level_8_1_lsb 1
+#define xd_p_dagc1_apply_delay	0xA125
+#define	dagc1_apply_delay_pos 0
+#define	dagc1_apply_delay_len 7
+#define	dagc1_apply_delay_lsb 0
+#define xd_p_dagc1_bypass_scale_ctl	0xA126
+#define	dagc1_bypass_scale_ctl_pos 0
+#define	dagc1_bypass_scale_ctl_len 2
+#define	dagc1_bypass_scale_ctl_lsb 0
+#define xd_p_reg_dagc1_in_sat_cnt_7_0	0xA127
+#define	reg_dagc1_in_sat_cnt_7_0_pos 0
+#define	reg_dagc1_in_sat_cnt_7_0_len 8
+#define	reg_dagc1_in_sat_cnt_7_0_lsb 0
+#define xd_p_reg_dagc1_in_sat_cnt_15_8	0xA128
+#define	reg_dagc1_in_sat_cnt_15_8_pos 0
+#define	reg_dagc1_in_sat_cnt_15_8_len 8
+#define	reg_dagc1_in_sat_cnt_15_8_lsb 8
+#define xd_p_reg_dagc1_in_sat_cnt_23_16	0xA129
+#define	reg_dagc1_in_sat_cnt_23_16_pos 0
+#define	reg_dagc1_in_sat_cnt_23_16_len 8
+#define	reg_dagc1_in_sat_cnt_23_16_lsb 16
+#define xd_p_reg_dagc1_in_sat_cnt_31_24	0xA12A
+#define	reg_dagc1_in_sat_cnt_31_24_pos 0
+#define	reg_dagc1_in_sat_cnt_31_24_len 8
+#define	reg_dagc1_in_sat_cnt_31_24_lsb 24
+#define xd_p_reg_dagc1_out_sat_cnt_7_0	0xA12B
+#define	reg_dagc1_out_sat_cnt_7_0_pos 0
+#define	reg_dagc1_out_sat_cnt_7_0_len 8
+#define	reg_dagc1_out_sat_cnt_7_0_lsb 0
+#define xd_p_reg_dagc1_out_sat_cnt_15_8	0xA12C
+#define	reg_dagc1_out_sat_cnt_15_8_pos 0
+#define	reg_dagc1_out_sat_cnt_15_8_len 8
+#define	reg_dagc1_out_sat_cnt_15_8_lsb 8
+#define xd_p_reg_dagc1_out_sat_cnt_23_16	0xA12D
+#define	reg_dagc1_out_sat_cnt_23_16_pos 0
+#define	reg_dagc1_out_sat_cnt_23_16_len 8
+#define	reg_dagc1_out_sat_cnt_23_16_lsb 16
+#define xd_p_reg_dagc1_out_sat_cnt_31_24	0xA12E
+#define	reg_dagc1_out_sat_cnt_31_24_pos 0
+#define	reg_dagc1_out_sat_cnt_31_24_len 8
+#define	reg_dagc1_out_sat_cnt_31_24_lsb 24
+#define xd_r_dagc1_multiplier_7_0	0xA136
+#define	dagc1_multiplier_7_0_pos 0
+#define	dagc1_multiplier_7_0_len 8
+#define	dagc1_multiplier_7_0_lsb 0
+#define xd_r_dagc1_multiplier_15_8	0xA137
+#define	dagc1_multiplier_15_8_pos 0
+#define	dagc1_multiplier_15_8_len 8
+#define	dagc1_multiplier_15_8_lsb 8
+#define xd_r_dagc1_right_shift_bits	0xA138
+#define	dagc1_right_shift_bits_pos 0
+#define	dagc1_right_shift_bits_len 4
+#define	dagc1_right_shift_bits_lsb 0
+#define xd_p_reg_bfs_fcw_7_0	0xA140
+#define	reg_bfs_fcw_7_0_pos 0
+#define	reg_bfs_fcw_7_0_len 8
+#define	reg_bfs_fcw_7_0_lsb 0
+#define xd_p_reg_bfs_fcw_15_8	0xA141
+#define	reg_bfs_fcw_15_8_pos 0
+#define	reg_bfs_fcw_15_8_len 8
+#define	reg_bfs_fcw_15_8_lsb 8
+#define xd_p_reg_bfs_fcw_22_16	0xA142
+#define	reg_bfs_fcw_22_16_pos 0
+#define	reg_bfs_fcw_22_16_len 7
+#define	reg_bfs_fcw_22_16_lsb 16
+#define xd_p_reg_antif_sf_7_0	0xA144
+#define	reg_antif_sf_7_0_pos 0
+#define	reg_antif_sf_7_0_len 8
+#define	reg_antif_sf_7_0_lsb 0
+#define xd_p_reg_antif_sf_11_8	0xA145
+#define	reg_antif_sf_11_8_pos 0
+#define	reg_antif_sf_11_8_len 4
+#define	reg_antif_sf_11_8_lsb 8
+#define xd_r_bfs_fcw_q_7_0	0xA150
+#define	bfs_fcw_q_7_0_pos 0
+#define	bfs_fcw_q_7_0_len 8
+#define	bfs_fcw_q_7_0_lsb 0
+#define xd_r_bfs_fcw_q_15_8	0xA151
+#define	bfs_fcw_q_15_8_pos 0
+#define	bfs_fcw_q_15_8_len 8
+#define	bfs_fcw_q_15_8_lsb 8
+#define xd_r_bfs_fcw_q_22_16	0xA152
+#define	bfs_fcw_q_22_16_pos 0
+#define	bfs_fcw_q_22_16_len 7
+#define	bfs_fcw_q_22_16_lsb 16
+#define xd_p_reg_dca_enu	0xA160
+#define	reg_dca_enu_pos 0
+#define	reg_dca_enu_len 1
+#define	reg_dca_enu_lsb 0
+#define xd_p_reg_dca_enl	0xA160
+#define	reg_dca_enl_pos 1
+#define	reg_dca_enl_len 1
+#define	reg_dca_enl_lsb 0
+#define xd_p_reg_dca_lower_chip	0xA160
+#define	reg_dca_lower_chip_pos 2
+#define	reg_dca_lower_chip_len 1
+#define	reg_dca_lower_chip_lsb 0
+#define xd_p_reg_dca_upper_chip	0xA160
+#define	reg_dca_upper_chip_pos 3
+#define	reg_dca_upper_chip_len 1
+#define	reg_dca_upper_chip_lsb 0
+#define xd_p_reg_dca_platch	0xA160
+#define	reg_dca_platch_pos 4
+#define	reg_dca_platch_len 1
+#define	reg_dca_platch_lsb 0
+#define xd_p_reg_dca_th	0xA161
+#define	reg_dca_th_pos 0
+#define	reg_dca_th_len 5
+#define	reg_dca_th_lsb 0
+#define xd_p_reg_dca_scale	0xA162
+#define	reg_dca_scale_pos 0
+#define	reg_dca_scale_len 4
+#define	reg_dca_scale_lsb 0
+#define xd_p_reg_dca_tone_7_0	0xA163
+#define	reg_dca_tone_7_0_pos 0
+#define	reg_dca_tone_7_0_len 8
+#define	reg_dca_tone_7_0_lsb 0
+#define xd_p_reg_dca_tone_12_8	0xA164
+#define	reg_dca_tone_12_8_pos 0
+#define	reg_dca_tone_12_8_len 5
+#define	reg_dca_tone_12_8_lsb 8
+#define xd_p_reg_dca_time_7_0	0xA165
+#define	reg_dca_time_7_0_pos 0
+#define	reg_dca_time_7_0_len 8
+#define	reg_dca_time_7_0_lsb 0
+#define xd_p_reg_dca_time_15_8	0xA166
+#define	reg_dca_time_15_8_pos 0
+#define	reg_dca_time_15_8_len 8
+#define	reg_dca_time_15_8_lsb 8
+#define xd_r_dcasm	0xA167
+#define	dcasm_pos 0
+#define	dcasm_len 3
+#define	dcasm_lsb 0
+#define xd_p_reg_qnt_valuew_7_0	0xA168
+#define	reg_qnt_valuew_7_0_pos 0
+#define	reg_qnt_valuew_7_0_len 8
+#define	reg_qnt_valuew_7_0_lsb 0
+#define xd_p_reg_qnt_valuew_10_8	0xA169
+#define	reg_qnt_valuew_10_8_pos 0
+#define	reg_qnt_valuew_10_8_len 3
+#define	reg_qnt_valuew_10_8_lsb 8
+#define xd_p_dca_sbx_gain_diff_7_0	0xA16A
+#define	dca_sbx_gain_diff_7_0_pos 0
+#define	dca_sbx_gain_diff_7_0_len 8
+#define	dca_sbx_gain_diff_7_0_lsb 0
+#define xd_p_dca_sbx_gain_diff_9_8	0xA16B
+#define	dca_sbx_gain_diff_9_8_pos 0
+#define	dca_sbx_gain_diff_9_8_len 2
+#define	dca_sbx_gain_diff_9_8_lsb 8
+#define xd_p_reg_dca_stand_alone	0xA16C
+#define	reg_dca_stand_alone_pos 0
+#define	reg_dca_stand_alone_len 1
+#define	reg_dca_stand_alone_lsb 0
+#define xd_p_reg_dca_upper_out_en	0xA16C
+#define	reg_dca_upper_out_en_pos 1
+#define	reg_dca_upper_out_en_len 1
+#define	reg_dca_upper_out_en_lsb 0
+#define xd_p_reg_dca_rc_en	0xA16C
+#define	reg_dca_rc_en_pos 2
+#define	reg_dca_rc_en_len 1
+#define	reg_dca_rc_en_lsb 0
+#define xd_p_reg_dca_retrain_send	0xA16C
+#define	reg_dca_retrain_send_pos 3
+#define	reg_dca_retrain_send_len 1
+#define	reg_dca_retrain_send_lsb 0
+#define xd_p_reg_dca_retrain_rec	0xA16C
+#define	reg_dca_retrain_rec_pos 4
+#define	reg_dca_retrain_rec_len 1
+#define	reg_dca_retrain_rec_lsb 0
+#define xd_p_reg_dca_api_tpsrdy	0xA16C
+#define	reg_dca_api_tpsrdy_pos 5
+#define	reg_dca_api_tpsrdy_len 1
+#define	reg_dca_api_tpsrdy_lsb 0
+#define xd_p_reg_dca_symbol_gap	0xA16D
+#define	reg_dca_symbol_gap_pos 0
+#define	reg_dca_symbol_gap_len 4
+#define	reg_dca_symbol_gap_lsb 0
+#define xd_p_reg_qnt_nfvaluew_7_0	0xA16E
+#define	reg_qnt_nfvaluew_7_0_pos 0
+#define	reg_qnt_nfvaluew_7_0_len 8
+#define	reg_qnt_nfvaluew_7_0_lsb 0
+#define xd_p_reg_qnt_nfvaluew_10_8	0xA16F
+#define	reg_qnt_nfvaluew_10_8_pos 0
+#define	reg_qnt_nfvaluew_10_8_len 3
+#define	reg_qnt_nfvaluew_10_8_lsb 8
+#define xd_p_reg_qnt_flatness_thr_7_0	0xA170
+#define	reg_qnt_flatness_thr_7_0_pos 0
+#define	reg_qnt_flatness_thr_7_0_len 8
+#define	reg_qnt_flatness_thr_7_0_lsb 0
+#define xd_p_reg_qnt_flatness_thr_9_8	0xA171
+#define	reg_qnt_flatness_thr_9_8_pos 0
+#define	reg_qnt_flatness_thr_9_8_len 2
+#define	reg_qnt_flatness_thr_9_8_lsb 8
+#define xd_p_reg_dca_tone_idx_5_0	0xA171
+#define	reg_dca_tone_idx_5_0_pos 2
+#define	reg_dca_tone_idx_5_0_len 6
+#define	reg_dca_tone_idx_5_0_lsb 0
+#define xd_p_reg_dca_tone_idx_12_6	0xA172
+#define	reg_dca_tone_idx_12_6_pos 0
+#define	reg_dca_tone_idx_12_6_len 7
+#define	reg_dca_tone_idx_12_6_lsb 6
+#define xd_p_reg_dca_data_vld	0xA173
+#define	reg_dca_data_vld_pos 0
+#define	reg_dca_data_vld_len 1
+#define	reg_dca_data_vld_lsb 0
+#define xd_p_reg_dca_read_update	0xA173
+#define	reg_dca_read_update_pos 1
+#define	reg_dca_read_update_len 1
+#define	reg_dca_read_update_lsb 0
+#define xd_r_reg_dca_data_re_5_0	0xA173
+#define	reg_dca_data_re_5_0_pos 2
+#define	reg_dca_data_re_5_0_len 6
+#define	reg_dca_data_re_5_0_lsb 0
+#define xd_r_reg_dca_data_re_10_6	0xA174
+#define	reg_dca_data_re_10_6_pos 0
+#define	reg_dca_data_re_10_6_len 5
+#define	reg_dca_data_re_10_6_lsb 6
+#define xd_r_reg_dca_data_im_7_0	0xA175
+#define	reg_dca_data_im_7_0_pos 0
+#define	reg_dca_data_im_7_0_len 8
+#define	reg_dca_data_im_7_0_lsb 0
+#define xd_r_reg_dca_data_im_10_8	0xA176
+#define	reg_dca_data_im_10_8_pos 0
+#define	reg_dca_data_im_10_8_len 3
+#define	reg_dca_data_im_10_8_lsb 8
+#define xd_r_reg_dca_data_h2_7_0	0xA178
+#define	reg_dca_data_h2_7_0_pos 0
+#define	reg_dca_data_h2_7_0_len 8
+#define	reg_dca_data_h2_7_0_lsb 0
+#define xd_r_reg_dca_data_h2_9_8	0xA179
+#define	reg_dca_data_h2_9_8_pos 0
+#define	reg_dca_data_h2_9_8_len 2
+#define	reg_dca_data_h2_9_8_lsb 8
+#define xd_p_reg_f_adc_7_0	0xA180
+#define	reg_f_adc_7_0_pos 0
+#define	reg_f_adc_7_0_len 8
+#define	reg_f_adc_7_0_lsb 0
+#define xd_p_reg_f_adc_15_8	0xA181
+#define	reg_f_adc_15_8_pos 0
+#define	reg_f_adc_15_8_len 8
+#define	reg_f_adc_15_8_lsb 8
+#define xd_p_reg_f_adc_23_16	0xA182
+#define	reg_f_adc_23_16_pos 0
+#define	reg_f_adc_23_16_len 8
+#define	reg_f_adc_23_16_lsb 16
+#define xd_r_intp_mu_7_0	0xA190
+#define	intp_mu_7_0_pos 0
+#define	intp_mu_7_0_len 8
+#define	intp_mu_7_0_lsb 0
+#define xd_r_intp_mu_15_8	0xA191
+#define	intp_mu_15_8_pos 0
+#define	intp_mu_15_8_len 8
+#define	intp_mu_15_8_lsb 8
+#define xd_r_intp_mu_19_16	0xA192
+#define	intp_mu_19_16_pos 0
+#define	intp_mu_19_16_len 4
+#define	intp_mu_19_16_lsb 16
+#define xd_p_reg_agc_rst	0xA1A0
+#define	reg_agc_rst_pos 0
+#define	reg_agc_rst_len 1
+#define	reg_agc_rst_lsb 0
+#define xd_p_rf_agc_en	0xA1A0
+#define	rf_agc_en_pos 1
+#define	rf_agc_en_len 1
+#define	rf_agc_en_lsb 0
+#define xd_p_rf_agc_dis	0xA1A0
+#define	rf_agc_dis_pos 2
+#define	rf_agc_dis_len 1
+#define	rf_agc_dis_lsb 0
+#define xd_p_if_agc_rst	0xA1A0
+#define	if_agc_rst_pos 3
+#define	if_agc_rst_len 1
+#define	if_agc_rst_lsb 0
+#define xd_p_if_agc_en	0xA1A0
+#define	if_agc_en_pos 4
+#define	if_agc_en_len 1
+#define	if_agc_en_lsb 0
+#define xd_p_if_agc_dis	0xA1A0
+#define	if_agc_dis_pos 5
+#define	if_agc_dis_len 1
+#define	if_agc_dis_lsb 0
+#define xd_p_agc_lock	0xA1A0
+#define	agc_lock_pos 6
+#define	agc_lock_len 1
+#define	agc_lock_lsb 0
+#define xd_p_reg_tinr_rst	0xA1A1
+#define	reg_tinr_rst_pos 0
+#define	reg_tinr_rst_len 1
+#define	reg_tinr_rst_lsb 0
+#define xd_p_reg_tinr_en	0xA1A1
+#define	reg_tinr_en_pos 1
+#define	reg_tinr_en_len 1
+#define	reg_tinr_en_lsb 0
+#define xd_p_reg_ccifs_en	0xA1A2
+#define	reg_ccifs_en_pos 0
+#define	reg_ccifs_en_len 1
+#define	reg_ccifs_en_lsb 0
+#define xd_p_reg_ccifs_dis	0xA1A2
+#define	reg_ccifs_dis_pos 1
+#define	reg_ccifs_dis_len 1
+#define	reg_ccifs_dis_lsb 0
+#define xd_p_reg_ccifs_rst	0xA1A2
+#define	reg_ccifs_rst_pos 2
+#define	reg_ccifs_rst_len 1
+#define	reg_ccifs_rst_lsb 0
+#define xd_p_reg_ccifs_byp	0xA1A2
+#define	reg_ccifs_byp_pos 3
+#define	reg_ccifs_byp_len 1
+#define	reg_ccifs_byp_lsb 0
+#define xd_p_reg_ccif_en	0xA1A3
+#define	reg_ccif_en_pos 0
+#define	reg_ccif_en_len 1
+#define	reg_ccif_en_lsb 0
+#define xd_p_reg_ccif_dis	0xA1A3
+#define	reg_ccif_dis_pos 1
+#define	reg_ccif_dis_len 1
+#define	reg_ccif_dis_lsb 0
+#define xd_p_reg_ccif_rst	0xA1A3
+#define	reg_ccif_rst_pos 2
+#define	reg_ccif_rst_len 1
+#define	reg_ccif_rst_lsb 0
+#define xd_p_reg_ccif_byp	0xA1A3
+#define	reg_ccif_byp_pos 3
+#define	reg_ccif_byp_len 1
+#define	reg_ccif_byp_lsb 0
+#define xd_p_dagc1_rst	0xA1A4
+#define	dagc1_rst_pos 0
+#define	dagc1_rst_len 1
+#define	dagc1_rst_lsb 0
+#define xd_p_dagc1_en	0xA1A4
+#define	dagc1_en_pos 1
+#define	dagc1_en_len 1
+#define	dagc1_en_lsb 0
+#define xd_p_dagc1_mode	0xA1A4
+#define	dagc1_mode_pos 2
+#define	dagc1_mode_len 2
+#define	dagc1_mode_lsb 0
+#define xd_p_dagc1_done	0xA1A4
+#define	dagc1_done_pos 4
+#define	dagc1_done_len 1
+#define	dagc1_done_lsb 0
+#define xd_p_ccid_rst	0xA1A5
+#define	ccid_rst_pos 0
+#define	ccid_rst_len 1
+#define	ccid_rst_lsb 0
+#define xd_p_ccid_en	0xA1A5
+#define	ccid_en_pos 1
+#define	ccid_en_len 1
+#define	ccid_en_lsb 0
+#define xd_p_ccid_mode	0xA1A5
+#define	ccid_mode_pos 2
+#define	ccid_mode_len 2
+#define	ccid_mode_lsb 0
+#define xd_p_ccid_done	0xA1A5
+#define	ccid_done_pos 4
+#define	ccid_done_len 1
+#define	ccid_done_lsb 0
+#define xd_r_ccid_deted	0xA1A5
+#define	ccid_deted_pos 5
+#define	ccid_deted_len 1
+#define	ccid_deted_lsb 0
+#define xd_p_ccid2_en	0xA1A5
+#define	ccid2_en_pos 6
+#define	ccid2_en_len 1
+#define	ccid2_en_lsb 0
+#define xd_p_ccid2_done	0xA1A5
+#define	ccid2_done_pos 7
+#define	ccid2_done_len 1
+#define	ccid2_done_lsb 0
+#define xd_p_reg_bfs_en	0xA1A6
+#define	reg_bfs_en_pos 0
+#define	reg_bfs_en_len 1
+#define	reg_bfs_en_lsb 0
+#define xd_p_reg_bfs_dis	0xA1A6
+#define	reg_bfs_dis_pos 1
+#define	reg_bfs_dis_len 1
+#define	reg_bfs_dis_lsb 0
+#define xd_p_reg_bfs_rst	0xA1A6
+#define	reg_bfs_rst_pos 2
+#define	reg_bfs_rst_len 1
+#define	reg_bfs_rst_lsb 0
+#define xd_p_reg_bfs_byp	0xA1A6
+#define	reg_bfs_byp_pos 3
+#define	reg_bfs_byp_len 1
+#define	reg_bfs_byp_lsb 0
+#define xd_p_reg_antif_en	0xA1A7
+#define	reg_antif_en_pos 0
+#define	reg_antif_en_len 1
+#define	reg_antif_en_lsb 0
+#define xd_p_reg_antif_dis	0xA1A7
+#define	reg_antif_dis_pos 1
+#define	reg_antif_dis_len 1
+#define	reg_antif_dis_lsb 0
+#define xd_p_reg_antif_rst	0xA1A7
+#define	reg_antif_rst_pos 2
+#define	reg_antif_rst_len 1
+#define	reg_antif_rst_lsb 0
+#define xd_p_reg_antif_byp	0xA1A7
+#define	reg_antif_byp_pos 3
+#define	reg_antif_byp_len 1
+#define	reg_antif_byp_lsb 0
+#define xd_p_intp_en	0xA1A8
+#define	intp_en_pos 0
+#define	intp_en_len 1
+#define	intp_en_lsb 0
+#define xd_p_intp_dis	0xA1A8
+#define	intp_dis_pos 1
+#define	intp_dis_len 1
+#define	intp_dis_lsb 0
+#define xd_p_intp_rst	0xA1A8
+#define	intp_rst_pos 2
+#define	intp_rst_len 1
+#define	intp_rst_lsb 0
+#define xd_p_intp_byp	0xA1A8
+#define	intp_byp_pos 3
+#define	intp_byp_len 1
+#define	intp_byp_lsb 0
+#define xd_p_reg_acif_en	0xA1A9
+#define	reg_acif_en_pos 0
+#define	reg_acif_en_len 1
+#define	reg_acif_en_lsb 0
+#define xd_p_reg_acif_dis	0xA1A9
+#define	reg_acif_dis_pos 1
+#define	reg_acif_dis_len 1
+#define	reg_acif_dis_lsb 0
+#define xd_p_reg_acif_rst	0xA1A9
+#define	reg_acif_rst_pos 2
+#define	reg_acif_rst_len 1
+#define	reg_acif_rst_lsb 0
+#define xd_p_reg_acif_byp	0xA1A9
+#define	reg_acif_byp_pos 3
+#define	reg_acif_byp_len 1
+#define	reg_acif_byp_lsb 0
+#define xd_p_reg_acif_sync_mode	0xA1A9
+#define	reg_acif_sync_mode_pos 4
+#define	reg_acif_sync_mode_len 1
+#define	reg_acif_sync_mode_lsb 0
+#define xd_p_dagc2_rst	0xA1AA
+#define	dagc2_rst_pos 0
+#define	dagc2_rst_len 1
+#define	dagc2_rst_lsb 0
+#define xd_p_dagc2_en	0xA1AA
+#define	dagc2_en_pos 1
+#define	dagc2_en_len 1
+#define	dagc2_en_lsb 0
+#define xd_p_dagc2_mode	0xA1AA
+#define	dagc2_mode_pos 2
+#define	dagc2_mode_len 2
+#define	dagc2_mode_lsb 0
+#define xd_p_dagc2_done	0xA1AA
+#define	dagc2_done_pos 4
+#define	dagc2_done_len 1
+#define	dagc2_done_lsb 0
+#define xd_p_reg_dca_en	0xA1AB
+#define	reg_dca_en_pos 0
+#define	reg_dca_en_len 1
+#define	reg_dca_en_lsb 0
+#define xd_p_dagc2_accumulate_num_2k_7_0	0xA1C0
+#define	dagc2_accumulate_num_2k_7_0_pos 0
+#define	dagc2_accumulate_num_2k_7_0_len 8
+#define	dagc2_accumulate_num_2k_7_0_lsb 0
+#define xd_p_dagc2_accumulate_num_2k_12_8	0xA1C1
+#define	dagc2_accumulate_num_2k_12_8_pos 0
+#define	dagc2_accumulate_num_2k_12_8_len 5
+#define	dagc2_accumulate_num_2k_12_8_lsb 8
+#define xd_p_dagc2_accumulate_num_8k_7_0	0xA1C2
+#define	dagc2_accumulate_num_8k_7_0_pos 0
+#define	dagc2_accumulate_num_8k_7_0_len 8
+#define	dagc2_accumulate_num_8k_7_0_lsb 0
+#define xd_p_dagc2_accumulate_num_8k_12_8	0xA1C3
+#define	dagc2_accumulate_num_8k_12_8_pos 0
+#define	dagc2_accumulate_num_8k_12_8_len 5
+#define	dagc2_accumulate_num_8k_12_8_lsb 8
+#define xd_p_dagc2_desired_level_2_0	0xA1C3
+#define	dagc2_desired_level_2_0_pos 5
+#define	dagc2_desired_level_2_0_len 3
+#define	dagc2_desired_level_2_0_lsb 0
+#define xd_p_dagc2_desired_level_8_3	0xA1C4
+#define	dagc2_desired_level_8_3_pos 0
+#define	dagc2_desired_level_8_3_len 6
+#define	dagc2_desired_level_8_3_lsb 3
+#define xd_p_dagc2_apply_delay	0xA1C5
+#define	dagc2_apply_delay_pos 0
+#define	dagc2_apply_delay_len 7
+#define	dagc2_apply_delay_lsb 0
+#define xd_p_dagc2_bypass_scale_ctl	0xA1C6
+#define	dagc2_bypass_scale_ctl_pos 0
+#define	dagc2_bypass_scale_ctl_len 3
+#define	dagc2_bypass_scale_ctl_lsb 0
+#define xd_p_dagc2_programmable_shift1	0xA1C7
+#define	dagc2_programmable_shift1_pos 0
+#define	dagc2_programmable_shift1_len 8
+#define	dagc2_programmable_shift1_lsb 0
+#define xd_p_dagc2_programmable_shift2	0xA1C8
+#define	dagc2_programmable_shift2_pos 0
+#define	dagc2_programmable_shift2_len 8
+#define	dagc2_programmable_shift2_lsb 0
+#define xd_p_reg_dagc2_in_sat_cnt_7_0	0xA1C9
+#define	reg_dagc2_in_sat_cnt_7_0_pos 0
+#define	reg_dagc2_in_sat_cnt_7_0_len 8
+#define	reg_dagc2_in_sat_cnt_7_0_lsb 0
+#define xd_p_reg_dagc2_in_sat_cnt_15_8	0xA1CA
+#define	reg_dagc2_in_sat_cnt_15_8_pos 0
+#define	reg_dagc2_in_sat_cnt_15_8_len 8
+#define	reg_dagc2_in_sat_cnt_15_8_lsb 8
+#define xd_p_reg_dagc2_in_sat_cnt_23_16	0xA1CB
+#define	reg_dagc2_in_sat_cnt_23_16_pos 0
+#define	reg_dagc2_in_sat_cnt_23_16_len 8
+#define	reg_dagc2_in_sat_cnt_23_16_lsb 16
+#define xd_p_reg_dagc2_in_sat_cnt_31_24	0xA1CC
+#define	reg_dagc2_in_sat_cnt_31_24_pos 0
+#define	reg_dagc2_in_sat_cnt_31_24_len 8
+#define	reg_dagc2_in_sat_cnt_31_24_lsb 24
+#define xd_p_reg_dagc2_out_sat_cnt_7_0	0xA1CD
+#define	reg_dagc2_out_sat_cnt_7_0_pos 0
+#define	reg_dagc2_out_sat_cnt_7_0_len 8
+#define	reg_dagc2_out_sat_cnt_7_0_lsb 0
+#define xd_p_reg_dagc2_out_sat_cnt_15_8	0xA1CE
+#define	reg_dagc2_out_sat_cnt_15_8_pos 0
+#define	reg_dagc2_out_sat_cnt_15_8_len 8
+#define	reg_dagc2_out_sat_cnt_15_8_lsb 8
+#define xd_p_reg_dagc2_out_sat_cnt_23_16	0xA1CF
+#define	reg_dagc2_out_sat_cnt_23_16_pos 0
+#define	reg_dagc2_out_sat_cnt_23_16_len 8
+#define	reg_dagc2_out_sat_cnt_23_16_lsb 16
+#define xd_p_reg_dagc2_out_sat_cnt_31_24	0xA1D0
+#define	reg_dagc2_out_sat_cnt_31_24_pos 0
+#define	reg_dagc2_out_sat_cnt_31_24_len 8
+#define	reg_dagc2_out_sat_cnt_31_24_lsb 24
+#define xd_r_dagc2_multiplier_7_0	0xA1D6
+#define	dagc2_multiplier_7_0_pos 0
+#define	dagc2_multiplier_7_0_len 8
+#define	dagc2_multiplier_7_0_lsb 0
+#define xd_r_dagc2_multiplier_15_8	0xA1D7
+#define	dagc2_multiplier_15_8_pos 0
+#define	dagc2_multiplier_15_8_len 8
+#define	dagc2_multiplier_15_8_lsb 8
+#define xd_r_dagc2_right_shift_bits	0xA1D8
+#define	dagc2_right_shift_bits_pos 0
+#define	dagc2_right_shift_bits_len 4
+#define	dagc2_right_shift_bits_lsb 0
+#define xd_p_cfoe_NS_coeff1_7_0	0xA200
+#define	cfoe_NS_coeff1_7_0_pos 0
+#define	cfoe_NS_coeff1_7_0_len 8
+#define	cfoe_NS_coeff1_7_0_lsb 0
+#define xd_p_cfoe_NS_coeff1_15_8	0xA201
+#define	cfoe_NS_coeff1_15_8_pos 0
+#define	cfoe_NS_coeff1_15_8_len 8
+#define	cfoe_NS_coeff1_15_8_lsb 8
+#define xd_p_cfoe_NS_coeff1_23_16	0xA202
+#define	cfoe_NS_coeff1_23_16_pos 0
+#define	cfoe_NS_coeff1_23_16_len 8
+#define	cfoe_NS_coeff1_23_16_lsb 16
+#define xd_p_cfoe_NS_coeff1_25_24	0xA203
+#define	cfoe_NS_coeff1_25_24_pos 0
+#define	cfoe_NS_coeff1_25_24_len 2
+#define	cfoe_NS_coeff1_25_24_lsb 24
+#define xd_p_cfoe_NS_coeff2_5_0	0xA203
+#define	cfoe_NS_coeff2_5_0_pos 2
+#define	cfoe_NS_coeff2_5_0_len 6
+#define	cfoe_NS_coeff2_5_0_lsb 0
+#define xd_p_cfoe_NS_coeff2_13_6	0xA204
+#define	cfoe_NS_coeff2_13_6_pos 0
+#define	cfoe_NS_coeff2_13_6_len 8
+#define	cfoe_NS_coeff2_13_6_lsb 6
+#define xd_p_cfoe_NS_coeff2_21_14	0xA205
+#define	cfoe_NS_coeff2_21_14_pos 0
+#define	cfoe_NS_coeff2_21_14_len 8
+#define	cfoe_NS_coeff2_21_14_lsb 14
+#define xd_p_cfoe_NS_coeff2_24_22	0xA206
+#define	cfoe_NS_coeff2_24_22_pos 0
+#define	cfoe_NS_coeff2_24_22_len 3
+#define	cfoe_NS_coeff2_24_22_lsb 22
+#define xd_p_cfoe_lf_c1_4_0	0xA206
+#define	cfoe_lf_c1_4_0_pos 3
+#define	cfoe_lf_c1_4_0_len 5
+#define	cfoe_lf_c1_4_0_lsb 0
+#define xd_p_cfoe_lf_c1_12_5	0xA207
+#define	cfoe_lf_c1_12_5_pos 0
+#define	cfoe_lf_c1_12_5_len 8
+#define	cfoe_lf_c1_12_5_lsb 5
+#define xd_p_cfoe_lf_c1_20_13	0xA208
+#define	cfoe_lf_c1_20_13_pos 0
+#define	cfoe_lf_c1_20_13_len 8
+#define	cfoe_lf_c1_20_13_lsb 13
+#define xd_p_cfoe_lf_c1_25_21	0xA209
+#define	cfoe_lf_c1_25_21_pos 0
+#define	cfoe_lf_c1_25_21_len 5
+#define	cfoe_lf_c1_25_21_lsb 21
+#define xd_p_cfoe_lf_c2_2_0	0xA209
+#define	cfoe_lf_c2_2_0_pos 5
+#define	cfoe_lf_c2_2_0_len 3
+#define	cfoe_lf_c2_2_0_lsb 0
+#define xd_p_cfoe_lf_c2_10_3	0xA20A
+#define	cfoe_lf_c2_10_3_pos 0
+#define	cfoe_lf_c2_10_3_len 8
+#define	cfoe_lf_c2_10_3_lsb 3
+#define xd_p_cfoe_lf_c2_18_11	0xA20B
+#define	cfoe_lf_c2_18_11_pos 0
+#define	cfoe_lf_c2_18_11_len 8
+#define	cfoe_lf_c2_18_11_lsb 11
+#define xd_p_cfoe_lf_c2_25_19	0xA20C
+#define	cfoe_lf_c2_25_19_pos 0
+#define	cfoe_lf_c2_25_19_len 7
+#define	cfoe_lf_c2_25_19_lsb 19
+#define xd_p_cfoe_ifod_7_0	0xA20D
+#define	cfoe_ifod_7_0_pos 0
+#define	cfoe_ifod_7_0_len 8
+#define	cfoe_ifod_7_0_lsb 0
+#define xd_p_cfoe_ifod_10_8	0xA20E
+#define	cfoe_ifod_10_8_pos 0
+#define	cfoe_ifod_10_8_len 3
+#define	cfoe_ifod_10_8_lsb 8
+#define xd_p_cfoe_Divg_ctr_th	0xA20E
+#define	cfoe_Divg_ctr_th_pos 4
+#define	cfoe_Divg_ctr_th_len 4
+#define	cfoe_Divg_ctr_th_lsb 0
+#define xd_p_cfoe_FOT_divg_th	0xA20F
+#define	cfoe_FOT_divg_th_pos 0
+#define	cfoe_FOT_divg_th_len 8
+#define	cfoe_FOT_divg_th_lsb 0
+#define xd_p_cfoe_FOT_cnvg_th	0xA210
+#define	cfoe_FOT_cnvg_th_pos 0
+#define	cfoe_FOT_cnvg_th_len 8
+#define	cfoe_FOT_cnvg_th_lsb 0
+#define xd_p_reg_cfoe_offset_7_0	0xA211
+#define	reg_cfoe_offset_7_0_pos 0
+#define	reg_cfoe_offset_7_0_len 8
+#define	reg_cfoe_offset_7_0_lsb 0
+#define xd_p_reg_cfoe_offset_9_8	0xA212
+#define	reg_cfoe_offset_9_8_pos 0
+#define	reg_cfoe_offset_9_8_len 2
+#define	reg_cfoe_offset_9_8_lsb 8
+#define xd_p_reg_cfoe_ifoe_sign_corr	0xA212
+#define	reg_cfoe_ifoe_sign_corr_pos 2
+#define	reg_cfoe_ifoe_sign_corr_len 1
+#define	reg_cfoe_ifoe_sign_corr_lsb 0
+#define xd_r_cfoe_fot_LF_output_7_0	0xA218
+#define	cfoe_fot_LF_output_7_0_pos 0
+#define	cfoe_fot_LF_output_7_0_len 8
+#define	cfoe_fot_LF_output_7_0_lsb 0
+#define xd_r_cfoe_fot_LF_output_15_8	0xA219
+#define	cfoe_fot_LF_output_15_8_pos 0
+#define	cfoe_fot_LF_output_15_8_len 8
+#define	cfoe_fot_LF_output_15_8_lsb 8
+#define xd_r_cfoe_ifo_metric_7_0	0xA21A
+#define	cfoe_ifo_metric_7_0_pos 0
+#define	cfoe_ifo_metric_7_0_len 8
+#define	cfoe_ifo_metric_7_0_lsb 0
+#define xd_r_cfoe_ifo_metric_15_8	0xA21B
+#define	cfoe_ifo_metric_15_8_pos 0
+#define	cfoe_ifo_metric_15_8_len 8
+#define	cfoe_ifo_metric_15_8_lsb 8
+#define xd_r_cfoe_ifo_metric_23_16	0xA21C
+#define	cfoe_ifo_metric_23_16_pos 0
+#define	cfoe_ifo_metric_23_16_len 8
+#define	cfoe_ifo_metric_23_16_lsb 16
+#define xd_p_ste_Nu	0xA220
+#define	ste_Nu_pos 0
+#define	ste_Nu_len 2
+#define	ste_Nu_lsb 0
+#define xd_p_ste_GI	0xA220
+#define	ste_GI_pos 2
+#define	ste_GI_len 3
+#define	ste_GI_lsb 0
+#define xd_p_ste_symbol_num	0xA221
+#define	ste_symbol_num_pos 0
+#define	ste_symbol_num_len 2
+#define	ste_symbol_num_lsb 0
+#define xd_p_ste_sample_num	0xA221
+#define	ste_sample_num_pos 2
+#define	ste_sample_num_len 2
+#define	ste_sample_num_lsb 0
+#define xd_p_reg_ste_buf_en	0xA221
+#define	reg_ste_buf_en_pos 7
+#define	reg_ste_buf_en_len 1
+#define	reg_ste_buf_en_lsb 0
+#define xd_p_ste_FFT_offset_7_0	0xA222
+#define	ste_FFT_offset_7_0_pos 0
+#define	ste_FFT_offset_7_0_len 8
+#define	ste_FFT_offset_7_0_lsb 0
+#define xd_p_ste_FFT_offset_11_8	0xA223
+#define	ste_FFT_offset_11_8_pos 0
+#define	ste_FFT_offset_11_8_len 4
+#define	ste_FFT_offset_11_8_lsb 8
+#define xd_p_reg_ste_tstmod	0xA223
+#define	reg_ste_tstmod_pos 5
+#define	reg_ste_tstmod_len 1
+#define	reg_ste_tstmod_lsb 0
+#define xd_p_ste_adv_start_7_0	0xA224
+#define	ste_adv_start_7_0_pos 0
+#define	ste_adv_start_7_0_len 8
+#define	ste_adv_start_7_0_lsb 0
+#define xd_p_ste_adv_start_10_8	0xA225
+#define	ste_adv_start_10_8_pos 0
+#define	ste_adv_start_10_8_len 3
+#define	ste_adv_start_10_8_lsb 8
+#define xd_p_ste_adv_stop	0xA226
+#define	ste_adv_stop_pos 0
+#define	ste_adv_stop_len 8
+#define	ste_adv_stop_lsb 0
+#define xd_r_ste_P_value_7_0	0xA228
+#define	ste_P_value_7_0_pos 0
+#define	ste_P_value_7_0_len 8
+#define	ste_P_value_7_0_lsb 0
+#define xd_r_ste_P_value_10_8	0xA229
+#define	ste_P_value_10_8_pos 0
+#define	ste_P_value_10_8_len 3
+#define	ste_P_value_10_8_lsb 8
+#define xd_r_ste_M_value_7_0	0xA22A
+#define	ste_M_value_7_0_pos 0
+#define	ste_M_value_7_0_len 8
+#define	ste_M_value_7_0_lsb 0
+#define xd_r_ste_M_value_10_8	0xA22B
+#define	ste_M_value_10_8_pos 0
+#define	ste_M_value_10_8_len 3
+#define	ste_M_value_10_8_lsb 8
+#define xd_r_ste_H1	0xA22C
+#define	ste_H1_pos 0
+#define	ste_H1_len 7
+#define	ste_H1_lsb 0
+#define xd_r_ste_H2	0xA22D
+#define	ste_H2_pos 0
+#define	ste_H2_len 7
+#define	ste_H2_lsb 0
+#define xd_r_ste_H3	0xA22E
+#define	ste_H3_pos 0
+#define	ste_H3_len 7
+#define	ste_H3_lsb 0
+#define xd_r_ste_H4	0xA22F
+#define	ste_H4_pos 0
+#define	ste_H4_len 7
+#define	ste_H4_lsb 0
+#define xd_r_ste_Corr_value_I_7_0	0xA230
+#define	ste_Corr_value_I_7_0_pos 0
+#define	ste_Corr_value_I_7_0_len 8
+#define	ste_Corr_value_I_7_0_lsb 0
+#define xd_r_ste_Corr_value_I_15_8	0xA231
+#define	ste_Corr_value_I_15_8_pos 0
+#define	ste_Corr_value_I_15_8_len 8
+#define	ste_Corr_value_I_15_8_lsb 8
+#define xd_r_ste_Corr_value_I_23_16	0xA232
+#define	ste_Corr_value_I_23_16_pos 0
+#define	ste_Corr_value_I_23_16_len 8
+#define	ste_Corr_value_I_23_16_lsb 16
+#define xd_r_ste_Corr_value_I_27_24	0xA233
+#define	ste_Corr_value_I_27_24_pos 0
+#define	ste_Corr_value_I_27_24_len 4
+#define	ste_Corr_value_I_27_24_lsb 24
+#define xd_r_ste_Corr_value_Q_7_0	0xA234
+#define	ste_Corr_value_Q_7_0_pos 0
+#define	ste_Corr_value_Q_7_0_len 8
+#define	ste_Corr_value_Q_7_0_lsb 0
+#define xd_r_ste_Corr_value_Q_15_8	0xA235
+#define	ste_Corr_value_Q_15_8_pos 0
+#define	ste_Corr_value_Q_15_8_len 8
+#define	ste_Corr_value_Q_15_8_lsb 8
+#define xd_r_ste_Corr_value_Q_23_16	0xA236
+#define	ste_Corr_value_Q_23_16_pos 0
+#define	ste_Corr_value_Q_23_16_len 8
+#define	ste_Corr_value_Q_23_16_lsb 16
+#define xd_r_ste_Corr_value_Q_27_24	0xA237
+#define	ste_Corr_value_Q_27_24_pos 0
+#define	ste_Corr_value_Q_27_24_len 4
+#define	ste_Corr_value_Q_27_24_lsb 24
+#define xd_r_ste_J_num_7_0	0xA238
+#define	ste_J_num_7_0_pos 0
+#define	ste_J_num_7_0_len 8
+#define	ste_J_num_7_0_lsb 0
+#define xd_r_ste_J_num_15_8	0xA239
+#define	ste_J_num_15_8_pos 0
+#define	ste_J_num_15_8_len 8
+#define	ste_J_num_15_8_lsb 8
+#define xd_r_ste_J_num_23_16	0xA23A
+#define	ste_J_num_23_16_pos 0
+#define	ste_J_num_23_16_len 8
+#define	ste_J_num_23_16_lsb 16
+#define xd_r_ste_J_num_31_24	0xA23B
+#define	ste_J_num_31_24_pos 0
+#define	ste_J_num_31_24_len 8
+#define	ste_J_num_31_24_lsb 24
+#define xd_r_ste_J_den_7_0	0xA23C
+#define	ste_J_den_7_0_pos 0
+#define	ste_J_den_7_0_len 8
+#define	ste_J_den_7_0_lsb 0
+#define xd_r_ste_J_den_15_8	0xA23D
+#define	ste_J_den_15_8_pos 0
+#define	ste_J_den_15_8_len 8
+#define	ste_J_den_15_8_lsb 8
+#define xd_r_ste_J_den_18_16	0xA23E
+#define	ste_J_den_18_16_pos 0
+#define	ste_J_den_18_16_len 3
+#define	ste_J_den_18_16_lsb 16
+#define xd_r_ste_Beacon_Indicator	0xA23E
+#define	ste_Beacon_Indicator_pos 4
+#define	ste_Beacon_Indicator_len 1
+#define	ste_Beacon_Indicator_lsb 0
+#define xd_r_tpsd_Frame_Num	0xA250
+#define	tpsd_Frame_Num_pos 0
+#define	tpsd_Frame_Num_len 2
+#define	tpsd_Frame_Num_lsb 0
+#define xd_r_tpsd_Constel	0xA250
+#define	tpsd_Constel_pos 2
+#define	tpsd_Constel_len 2
+#define	tpsd_Constel_lsb 0
+#define xd_r_tpsd_GI	0xA250
+#define	tpsd_GI_pos 4
+#define	tpsd_GI_len 2
+#define	tpsd_GI_lsb 0
+#define xd_r_tpsd_Mode	0xA250
+#define	tpsd_Mode_pos 6
+#define	tpsd_Mode_len 2
+#define	tpsd_Mode_lsb 0
+#define xd_r_tpsd_CR_HP	0xA251
+#define	tpsd_CR_HP_pos 0
+#define	tpsd_CR_HP_len 3
+#define	tpsd_CR_HP_lsb 0
+#define xd_r_tpsd_CR_LP	0xA251
+#define	tpsd_CR_LP_pos 3
+#define	tpsd_CR_LP_len 3
+#define	tpsd_CR_LP_lsb 0
+#define xd_r_tpsd_Hie	0xA252
+#define	tpsd_Hie_pos 0
+#define	tpsd_Hie_len 3
+#define	tpsd_Hie_lsb 0
+#define xd_r_tpsd_Res_Bits	0xA252
+#define	tpsd_Res_Bits_pos 3
+#define	tpsd_Res_Bits_len 5
+#define	tpsd_Res_Bits_lsb 0
+#define xd_r_tpsd_Res_Bits_0	0xA253
+#define	tpsd_Res_Bits_0_pos 0
+#define	tpsd_Res_Bits_0_len 1
+#define	tpsd_Res_Bits_0_lsb 0
+#define xd_r_tpsd_LengthInd	0xA253
+#define	tpsd_LengthInd_pos 1
+#define	tpsd_LengthInd_len 6
+#define	tpsd_LengthInd_lsb 0
+#define xd_r_tpsd_Cell_Id_7_0	0xA254
+#define	tpsd_Cell_Id_7_0_pos 0
+#define	tpsd_Cell_Id_7_0_len 8
+#define	tpsd_Cell_Id_7_0_lsb 0
+#define xd_r_tpsd_Cell_Id_15_8	0xA255
+#define	tpsd_Cell_Id_15_8_pos 0
+#define	tpsd_Cell_Id_15_8_len 8
+#define	tpsd_Cell_Id_15_8_lsb 0
+#define xd_p_reg_fft_mask_tone0_7_0	0xA260
+#define	reg_fft_mask_tone0_7_0_pos 0
+#define	reg_fft_mask_tone0_7_0_len 8
+#define	reg_fft_mask_tone0_7_0_lsb 0
+#define xd_p_reg_fft_mask_tone0_12_8	0xA261
+#define	reg_fft_mask_tone0_12_8_pos 0
+#define	reg_fft_mask_tone0_12_8_len 5
+#define	reg_fft_mask_tone0_12_8_lsb 8
+#define xd_p_reg_fft_mask_tone1_7_0	0xA262
+#define	reg_fft_mask_tone1_7_0_pos 0
+#define	reg_fft_mask_tone1_7_0_len 8
+#define	reg_fft_mask_tone1_7_0_lsb 0
+#define xd_p_reg_fft_mask_tone1_12_8	0xA263
+#define	reg_fft_mask_tone1_12_8_pos 0
+#define	reg_fft_mask_tone1_12_8_len 5
+#define	reg_fft_mask_tone1_12_8_lsb 8
+#define xd_p_reg_fft_mask_tone2_7_0	0xA264
+#define	reg_fft_mask_tone2_7_0_pos 0
+#define	reg_fft_mask_tone2_7_0_len 8
+#define	reg_fft_mask_tone2_7_0_lsb 0
+#define xd_p_reg_fft_mask_tone2_12_8	0xA265
+#define	reg_fft_mask_tone2_12_8_pos 0
+#define	reg_fft_mask_tone2_12_8_len 5
+#define	reg_fft_mask_tone2_12_8_lsb 8
+#define xd_p_reg_fft_mask_tone3_7_0	0xA266
+#define	reg_fft_mask_tone3_7_0_pos 0
+#define	reg_fft_mask_tone3_7_0_len 8
+#define	reg_fft_mask_tone3_7_0_lsb 0
+#define xd_p_reg_fft_mask_tone3_12_8	0xA267
+#define	reg_fft_mask_tone3_12_8_pos 0
+#define	reg_fft_mask_tone3_12_8_len 5
+#define	reg_fft_mask_tone3_12_8_lsb 8
+#define xd_p_reg_fft_mask_from0_7_0	0xA268
+#define	reg_fft_mask_from0_7_0_pos 0
+#define	reg_fft_mask_from0_7_0_len 8
+#define	reg_fft_mask_from0_7_0_lsb 0
+#define xd_p_reg_fft_mask_from0_12_8	0xA269
+#define	reg_fft_mask_from0_12_8_pos 0
+#define	reg_fft_mask_from0_12_8_len 5
+#define	reg_fft_mask_from0_12_8_lsb 8
+#define xd_p_reg_fft_mask_to0_7_0	0xA26A
+#define	reg_fft_mask_to0_7_0_pos 0
+#define	reg_fft_mask_to0_7_0_len 8
+#define	reg_fft_mask_to0_7_0_lsb 0
+#define xd_p_reg_fft_mask_to0_12_8	0xA26B
+#define	reg_fft_mask_to0_12_8_pos 0
+#define	reg_fft_mask_to0_12_8_len 5
+#define	reg_fft_mask_to0_12_8_lsb 8
+#define xd_p_reg_fft_mask_from1_7_0	0xA26C
+#define	reg_fft_mask_from1_7_0_pos 0
+#define	reg_fft_mask_from1_7_0_len 8
+#define	reg_fft_mask_from1_7_0_lsb 0
+#define xd_p_reg_fft_mask_from1_12_8	0xA26D
+#define	reg_fft_mask_from1_12_8_pos 0
+#define	reg_fft_mask_from1_12_8_len 5
+#define	reg_fft_mask_from1_12_8_lsb 8
+#define xd_p_reg_fft_mask_to1_7_0	0xA26E
+#define	reg_fft_mask_to1_7_0_pos 0
+#define	reg_fft_mask_to1_7_0_len 8
+#define	reg_fft_mask_to1_7_0_lsb 0
+#define xd_p_reg_fft_mask_to1_12_8	0xA26F
+#define	reg_fft_mask_to1_12_8_pos 0
+#define	reg_fft_mask_to1_12_8_len 5
+#define	reg_fft_mask_to1_12_8_lsb 8
+#define xd_p_reg_cge_idx0_7_0	0xA280
+#define	reg_cge_idx0_7_0_pos 0
+#define	reg_cge_idx0_7_0_len 8
+#define	reg_cge_idx0_7_0_lsb 0
+#define xd_p_reg_cge_idx0_12_8	0xA281
+#define	reg_cge_idx0_12_8_pos 0
+#define	reg_cge_idx0_12_8_len 5
+#define	reg_cge_idx0_12_8_lsb 8
+#define xd_p_reg_cge_idx1_7_0	0xA282
+#define	reg_cge_idx1_7_0_pos 0
+#define	reg_cge_idx1_7_0_len 8
+#define	reg_cge_idx1_7_0_lsb 0
+#define xd_p_reg_cge_idx1_12_8	0xA283
+#define	reg_cge_idx1_12_8_pos 0
+#define	reg_cge_idx1_12_8_len 5
+#define	reg_cge_idx1_12_8_lsb 8
+#define xd_p_reg_cge_idx2_7_0	0xA284
+#define	reg_cge_idx2_7_0_pos 0
+#define	reg_cge_idx2_7_0_len 8
+#define	reg_cge_idx2_7_0_lsb 0
+#define xd_p_reg_cge_idx2_12_8	0xA285
+#define	reg_cge_idx2_12_8_pos 0
+#define	reg_cge_idx2_12_8_len 5
+#define	reg_cge_idx2_12_8_lsb 8
+#define xd_p_reg_cge_idx3_7_0	0xA286
+#define	reg_cge_idx3_7_0_pos 0
+#define	reg_cge_idx3_7_0_len 8
+#define	reg_cge_idx3_7_0_lsb 0
+#define xd_p_reg_cge_idx3_12_8	0xA287
+#define	reg_cge_idx3_12_8_pos 0
+#define	reg_cge_idx3_12_8_len 5
+#define	reg_cge_idx3_12_8_lsb 8
+#define xd_p_reg_cge_idx4_7_0	0xA288
+#define	reg_cge_idx4_7_0_pos 0
+#define	reg_cge_idx4_7_0_len 8
+#define	reg_cge_idx4_7_0_lsb 0
+#define xd_p_reg_cge_idx4_12_8	0xA289
+#define	reg_cge_idx4_12_8_pos 0
+#define	reg_cge_idx4_12_8_len 5
+#define	reg_cge_idx4_12_8_lsb 8
+#define xd_p_reg_cge_idx5_7_0	0xA28A
+#define	reg_cge_idx5_7_0_pos 0
+#define	reg_cge_idx5_7_0_len 8
+#define	reg_cge_idx5_7_0_lsb 0
+#define xd_p_reg_cge_idx5_12_8	0xA28B
+#define	reg_cge_idx5_12_8_pos 0
+#define	reg_cge_idx5_12_8_len 5
+#define	reg_cge_idx5_12_8_lsb 8
+#define xd_p_reg_cge_idx6_7_0	0xA28C
+#define	reg_cge_idx6_7_0_pos 0
+#define	reg_cge_idx6_7_0_len 8
+#define	reg_cge_idx6_7_0_lsb 0
+#define xd_p_reg_cge_idx6_12_8	0xA28D
+#define	reg_cge_idx6_12_8_pos 0
+#define	reg_cge_idx6_12_8_len 5
+#define	reg_cge_idx6_12_8_lsb 8
+#define xd_p_reg_cge_idx7_7_0	0xA28E
+#define	reg_cge_idx7_7_0_pos 0
+#define	reg_cge_idx7_7_0_len 8
+#define	reg_cge_idx7_7_0_lsb 0
+#define xd_p_reg_cge_idx7_12_8	0xA28F
+#define	reg_cge_idx7_12_8_pos 0
+#define	reg_cge_idx7_12_8_len 5
+#define	reg_cge_idx7_12_8_lsb 8
+#define xd_p_reg_cge_idx8_7_0	0xA290
+#define	reg_cge_idx8_7_0_pos 0
+#define	reg_cge_idx8_7_0_len 8
+#define	reg_cge_idx8_7_0_lsb 0
+#define xd_p_reg_cge_idx8_12_8	0xA291
+#define	reg_cge_idx8_12_8_pos 0
+#define	reg_cge_idx8_12_8_len 5
+#define	reg_cge_idx8_12_8_lsb 8
+#define xd_p_reg_cge_idx9_7_0	0xA292
+#define	reg_cge_idx9_7_0_pos 0
+#define	reg_cge_idx9_7_0_len 8
+#define	reg_cge_idx9_7_0_lsb 0
+#define xd_p_reg_cge_idx9_12_8	0xA293
+#define	reg_cge_idx9_12_8_pos 0
+#define	reg_cge_idx9_12_8_len 5
+#define	reg_cge_idx9_12_8_lsb 8
+#define xd_p_reg_cge_idx10_7_0	0xA294
+#define	reg_cge_idx10_7_0_pos 0
+#define	reg_cge_idx10_7_0_len 8
+#define	reg_cge_idx10_7_0_lsb 0
+#define xd_p_reg_cge_idx10_12_8	0xA295
+#define	reg_cge_idx10_12_8_pos 0
+#define	reg_cge_idx10_12_8_len 5
+#define	reg_cge_idx10_12_8_lsb 8
+#define xd_p_reg_cge_idx11_7_0	0xA296
+#define	reg_cge_idx11_7_0_pos 0
+#define	reg_cge_idx11_7_0_len 8
+#define	reg_cge_idx11_7_0_lsb 0
+#define xd_p_reg_cge_idx11_12_8	0xA297
+#define	reg_cge_idx11_12_8_pos 0
+#define	reg_cge_idx11_12_8_len 5
+#define	reg_cge_idx11_12_8_lsb 8
+#define xd_p_reg_cge_idx12_7_0	0xA298
+#define	reg_cge_idx12_7_0_pos 0
+#define	reg_cge_idx12_7_0_len 8
+#define	reg_cge_idx12_7_0_lsb 0
+#define xd_p_reg_cge_idx12_12_8	0xA299
+#define	reg_cge_idx12_12_8_pos 0
+#define	reg_cge_idx12_12_8_len 5
+#define	reg_cge_idx12_12_8_lsb 8
+#define xd_p_reg_cge_idx13_7_0	0xA29A
+#define	reg_cge_idx13_7_0_pos 0
+#define	reg_cge_idx13_7_0_len 8
+#define	reg_cge_idx13_7_0_lsb 0
+#define xd_p_reg_cge_idx13_12_8	0xA29B
+#define	reg_cge_idx13_12_8_pos 0
+#define	reg_cge_idx13_12_8_len 5
+#define	reg_cge_idx13_12_8_lsb 8
+#define xd_p_reg_cge_idx14_7_0	0xA29C
+#define	reg_cge_idx14_7_0_pos 0
+#define	reg_cge_idx14_7_0_len 8
+#define	reg_cge_idx14_7_0_lsb 0
+#define xd_p_reg_cge_idx14_12_8	0xA29D
+#define	reg_cge_idx14_12_8_pos 0
+#define	reg_cge_idx14_12_8_len 5
+#define	reg_cge_idx14_12_8_lsb 8
+#define xd_p_reg_cge_idx15_7_0	0xA29E
+#define	reg_cge_idx15_7_0_pos 0
+#define	reg_cge_idx15_7_0_len 8
+#define	reg_cge_idx15_7_0_lsb 0
+#define xd_p_reg_cge_idx15_12_8	0xA29F
+#define	reg_cge_idx15_12_8_pos 0
+#define	reg_cge_idx15_12_8_len 5
+#define	reg_cge_idx15_12_8_lsb 8
+#define xd_r_reg_fft_crc	0xA2A8
+#define	reg_fft_crc_pos 0
+#define	reg_fft_crc_len 8
+#define	reg_fft_crc_lsb 0
+#define xd_p_fd_fft_shift_max	0xA2A9
+#define	fd_fft_shift_max_pos 0
+#define	fd_fft_shift_max_len 4
+#define	fd_fft_shift_max_lsb 0
+#define xd_r_fd_fft_shift	0xA2A9
+#define	fd_fft_shift_pos 4
+#define	fd_fft_shift_len 4
+#define	fd_fft_shift_lsb 0
+#define xd_r_fd_fft_frame_num	0xA2AA
+#define	fd_fft_frame_num_pos 0
+#define	fd_fft_frame_num_len 2
+#define	fd_fft_frame_num_lsb 0
+#define xd_r_fd_fft_symbol_count	0xA2AB
+#define	fd_fft_symbol_count_pos 0
+#define	fd_fft_symbol_count_len 7
+#define	fd_fft_symbol_count_lsb 0
+#define xd_r_reg_fft_idx_max_7_0	0xA2AC
+#define	reg_fft_idx_max_7_0_pos 0
+#define	reg_fft_idx_max_7_0_len 8
+#define	reg_fft_idx_max_7_0_lsb 0
+#define xd_r_reg_fft_idx_max_12_8	0xA2AD
+#define	reg_fft_idx_max_12_8_pos 0
+#define	reg_fft_idx_max_12_8_len 5
+#define	reg_fft_idx_max_12_8_lsb 8
+#define xd_p_reg_cge_program	0xA2AE
+#define	reg_cge_program_pos 0
+#define	reg_cge_program_len 1
+#define	reg_cge_program_lsb 0
+#define xd_p_reg_cge_fixed	0xA2AE
+#define	reg_cge_fixed_pos 1
+#define	reg_cge_fixed_len 1
+#define	reg_cge_fixed_lsb 0
+#define xd_p_reg_fft_rotate_en	0xA2AE
+#define	reg_fft_rotate_en_pos 2
+#define	reg_fft_rotate_en_len 1
+#define	reg_fft_rotate_en_lsb 0
+#define xd_p_reg_fft_rotate_base_4_0	0xA2AE
+#define	reg_fft_rotate_base_4_0_pos 3
+#define	reg_fft_rotate_base_4_0_len 5
+#define	reg_fft_rotate_base_4_0_lsb 0
+#define xd_p_reg_fft_rotate_base_12_5	0xA2AF
+#define	reg_fft_rotate_base_12_5_pos 0
+#define	reg_fft_rotate_base_12_5_len 8
+#define	reg_fft_rotate_base_12_5_lsb 5
+#define xd_p_reg_gp_trigger_fd	0xA2B8
+#define	reg_gp_trigger_fd_pos 0
+#define	reg_gp_trigger_fd_len 1
+#define	reg_gp_trigger_fd_lsb 0
+#define xd_p_reg_trigger_sel_fd	0xA2B8
+#define	reg_trigger_sel_fd_pos 1
+#define	reg_trigger_sel_fd_len 2
+#define	reg_trigger_sel_fd_lsb 0
+#define xd_p_reg_trigger_module_sel_fd	0xA2B9
+#define	reg_trigger_module_sel_fd_pos 0
+#define	reg_trigger_module_sel_fd_len 6
+#define	reg_trigger_module_sel_fd_lsb 0
+#define xd_p_reg_trigger_set_sel_fd	0xA2BA
+#define	reg_trigger_set_sel_fd_pos 0
+#define	reg_trigger_set_sel_fd_len 6
+#define	reg_trigger_set_sel_fd_lsb 0
+#define xd_p_reg_fd_noname_7_0	0xA2BC
+#define	reg_fd_noname_7_0_pos 0
+#define	reg_fd_noname_7_0_len 8
+#define	reg_fd_noname_7_0_lsb 0
+#define xd_p_reg_fd_noname_15_8	0xA2BD
+#define	reg_fd_noname_15_8_pos 0
+#define	reg_fd_noname_15_8_len 8
+#define	reg_fd_noname_15_8_lsb 8
+#define xd_p_reg_fd_noname_23_16	0xA2BE
+#define	reg_fd_noname_23_16_pos 0
+#define	reg_fd_noname_23_16_len 8
+#define	reg_fd_noname_23_16_lsb 16
+#define xd_p_reg_fd_noname_31_24	0xA2BF
+#define	reg_fd_noname_31_24_pos 0
+#define	reg_fd_noname_31_24_len 8
+#define	reg_fd_noname_31_24_lsb 24
+#define xd_r_fd_fpcc_cp_corr_signn	0xA2C0
+#define	fd_fpcc_cp_corr_signn_pos 0
+#define	fd_fpcc_cp_corr_signn_len 8
+#define	fd_fpcc_cp_corr_signn_lsb 0
+#define xd_p_reg_feq_s1	0xA2C1
+#define	reg_feq_s1_pos 0
+#define	reg_feq_s1_len 5
+#define	reg_feq_s1_lsb 0
+#define xd_p_fd_fpcc_cp_corr_tone_th	0xA2C2
+#define	fd_fpcc_cp_corr_tone_th_pos 0
+#define	fd_fpcc_cp_corr_tone_th_len 6
+#define	fd_fpcc_cp_corr_tone_th_lsb 0
+#define xd_p_fd_fpcc_cp_corr_symbol_log_th	0xA2C3
+#define	fd_fpcc_cp_corr_symbol_log_th_pos 0
+#define	fd_fpcc_cp_corr_symbol_log_th_len 4
+#define	fd_fpcc_cp_corr_symbol_log_th_lsb 0
+#define xd_p_fd_fpcc_cp_corr_int	0xA2C4
+#define	fd_fpcc_cp_corr_int_pos 0
+#define	fd_fpcc_cp_corr_int_len 1
+#define	fd_fpcc_cp_corr_int_lsb 0
+#define xd_p_reg_sfoe_ns_7_0	0xA320
+#define	reg_sfoe_ns_7_0_pos 0
+#define	reg_sfoe_ns_7_0_len 8
+#define	reg_sfoe_ns_7_0_lsb 0
+#define xd_p_reg_sfoe_ns_14_8	0xA321
+#define	reg_sfoe_ns_14_8_pos 0
+#define	reg_sfoe_ns_14_8_len 7
+#define	reg_sfoe_ns_14_8_lsb 8
+#define xd_p_reg_sfoe_c1_7_0	0xA322
+#define	reg_sfoe_c1_7_0_pos 0
+#define	reg_sfoe_c1_7_0_len 8
+#define	reg_sfoe_c1_7_0_lsb 0
+#define xd_p_reg_sfoe_c1_15_8	0xA323
+#define	reg_sfoe_c1_15_8_pos 0
+#define	reg_sfoe_c1_15_8_len 8
+#define	reg_sfoe_c1_15_8_lsb 8
+#define xd_p_reg_sfoe_c1_17_16	0xA324
+#define	reg_sfoe_c1_17_16_pos 0
+#define	reg_sfoe_c1_17_16_len 2
+#define	reg_sfoe_c1_17_16_lsb 16
+#define xd_p_reg_sfoe_c2_7_0	0xA325
+#define	reg_sfoe_c2_7_0_pos 0
+#define	reg_sfoe_c2_7_0_len 8
+#define	reg_sfoe_c2_7_0_lsb 0
+#define xd_p_reg_sfoe_c2_15_8	0xA326
+#define	reg_sfoe_c2_15_8_pos 0
+#define	reg_sfoe_c2_15_8_len 8
+#define	reg_sfoe_c2_15_8_lsb 8
+#define xd_p_reg_sfoe_c2_17_16	0xA327
+#define	reg_sfoe_c2_17_16_pos 0
+#define	reg_sfoe_c2_17_16_len 2
+#define	reg_sfoe_c2_17_16_lsb 16
+#define xd_r_reg_sfoe_out_9_2	0xA328
+#define	reg_sfoe_out_9_2_pos 0
+#define	reg_sfoe_out_9_2_len 8
+#define	reg_sfoe_out_9_2_lsb 0
+#define xd_r_reg_sfoe_out_1_0	0xA329
+#define	reg_sfoe_out_1_0_pos 0
+#define	reg_sfoe_out_1_0_len 2
+#define	reg_sfoe_out_1_0_lsb 0
+#define xd_p_reg_sfoe_lm_counter_th	0xA32A
+#define	reg_sfoe_lm_counter_th_pos 0
+#define	reg_sfoe_lm_counter_th_len 4
+#define	reg_sfoe_lm_counter_th_lsb 0
+#define xd_p_reg_sfoe_convg_th	0xA32B
+#define	reg_sfoe_convg_th_pos 0
+#define	reg_sfoe_convg_th_len 8
+#define	reg_sfoe_convg_th_lsb 0
+#define xd_p_reg_sfoe_divg_th	0xA32C
+#define	reg_sfoe_divg_th_pos 0
+#define	reg_sfoe_divg_th_len 8
+#define	reg_sfoe_divg_th_lsb 0
+#define xd_p_fd_tpsd_en	0xA330
+#define	fd_tpsd_en_pos 0
+#define	fd_tpsd_en_len 1
+#define	fd_tpsd_en_lsb 0
+#define xd_p_fd_tpsd_dis	0xA330
+#define	fd_tpsd_dis_pos 1
+#define	fd_tpsd_dis_len 1
+#define	fd_tpsd_dis_lsb 0
+#define xd_p_fd_tpsd_rst	0xA330
+#define	fd_tpsd_rst_pos 2
+#define	fd_tpsd_rst_len 1
+#define	fd_tpsd_rst_lsb 0
+#define xd_p_fd_tpsd_lock	0xA330
+#define	fd_tpsd_lock_pos 3
+#define	fd_tpsd_lock_len 1
+#define	fd_tpsd_lock_lsb 0
+#define xd_r_fd_tpsd_s19	0xA330
+#define	fd_tpsd_s19_pos 4
+#define	fd_tpsd_s19_len 1
+#define	fd_tpsd_s19_lsb 0
+#define xd_r_fd_tpsd_s17	0xA330
+#define	fd_tpsd_s17_pos 5
+#define	fd_tpsd_s17_len 1
+#define	fd_tpsd_s17_lsb 0
+#define xd_p_fd_sfr_ste_en	0xA331
+#define	fd_sfr_ste_en_pos 0
+#define	fd_sfr_ste_en_len 1
+#define	fd_sfr_ste_en_lsb 0
+#define xd_p_fd_sfr_ste_dis	0xA331
+#define	fd_sfr_ste_dis_pos 1
+#define	fd_sfr_ste_dis_len 1
+#define	fd_sfr_ste_dis_lsb 0
+#define xd_p_fd_sfr_ste_rst	0xA331
+#define	fd_sfr_ste_rst_pos 2
+#define	fd_sfr_ste_rst_len 1
+#define	fd_sfr_ste_rst_lsb 0
+#define xd_p_fd_sfr_ste_mode	0xA331
+#define	fd_sfr_ste_mode_pos 3
+#define	fd_sfr_ste_mode_len 1
+#define	fd_sfr_ste_mode_lsb 0
+#define xd_p_fd_sfr_ste_done	0xA331
+#define	fd_sfr_ste_done_pos 4
+#define	fd_sfr_ste_done_len 1
+#define	fd_sfr_ste_done_lsb 0
+#define xd_p_reg_cfoe_ffoe_en	0xA332
+#define	reg_cfoe_ffoe_en_pos 0
+#define	reg_cfoe_ffoe_en_len 1
+#define	reg_cfoe_ffoe_en_lsb 0
+#define xd_p_reg_cfoe_ffoe_dis	0xA332
+#define	reg_cfoe_ffoe_dis_pos 1
+#define	reg_cfoe_ffoe_dis_len 1
+#define	reg_cfoe_ffoe_dis_lsb 0
+#define xd_p_reg_cfoe_ffoe_rst	0xA332
+#define	reg_cfoe_ffoe_rst_pos 2
+#define	reg_cfoe_ffoe_rst_len 1
+#define	reg_cfoe_ffoe_rst_lsb 0
+#define xd_p_reg_cfoe_ifoe_en	0xA332
+#define	reg_cfoe_ifoe_en_pos 3
+#define	reg_cfoe_ifoe_en_len 1
+#define	reg_cfoe_ifoe_en_lsb 0
+#define xd_p_reg_cfoe_ifoe_dis	0xA332
+#define	reg_cfoe_ifoe_dis_pos 4
+#define	reg_cfoe_ifoe_dis_len 1
+#define	reg_cfoe_ifoe_dis_lsb 0
+#define xd_p_reg_cfoe_ifoe_rst	0xA332
+#define	reg_cfoe_ifoe_rst_pos 5
+#define	reg_cfoe_ifoe_rst_len 1
+#define	reg_cfoe_ifoe_rst_lsb 0
+#define xd_p_reg_cfoe_fot_en	0xA332
+#define	reg_cfoe_fot_en_pos 6
+#define	reg_cfoe_fot_en_len 1
+#define	reg_cfoe_fot_en_lsb 0
+#define xd_p_reg_cfoe_fot_lm_en	0xA332
+#define	reg_cfoe_fot_lm_en_pos 7
+#define	reg_cfoe_fot_lm_en_len 1
+#define	reg_cfoe_fot_lm_en_lsb 0
+#define xd_p_reg_cfoe_fot_rst	0xA333
+#define	reg_cfoe_fot_rst_pos 0
+#define	reg_cfoe_fot_rst_len 1
+#define	reg_cfoe_fot_rst_lsb 0
+#define xd_r_fd_cfoe_ffoe_done	0xA333
+#define	fd_cfoe_ffoe_done_pos 1
+#define	fd_cfoe_ffoe_done_len 1
+#define	fd_cfoe_ffoe_done_lsb 0
+#define xd_p_fd_cfoe_metric_vld	0xA333
+#define	fd_cfoe_metric_vld_pos 2
+#define	fd_cfoe_metric_vld_len 1
+#define	fd_cfoe_metric_vld_lsb 0
+#define xd_p_reg_cfoe_ifod_vld	0xA333
+#define	reg_cfoe_ifod_vld_pos 3
+#define	reg_cfoe_ifod_vld_len 1
+#define	reg_cfoe_ifod_vld_lsb 0
+#define xd_r_fd_cfoe_ifoe_done	0xA333
+#define	fd_cfoe_ifoe_done_pos 4
+#define	fd_cfoe_ifoe_done_len 1
+#define	fd_cfoe_ifoe_done_lsb 0
+#define xd_r_fd_cfoe_fot_valid	0xA333
+#define	fd_cfoe_fot_valid_pos 5
+#define	fd_cfoe_fot_valid_len 1
+#define	fd_cfoe_fot_valid_lsb 0
+#define xd_p_reg_cfoe_divg_int	0xA333
+#define	reg_cfoe_divg_int_pos 6
+#define	reg_cfoe_divg_int_len 1
+#define	reg_cfoe_divg_int_lsb 0
+#define xd_r_reg_cfoe_divg_flag	0xA333
+#define	reg_cfoe_divg_flag_pos 7
+#define	reg_cfoe_divg_flag_len 1
+#define	reg_cfoe_divg_flag_lsb 0
+#define xd_p_reg_sfoe_en	0xA334
+#define	reg_sfoe_en_pos 0
+#define	reg_sfoe_en_len 1
+#define	reg_sfoe_en_lsb 0
+#define xd_p_reg_sfoe_dis	0xA334
+#define	reg_sfoe_dis_pos 1
+#define	reg_sfoe_dis_len 1
+#define	reg_sfoe_dis_lsb 0
+#define xd_p_reg_sfoe_rst	0xA334
+#define	reg_sfoe_rst_pos 2
+#define	reg_sfoe_rst_len 1
+#define	reg_sfoe_rst_lsb 0
+#define xd_p_reg_sfoe_vld_int	0xA334
+#define	reg_sfoe_vld_int_pos 3
+#define	reg_sfoe_vld_int_len 1
+#define	reg_sfoe_vld_int_lsb 0
+#define xd_p_reg_sfoe_lm_en	0xA334
+#define	reg_sfoe_lm_en_pos 4
+#define	reg_sfoe_lm_en_len 1
+#define	reg_sfoe_lm_en_lsb 0
+#define xd_p_reg_sfoe_divg_int	0xA334
+#define	reg_sfoe_divg_int_pos 5
+#define	reg_sfoe_divg_int_len 1
+#define	reg_sfoe_divg_int_lsb 0
+#define xd_r_reg_sfoe_divg_flag	0xA334
+#define	reg_sfoe_divg_flag_pos 6
+#define	reg_sfoe_divg_flag_len 1
+#define	reg_sfoe_divg_flag_lsb 0
+#define xd_p_reg_fft_rst	0xA335
+#define	reg_fft_rst_pos 0
+#define	reg_fft_rst_len 1
+#define	reg_fft_rst_lsb 0
+#define xd_p_reg_fft_fast_beacon	0xA335
+#define	reg_fft_fast_beacon_pos 1
+#define	reg_fft_fast_beacon_len 1
+#define	reg_fft_fast_beacon_lsb 0
+#define xd_p_reg_fft_fast_valid	0xA335
+#define	reg_fft_fast_valid_pos 2
+#define	reg_fft_fast_valid_len 1
+#define	reg_fft_fast_valid_lsb 0
+#define xd_p_reg_fft_mask_en	0xA335
+#define	reg_fft_mask_en_pos 3
+#define	reg_fft_mask_en_len 1
+#define	reg_fft_mask_en_lsb 0
+#define xd_p_reg_fft_crc_en	0xA335
+#define	reg_fft_crc_en_pos 4
+#define	reg_fft_crc_en_len 1
+#define	reg_fft_crc_en_lsb 0
+#define xd_p_reg_finr_en	0xA336
+#define	reg_finr_en_pos 0
+#define	reg_finr_en_len 1
+#define	reg_finr_en_lsb 0
+#define xd_p_fd_fste_en	0xA337
+#define	fd_fste_en_pos 1
+#define	fd_fste_en_len 1
+#define	fd_fste_en_lsb 0
+#define xd_p_fd_sqi_tps_level_shift	0xA338
+#define	fd_sqi_tps_level_shift_pos 0
+#define	fd_sqi_tps_level_shift_len 8
+#define	fd_sqi_tps_level_shift_lsb 0
+#define xd_p_fd_pilot_ma_len	0xA339
+#define	fd_pilot_ma_len_pos 0
+#define	fd_pilot_ma_len_len 6
+#define	fd_pilot_ma_len_lsb 0
+#define xd_p_fd_tps_ma_len	0xA33A
+#define	fd_tps_ma_len_pos 0
+#define	fd_tps_ma_len_len 6
+#define	fd_tps_ma_len_lsb 0
+#define xd_p_fd_sqi_s3	0xA33B
+#define	fd_sqi_s3_pos 0
+#define	fd_sqi_s3_len 8
+#define	fd_sqi_s3_lsb 0
+#define xd_p_fd_sqi_dummy_reg_0	0xA33C
+#define	fd_sqi_dummy_reg_0_pos 0
+#define	fd_sqi_dummy_reg_0_len 1
+#define	fd_sqi_dummy_reg_0_lsb 0
+#define xd_p_fd_sqi_debug_sel	0xA33C
+#define	fd_sqi_debug_sel_pos 1
+#define	fd_sqi_debug_sel_len 2
+#define	fd_sqi_debug_sel_lsb 0
+#define xd_p_fd_sqi_s2	0xA33C
+#define	fd_sqi_s2_pos 3
+#define	fd_sqi_s2_len 5
+#define	fd_sqi_s2_lsb 0
+#define xd_p_fd_sqi_dummy_reg_1	0xA33D
+#define	fd_sqi_dummy_reg_1_pos 0
+#define	fd_sqi_dummy_reg_1_len 1
+#define	fd_sqi_dummy_reg_1_lsb 0
+#define xd_p_fd_inr_ignore	0xA33D
+#define	fd_inr_ignore_pos 1
+#define	fd_inr_ignore_len 1
+#define	fd_inr_ignore_lsb 0
+#define xd_p_fd_pilot_ignore	0xA33D
+#define	fd_pilot_ignore_pos 2
+#define	fd_pilot_ignore_len 1
+#define	fd_pilot_ignore_lsb 0
+#define xd_p_fd_etps_ignore	0xA33D
+#define	fd_etps_ignore_pos 3
+#define	fd_etps_ignore_len 1
+#define	fd_etps_ignore_lsb 0
+#define xd_p_fd_sqi_s1	0xA33D
+#define	fd_sqi_s1_pos 4
+#define	fd_sqi_s1_len 4
+#define	fd_sqi_s1_lsb 0
+#define xd_p_reg_fste_ehw_7_0	0xA33E
+#define	reg_fste_ehw_7_0_pos 0
+#define	reg_fste_ehw_7_0_len 8
+#define	reg_fste_ehw_7_0_lsb 0
+#define xd_p_reg_fste_ehw_9_8	0xA33F
+#define	reg_fste_ehw_9_8_pos 0
+#define	reg_fste_ehw_9_8_len 2
+#define	reg_fste_ehw_9_8_lsb 8
+#define xd_p_reg_fste_i_adj_vld	0xA33F
+#define	reg_fste_i_adj_vld_pos 2
+#define	reg_fste_i_adj_vld_len 1
+#define	reg_fste_i_adj_vld_lsb 0
+#define xd_p_reg_fste_phase_ini_7_0	0xA340
+#define	reg_fste_phase_ini_7_0_pos 0
+#define	reg_fste_phase_ini_7_0_len 8
+#define	reg_fste_phase_ini_7_0_lsb 0
+#define xd_p_reg_fste_phase_ini_11_8	0xA341
+#define	reg_fste_phase_ini_11_8_pos 0
+#define	reg_fste_phase_ini_11_8_len 4
+#define	reg_fste_phase_ini_11_8_lsb 8
+#define xd_p_reg_fste_phase_inc_3_0	0xA341
+#define	reg_fste_phase_inc_3_0_pos 4
+#define	reg_fste_phase_inc_3_0_len 4
+#define	reg_fste_phase_inc_3_0_lsb 0
+#define xd_p_reg_fste_phase_inc_11_4	0xA342
+#define	reg_fste_phase_inc_11_4_pos 0
+#define	reg_fste_phase_inc_11_4_len 8
+#define	reg_fste_phase_inc_11_4_lsb 4
+#define xd_p_reg_fste_acum_cost_cnt_max	0xA343
+#define	reg_fste_acum_cost_cnt_max_pos 0
+#define	reg_fste_acum_cost_cnt_max_len 4
+#define	reg_fste_acum_cost_cnt_max_lsb 0
+#define xd_p_reg_fste_step_size_std	0xA343
+#define	reg_fste_step_size_std_pos 4
+#define	reg_fste_step_size_std_len 4
+#define	reg_fste_step_size_std_lsb 0
+#define xd_p_reg_fste_step_size_max	0xA344
+#define	reg_fste_step_size_max_pos 0
+#define	reg_fste_step_size_max_len 4
+#define	reg_fste_step_size_max_lsb 0
+#define xd_p_reg_fste_step_size_min	0xA344
+#define	reg_fste_step_size_min_pos 4
+#define	reg_fste_step_size_min_len 4
+#define	reg_fste_step_size_min_lsb 0
+#define xd_p_reg_fste_frac_step_size_7_0	0xA345
+#define	reg_fste_frac_step_size_7_0_pos 0
+#define	reg_fste_frac_step_size_7_0_len 8
+#define	reg_fste_frac_step_size_7_0_lsb 0
+#define xd_p_reg_fste_frac_step_size_15_8	0xA346
+#define	reg_fste_frac_step_size_15_8_pos 0
+#define	reg_fste_frac_step_size_15_8_len 8
+#define	reg_fste_frac_step_size_15_8_lsb 8
+#define xd_p_reg_fste_frac_step_size_19_16	0xA347
+#define	reg_fste_frac_step_size_19_16_pos 0
+#define	reg_fste_frac_step_size_19_16_len 4
+#define	reg_fste_frac_step_size_19_16_lsb 16
+#define xd_p_reg_fste_rpd_dir_cnt_max	0xA347
+#define	reg_fste_rpd_dir_cnt_max_pos 4
+#define	reg_fste_rpd_dir_cnt_max_len 4
+#define	reg_fste_rpd_dir_cnt_max_lsb 0
+#define xd_p_reg_fste_ehs	0xA348
+#define	reg_fste_ehs_pos 0
+#define	reg_fste_ehs_len 4
+#define	reg_fste_ehs_lsb 0
+#define xd_p_reg_fste_frac_cost_cnt_max_3_0	0xA348
+#define	reg_fste_frac_cost_cnt_max_3_0_pos 4
+#define	reg_fste_frac_cost_cnt_max_3_0_len 4
+#define	reg_fste_frac_cost_cnt_max_3_0_lsb 0
+#define xd_p_reg_fste_frac_cost_cnt_max_9_4	0xA349
+#define	reg_fste_frac_cost_cnt_max_9_4_pos 0
+#define	reg_fste_frac_cost_cnt_max_9_4_len 6
+#define	reg_fste_frac_cost_cnt_max_9_4_lsb 4
+#define xd_p_reg_fste_w0_7_0	0xA34A
+#define	reg_fste_w0_7_0_pos 0
+#define	reg_fste_w0_7_0_len 8
+#define	reg_fste_w0_7_0_lsb 0
+#define xd_p_reg_fste_w0_11_8	0xA34B
+#define	reg_fste_w0_11_8_pos 0
+#define	reg_fste_w0_11_8_len 4
+#define	reg_fste_w0_11_8_lsb 8
+#define xd_p_reg_fste_w1_3_0	0xA34B
+#define	reg_fste_w1_3_0_pos 4
+#define	reg_fste_w1_3_0_len 4
+#define	reg_fste_w1_3_0_lsb 0
+#define xd_p_reg_fste_w1_11_4	0xA34C
+#define	reg_fste_w1_11_4_pos 0
+#define	reg_fste_w1_11_4_len 8
+#define	reg_fste_w1_11_4_lsb 4
+#define xd_p_reg_fste_w2_7_0	0xA34D
+#define	reg_fste_w2_7_0_pos 0
+#define	reg_fste_w2_7_0_len 8
+#define	reg_fste_w2_7_0_lsb 0
+#define xd_p_reg_fste_w2_11_8	0xA34E
+#define	reg_fste_w2_11_8_pos 0
+#define	reg_fste_w2_11_8_len 4
+#define	reg_fste_w2_11_8_lsb 8
+#define xd_p_reg_fste_w3_3_0	0xA34E
+#define	reg_fste_w3_3_0_pos 4
+#define	reg_fste_w3_3_0_len 4
+#define	reg_fste_w3_3_0_lsb 0
+#define xd_p_reg_fste_w3_11_4	0xA34F
+#define	reg_fste_w3_11_4_pos 0
+#define	reg_fste_w3_11_4_len 8
+#define	reg_fste_w3_11_4_lsb 4
+#define xd_p_reg_fste_w4_7_0	0xA350
+#define	reg_fste_w4_7_0_pos 0
+#define	reg_fste_w4_7_0_len 8
+#define	reg_fste_w4_7_0_lsb 0
+#define xd_p_reg_fste_w4_11_8	0xA351
+#define	reg_fste_w4_11_8_pos 0
+#define	reg_fste_w4_11_8_len 4
+#define	reg_fste_w4_11_8_lsb 8
+#define xd_p_reg_fste_w5_3_0	0xA351
+#define	reg_fste_w5_3_0_pos 4
+#define	reg_fste_w5_3_0_len 4
+#define	reg_fste_w5_3_0_lsb 0
+#define xd_p_reg_fste_w5_11_4	0xA352
+#define	reg_fste_w5_11_4_pos 0
+#define	reg_fste_w5_11_4_len 8
+#define	reg_fste_w5_11_4_lsb 4
+#define xd_p_reg_fste_w6_7_0	0xA353
+#define	reg_fste_w6_7_0_pos 0
+#define	reg_fste_w6_7_0_len 8
+#define	reg_fste_w6_7_0_lsb 0
+#define xd_p_reg_fste_w6_11_8	0xA354
+#define	reg_fste_w6_11_8_pos 0
+#define	reg_fste_w6_11_8_len 4
+#define	reg_fste_w6_11_8_lsb 8
+#define xd_p_reg_fste_w7_3_0	0xA354
+#define	reg_fste_w7_3_0_pos 4
+#define	reg_fste_w7_3_0_len 4
+#define	reg_fste_w7_3_0_lsb 0
+#define xd_p_reg_fste_w7_11_4	0xA355
+#define	reg_fste_w7_11_4_pos 0
+#define	reg_fste_w7_11_4_len 8
+#define	reg_fste_w7_11_4_lsb 4
+#define xd_p_reg_fste_w8_7_0	0xA356
+#define	reg_fste_w8_7_0_pos 0
+#define	reg_fste_w8_7_0_len 8
+#define	reg_fste_w8_7_0_lsb 0
+#define xd_p_reg_fste_w8_11_8	0xA357
+#define	reg_fste_w8_11_8_pos 0
+#define	reg_fste_w8_11_8_len 4
+#define	reg_fste_w8_11_8_lsb 8
+#define xd_p_reg_fste_w9_3_0	0xA357
+#define	reg_fste_w9_3_0_pos 4
+#define	reg_fste_w9_3_0_len 4
+#define	reg_fste_w9_3_0_lsb 0
+#define xd_p_reg_fste_w9_11_4	0xA358
+#define	reg_fste_w9_11_4_pos 0
+#define	reg_fste_w9_11_4_len 8
+#define	reg_fste_w9_11_4_lsb 4
+#define xd_p_reg_fste_wa_7_0	0xA359
+#define	reg_fste_wa_7_0_pos 0
+#define	reg_fste_wa_7_0_len 8
+#define	reg_fste_wa_7_0_lsb 0
+#define xd_p_reg_fste_wa_11_8	0xA35A
+#define	reg_fste_wa_11_8_pos 0
+#define	reg_fste_wa_11_8_len 4
+#define	reg_fste_wa_11_8_lsb 8
+#define xd_p_reg_fste_wb_3_0	0xA35A
+#define	reg_fste_wb_3_0_pos 4
+#define	reg_fste_wb_3_0_len 4
+#define	reg_fste_wb_3_0_lsb 0
+#define xd_p_reg_fste_wb_11_4	0xA35B
+#define	reg_fste_wb_11_4_pos 0
+#define	reg_fste_wb_11_4_len 8
+#define	reg_fste_wb_11_4_lsb 4
+#define xd_r_fd_fste_i_adj	0xA35C
+#define	fd_fste_i_adj_pos 0
+#define	fd_fste_i_adj_len 5
+#define	fd_fste_i_adj_lsb 0
+#define xd_r_fd_fste_f_adj_7_0	0xA35D
+#define	fd_fste_f_adj_7_0_pos 0
+#define	fd_fste_f_adj_7_0_len 8
+#define	fd_fste_f_adj_7_0_lsb 0
+#define xd_r_fd_fste_f_adj_15_8	0xA35E
+#define	fd_fste_f_adj_15_8_pos 0
+#define	fd_fste_f_adj_15_8_len 8
+#define	fd_fste_f_adj_15_8_lsb 8
+#define xd_r_fd_fste_f_adj_19_16	0xA35F
+#define	fd_fste_f_adj_19_16_pos 0
+#define	fd_fste_f_adj_19_16_len 4
+#define	fd_fste_f_adj_19_16_lsb 16
+#define xd_p_reg_feq_Leak_Bypass	0xA366
+#define	reg_feq_Leak_Bypass_pos 0
+#define	reg_feq_Leak_Bypass_len 1
+#define	reg_feq_Leak_Bypass_lsb 0
+#define xd_p_reg_feq_Leak_Mneg1	0xA366
+#define	reg_feq_Leak_Mneg1_pos 1
+#define	reg_feq_Leak_Mneg1_len 3
+#define	reg_feq_Leak_Mneg1_lsb 0
+#define xd_p_reg_feq_Leak_B_ShiftQ	0xA366
+#define	reg_feq_Leak_B_ShiftQ_pos 4
+#define	reg_feq_Leak_B_ShiftQ_len 4
+#define	reg_feq_Leak_B_ShiftQ_lsb 0
+#define xd_p_reg_feq_Leak_B_Float0	0xA367
+#define	reg_feq_Leak_B_Float0_pos 0
+#define	reg_feq_Leak_B_Float0_len 8
+#define	reg_feq_Leak_B_Float0_lsb 0
+#define xd_p_reg_feq_Leak_B_Float1	0xA368
+#define	reg_feq_Leak_B_Float1_pos 0
+#define	reg_feq_Leak_B_Float1_len 8
+#define	reg_feq_Leak_B_Float1_lsb 0
+#define xd_p_reg_feq_Leak_B_Float2	0xA369
+#define	reg_feq_Leak_B_Float2_pos 0
+#define	reg_feq_Leak_B_Float2_len 8
+#define	reg_feq_Leak_B_Float2_lsb 0
+#define xd_p_reg_feq_Leak_B_Float3	0xA36A
+#define	reg_feq_Leak_B_Float3_pos 0
+#define	reg_feq_Leak_B_Float3_len 8
+#define	reg_feq_Leak_B_Float3_lsb 0
+#define xd_p_reg_feq_Leak_B_Float4	0xA36B
+#define	reg_feq_Leak_B_Float4_pos 0
+#define	reg_feq_Leak_B_Float4_len 8
+#define	reg_feq_Leak_B_Float4_lsb 0
+#define xd_p_reg_feq_Leak_B_Float5	0xA36C
+#define	reg_feq_Leak_B_Float5_pos 0
+#define	reg_feq_Leak_B_Float5_len 8
+#define	reg_feq_Leak_B_Float5_lsb 0
+#define xd_p_reg_feq_Leak_B_Float6	0xA36D
+#define	reg_feq_Leak_B_Float6_pos 0
+#define	reg_feq_Leak_B_Float6_len 8
+#define	reg_feq_Leak_B_Float6_lsb 0
+#define xd_p_reg_feq_Leak_B_Float7	0xA36E
+#define	reg_feq_Leak_B_Float7_pos 0
+#define	reg_feq_Leak_B_Float7_len 8
+#define	reg_feq_Leak_B_Float7_lsb 0
+#define xd_r_reg_feq_data_h2_7_0	0xA36F
+#define	reg_feq_data_h2_7_0_pos 0
+#define	reg_feq_data_h2_7_0_len 8
+#define	reg_feq_data_h2_7_0_lsb 0
+#define xd_r_reg_feq_data_h2_9_8	0xA370
+#define	reg_feq_data_h2_9_8_pos 0
+#define	reg_feq_data_h2_9_8_len 2
+#define	reg_feq_data_h2_9_8_lsb 8
+#define xd_p_reg_feq_leak_use_slice_tps	0xA371
+#define	reg_feq_leak_use_slice_tps_pos 0
+#define	reg_feq_leak_use_slice_tps_len 1
+#define	reg_feq_leak_use_slice_tps_lsb 0
+#define xd_p_reg_feq_read_update	0xA371
+#define	reg_feq_read_update_pos 1
+#define	reg_feq_read_update_len 1
+#define	reg_feq_read_update_lsb 0
+#define xd_p_reg_feq_data_vld	0xA371
+#define	reg_feq_data_vld_pos 2
+#define	reg_feq_data_vld_len 1
+#define	reg_feq_data_vld_lsb 0
+#define xd_p_reg_feq_tone_idx_4_0	0xA371
+#define	reg_feq_tone_idx_4_0_pos 3
+#define	reg_feq_tone_idx_4_0_len 5
+#define	reg_feq_tone_idx_4_0_lsb 0
+#define xd_p_reg_feq_tone_idx_12_5	0xA372
+#define	reg_feq_tone_idx_12_5_pos 0
+#define	reg_feq_tone_idx_12_5_len 8
+#define	reg_feq_tone_idx_12_5_lsb 5
+#define xd_r_reg_feq_data_re_7_0	0xA373
+#define	reg_feq_data_re_7_0_pos 0
+#define	reg_feq_data_re_7_0_len 8
+#define	reg_feq_data_re_7_0_lsb 0
+#define xd_r_reg_feq_data_re_10_8	0xA374
+#define	reg_feq_data_re_10_8_pos 0
+#define	reg_feq_data_re_10_8_len 3
+#define	reg_feq_data_re_10_8_lsb 8
+#define xd_r_reg_feq_data_im_7_0	0xA375
+#define	reg_feq_data_im_7_0_pos 0
+#define	reg_feq_data_im_7_0_len 8
+#define	reg_feq_data_im_7_0_lsb 0
+#define xd_r_reg_feq_data_im_10_8	0xA376
+#define	reg_feq_data_im_10_8_pos 0
+#define	reg_feq_data_im_10_8_len 3
+#define	reg_feq_data_im_10_8_lsb 8
+#define xd_r_reg_feq_y_re	0xA377
+#define	reg_feq_y_re_pos 0
+#define	reg_feq_y_re_len 8
+#define	reg_feq_y_re_lsb 0
+#define xd_r_reg_feq_y_im	0xA378
+#define	reg_feq_y_im_pos 0
+#define	reg_feq_y_im_len 8
+#define	reg_feq_y_im_lsb 0
+#define xd_r_reg_feq_h_re_7_0	0xA379
+#define	reg_feq_h_re_7_0_pos 0
+#define	reg_feq_h_re_7_0_len 8
+#define	reg_feq_h_re_7_0_lsb 0
+#define xd_r_reg_feq_h_re_8	0xA37A
+#define	reg_feq_h_re_8_pos 0
+#define	reg_feq_h_re_8_len 1
+#define	reg_feq_h_re_8_lsb 0
+#define xd_r_reg_feq_h_im_7_0	0xA37B
+#define	reg_feq_h_im_7_0_pos 0
+#define	reg_feq_h_im_7_0_len 8
+#define	reg_feq_h_im_7_0_lsb 0
+#define xd_r_reg_feq_h_im_8	0xA37C
+#define	reg_feq_h_im_8_pos 0
+#define	reg_feq_h_im_8_len 1
+#define	reg_feq_h_im_8_lsb 0
+#define xd_p_fec_super_frm_unit_7_0	0xA380
+#define	fec_super_frm_unit_7_0_pos 0
+#define	fec_super_frm_unit_7_0_len 8
+#define	fec_super_frm_unit_7_0_lsb 0
+#define xd_p_fec_super_frm_unit_15_8	0xA381
+#define	fec_super_frm_unit_15_8_pos 0
+#define	fec_super_frm_unit_15_8_len 8
+#define	fec_super_frm_unit_15_8_lsb 8
+#define xd_r_fec_vtb_err_bit_cnt_7_0	0xA382
+#define	fec_vtb_err_bit_cnt_7_0_pos 0
+#define	fec_vtb_err_bit_cnt_7_0_len 8
+#define	fec_vtb_err_bit_cnt_7_0_lsb 0
+#define xd_r_fec_vtb_err_bit_cnt_15_8	0xA383
+#define	fec_vtb_err_bit_cnt_15_8_pos 0
+#define	fec_vtb_err_bit_cnt_15_8_len 8
+#define	fec_vtb_err_bit_cnt_15_8_lsb 8
+#define xd_r_fec_vtb_err_bit_cnt_23_16	0xA384
+#define	fec_vtb_err_bit_cnt_23_16_pos 0
+#define	fec_vtb_err_bit_cnt_23_16_len 8
+#define	fec_vtb_err_bit_cnt_23_16_lsb 16
+#define xd_p_fec_rsd_packet_unit_7_0	0xA385
+#define	fec_rsd_packet_unit_7_0_pos 0
+#define	fec_rsd_packet_unit_7_0_len 8
+#define	fec_rsd_packet_unit_7_0_lsb 0
+#define xd_p_fec_rsd_packet_unit_15_8	0xA386
+#define	fec_rsd_packet_unit_15_8_pos 0
+#define	fec_rsd_packet_unit_15_8_len 8
+#define	fec_rsd_packet_unit_15_8_lsb 8
+#define xd_r_fec_rsd_bit_err_cnt_7_0	0xA387
+#define	fec_rsd_bit_err_cnt_7_0_pos 0
+#define	fec_rsd_bit_err_cnt_7_0_len 8
+#define	fec_rsd_bit_err_cnt_7_0_lsb 0
+#define xd_r_fec_rsd_bit_err_cnt_15_8	0xA388
+#define	fec_rsd_bit_err_cnt_15_8_pos 0
+#define	fec_rsd_bit_err_cnt_15_8_len 8
+#define	fec_rsd_bit_err_cnt_15_8_lsb 8
+#define xd_r_fec_rsd_bit_err_cnt_23_16	0xA389
+#define	fec_rsd_bit_err_cnt_23_16_pos 0
+#define	fec_rsd_bit_err_cnt_23_16_len 8
+#define	fec_rsd_bit_err_cnt_23_16_lsb 16
+#define xd_r_fec_rsd_abort_packet_cnt_7_0	0xA38A
+#define	fec_rsd_abort_packet_cnt_7_0_pos 0
+#define	fec_rsd_abort_packet_cnt_7_0_len 8
+#define	fec_rsd_abort_packet_cnt_7_0_lsb 0
+#define xd_r_fec_rsd_abort_packet_cnt_15_8	0xA38B
+#define	fec_rsd_abort_packet_cnt_15_8_pos 0
+#define	fec_rsd_abort_packet_cnt_15_8_len 8
+#define	fec_rsd_abort_packet_cnt_15_8_lsb 8
+#define xd_p_fec_RSD_PKT_NUM_PER_UNIT_7_0	0xA38C
+#define	fec_RSD_PKT_NUM_PER_UNIT_7_0_pos 0
+#define	fec_RSD_PKT_NUM_PER_UNIT_7_0_len 8
+#define	fec_RSD_PKT_NUM_PER_UNIT_7_0_lsb 0
+#define xd_p_fec_RSD_PKT_NUM_PER_UNIT_15_8	0xA38D
+#define	fec_RSD_PKT_NUM_PER_UNIT_15_8_pos 0
+#define	fec_RSD_PKT_NUM_PER_UNIT_15_8_len 8
+#define	fec_RSD_PKT_NUM_PER_UNIT_15_8_lsb 8
+#define xd_p_fec_RS_TH_1_7_0	0xA38E
+#define	fec_RS_TH_1_7_0_pos 0
+#define	fec_RS_TH_1_7_0_len 8
+#define	fec_RS_TH_1_7_0_lsb 0
+#define xd_p_fec_RS_TH_1_15_8	0xA38F
+#define	fec_RS_TH_1_15_8_pos 0
+#define	fec_RS_TH_1_15_8_len 8
+#define	fec_RS_TH_1_15_8_lsb 8
+#define xd_p_fec_RS_TH_2	0xA390
+#define	fec_RS_TH_2_pos 0
+#define	fec_RS_TH_2_len 8
+#define	fec_RS_TH_2_lsb 0
+#define xd_p_fec_mon_en	0xA391
+#define	fec_mon_en_pos 0
+#define	fec_mon_en_len 1
+#define	fec_mon_en_lsb 0
+#define xd_p_reg_b8to47	0xA391
+#define	reg_b8to47_pos 1
+#define	reg_b8to47_len 1
+#define	reg_b8to47_lsb 0
+#define xd_p_reg_rsd_sync_rep	0xA391
+#define	reg_rsd_sync_rep_pos 2
+#define	reg_rsd_sync_rep_len 1
+#define	reg_rsd_sync_rep_lsb 0
+#define xd_p_fec_rsd_retrain_rst	0xA391
+#define	fec_rsd_retrain_rst_pos 3
+#define	fec_rsd_retrain_rst_len 1
+#define	fec_rsd_retrain_rst_lsb 0
+#define xd_r_fec_rsd_ber_rdy	0xA391
+#define	fec_rsd_ber_rdy_pos 4
+#define	fec_rsd_ber_rdy_len 1
+#define	fec_rsd_ber_rdy_lsb 0
+#define xd_p_fec_rsd_ber_rst	0xA391
+#define	fec_rsd_ber_rst_pos 5
+#define	fec_rsd_ber_rst_len 1
+#define	fec_rsd_ber_rst_lsb 0
+#define xd_r_fec_vtb_ber_rdy	0xA391
+#define	fec_vtb_ber_rdy_pos 6
+#define	fec_vtb_ber_rdy_len 1
+#define	fec_vtb_ber_rdy_lsb 0
+#define xd_p_fec_vtb_ber_rst	0xA391
+#define	fec_vtb_ber_rst_pos 7
+#define	fec_vtb_ber_rst_len 1
+#define	fec_vtb_ber_rst_lsb 0
+#define xd_p_reg_vtb_clk40en	0xA392
+#define	reg_vtb_clk40en_pos 0
+#define	reg_vtb_clk40en_len 1
+#define	reg_vtb_clk40en_lsb 0
+#define xd_p_fec_vtb_rsd_mon_en	0xA392
+#define	fec_vtb_rsd_mon_en_pos 1
+#define	fec_vtb_rsd_mon_en_len 1
+#define	fec_vtb_rsd_mon_en_lsb 0
+#define xd_p_reg_fec_data_en	0xA392
+#define	reg_fec_data_en_pos 2
+#define	reg_fec_data_en_len 1
+#define	reg_fec_data_en_lsb 0
+#define xd_p_fec_dummy_reg_2	0xA392
+#define	fec_dummy_reg_2_pos 3
+#define	fec_dummy_reg_2_len 3
+#define	fec_dummy_reg_2_lsb 0
+#define xd_p_reg_sync_chk	0xA392
+#define	reg_sync_chk_pos 6
+#define	reg_sync_chk_len 1
+#define	reg_sync_chk_lsb 0
+#define xd_p_fec_rsd_bypass	0xA392
+#define	fec_rsd_bypass_pos 7
+#define	fec_rsd_bypass_len 1
+#define	fec_rsd_bypass_lsb 0
+#define xd_p_fec_sw_rst	0xA393
+#define	fec_sw_rst_pos 0
+#define	fec_sw_rst_len 1
+#define	fec_sw_rst_lsb 0
+#define xd_r_fec_vtb_pm_crc	0xA394
+#define	fec_vtb_pm_crc_pos 0
+#define	fec_vtb_pm_crc_len 8
+#define	fec_vtb_pm_crc_lsb 0
+#define xd_r_fec_vtb_tb_7_crc	0xA395
+#define	fec_vtb_tb_7_crc_pos 0
+#define	fec_vtb_tb_7_crc_len 8
+#define	fec_vtb_tb_7_crc_lsb 0
+#define xd_r_fec_vtb_tb_6_crc	0xA396
+#define	fec_vtb_tb_6_crc_pos 0
+#define	fec_vtb_tb_6_crc_len 8
+#define	fec_vtb_tb_6_crc_lsb 0
+#define xd_r_fec_vtb_tb_5_crc	0xA397
+#define	fec_vtb_tb_5_crc_pos 0
+#define	fec_vtb_tb_5_crc_len 8
+#define	fec_vtb_tb_5_crc_lsb 0
+#define xd_r_fec_vtb_tb_4_crc	0xA398
+#define	fec_vtb_tb_4_crc_pos 0
+#define	fec_vtb_tb_4_crc_len 8
+#define	fec_vtb_tb_4_crc_lsb 0
+#define xd_r_fec_vtb_tb_3_crc	0xA399
+#define	fec_vtb_tb_3_crc_pos 0
+#define	fec_vtb_tb_3_crc_len 8
+#define	fec_vtb_tb_3_crc_lsb 0
+#define xd_r_fec_vtb_tb_2_crc	0xA39A
+#define	fec_vtb_tb_2_crc_pos 0
+#define	fec_vtb_tb_2_crc_len 8
+#define	fec_vtb_tb_2_crc_lsb 0
+#define xd_r_fec_vtb_tb_1_crc	0xA39B
+#define	fec_vtb_tb_1_crc_pos 0
+#define	fec_vtb_tb_1_crc_len 8
+#define	fec_vtb_tb_1_crc_lsb 0
+#define xd_r_fec_vtb_tb_0_crc	0xA39C
+#define	fec_vtb_tb_0_crc_pos 0
+#define	fec_vtb_tb_0_crc_len 8
+#define	fec_vtb_tb_0_crc_lsb 0
+#define xd_r_fec_rsd_bank0_crc	0xA39D
+#define	fec_rsd_bank0_crc_pos 0
+#define	fec_rsd_bank0_crc_len 8
+#define	fec_rsd_bank0_crc_lsb 0
+#define xd_r_fec_rsd_bank1_crc	0xA39E
+#define	fec_rsd_bank1_crc_pos 0
+#define	fec_rsd_bank1_crc_len 8
+#define	fec_rsd_bank1_crc_lsb 0
+#define xd_r_fec_idi_vtb_crc	0xA39F
+#define	fec_idi_vtb_crc_pos 0
+#define	fec_idi_vtb_crc_len 8
+#define	fec_idi_vtb_crc_lsb 0
+#define xd_g_reg_tpsd_txmod	0xA3C0
+#define	reg_tpsd_txmod_pos 0
+#define	reg_tpsd_txmod_len 2
+#define	reg_tpsd_txmod_lsb 0
+#define xd_g_reg_tpsd_gi	0xA3C0
+#define	reg_tpsd_gi_pos 2
+#define	reg_tpsd_gi_len 2
+#define	reg_tpsd_gi_lsb 0
+#define xd_g_reg_tpsd_hier	0xA3C0
+#define	reg_tpsd_hier_pos 4
+#define	reg_tpsd_hier_len 3
+#define	reg_tpsd_hier_lsb 0
+#define xd_g_reg_bw	0xA3C1
+#define	reg_bw_pos 2
+#define	reg_bw_len 2
+#define	reg_bw_lsb 0
+#define xd_g_reg_dec_pri	0xA3C1
+#define	reg_dec_pri_pos 4
+#define	reg_dec_pri_len 1
+#define	reg_dec_pri_lsb 0
+#define xd_g_reg_tpsd_const	0xA3C1
+#define	reg_tpsd_const_pos 6
+#define	reg_tpsd_const_len 2
+#define	reg_tpsd_const_lsb 0
+#define xd_g_reg_tpsd_hpcr	0xA3C2
+#define	reg_tpsd_hpcr_pos 0
+#define	reg_tpsd_hpcr_len 3
+#define	reg_tpsd_hpcr_lsb 0
+#define xd_g_reg_tpsd_lpcr	0xA3C2
+#define	reg_tpsd_lpcr_pos 3
+#define	reg_tpsd_lpcr_len 3
+#define	reg_tpsd_lpcr_lsb 0
+#define xd_g_reg_ofsm_clk	0xA3D0
+#define	reg_ofsm_clk_pos 0
+#define	reg_ofsm_clk_len 3
+#define	reg_ofsm_clk_lsb 0
+#define xd_g_reg_fclk_cfg	0xA3D1
+#define	reg_fclk_cfg_pos 0
+#define	reg_fclk_cfg_len 1
+#define	reg_fclk_cfg_lsb 0
+#define xd_g_reg_fclk_idi	0xA3D1
+#define	reg_fclk_idi_pos 1
+#define	reg_fclk_idi_len 1
+#define	reg_fclk_idi_lsb 0
+#define xd_g_reg_fclk_odi	0xA3D1
+#define	reg_fclk_odi_pos 2
+#define	reg_fclk_odi_len 1
+#define	reg_fclk_odi_lsb 0
+#define xd_g_reg_fclk_rsd	0xA3D1
+#define	reg_fclk_rsd_pos 3
+#define	reg_fclk_rsd_len 1
+#define	reg_fclk_rsd_lsb 0
+#define xd_g_reg_fclk_vtb	0xA3D1
+#define	reg_fclk_vtb_pos 4
+#define	reg_fclk_vtb_len 1
+#define	reg_fclk_vtb_lsb 0
+#define xd_g_reg_fclk_cste	0xA3D1
+#define	reg_fclk_cste_pos 5
+#define	reg_fclk_cste_len 1
+#define	reg_fclk_cste_lsb 0
+#define xd_g_reg_fclk_mp2if	0xA3D1
+#define	reg_fclk_mp2if_pos 6
+#define	reg_fclk_mp2if_len 1
+#define	reg_fclk_mp2if_lsb 0
+#define xd_I2C_i2c_m_slave_addr	0xA400
+#define	i2c_m_slave_addr_pos 0
+#define	i2c_m_slave_addr_len 8
+#define	i2c_m_slave_addr_lsb 0
+#define xd_I2C_i2c_m_data1	0xA401
+#define	i2c_m_data1_pos 0
+#define	i2c_m_data1_len 8
+#define	i2c_m_data1_lsb 0
+#define xd_I2C_i2c_m_data2	0xA402
+#define	i2c_m_data2_pos 0
+#define	i2c_m_data2_len 8
+#define	i2c_m_data2_lsb 0
+#define xd_I2C_i2c_m_data3	0xA403
+#define	i2c_m_data3_pos 0
+#define	i2c_m_data3_len 8
+#define	i2c_m_data3_lsb 0
+#define xd_I2C_i2c_m_data4	0xA404
+#define	i2c_m_data4_pos 0
+#define	i2c_m_data4_len 8
+#define	i2c_m_data4_lsb 0
+#define xd_I2C_i2c_m_data5	0xA405
+#define	i2c_m_data5_pos 0
+#define	i2c_m_data5_len 8
+#define	i2c_m_data5_lsb 0
+#define xd_I2C_i2c_m_data6	0xA406
+#define	i2c_m_data6_pos 0
+#define	i2c_m_data6_len 8
+#define	i2c_m_data6_lsb 0
+#define xd_I2C_i2c_m_data7	0xA407
+#define	i2c_m_data7_pos 0
+#define	i2c_m_data7_len 8
+#define	i2c_m_data7_lsb 0
+#define xd_I2C_i2c_m_data8	0xA408
+#define	i2c_m_data8_pos 0
+#define	i2c_m_data8_len 8
+#define	i2c_m_data8_lsb 0
+#define xd_I2C_i2c_m_data9	0xA409
+#define	i2c_m_data9_pos 0
+#define	i2c_m_data9_len 8
+#define	i2c_m_data9_lsb 0
+#define xd_I2C_i2c_m_data10	0xA40A
+#define	i2c_m_data10_pos 0
+#define	i2c_m_data10_len 8
+#define	i2c_m_data10_lsb 0
+#define xd_I2C_i2c_m_data11	0xA40B
+#define	i2c_m_data11_pos 0
+#define	i2c_m_data11_len 8
+#define	i2c_m_data11_lsb 0
+#define xd_I2C_i2c_m_cmd_rw	0xA40C
+#define	i2c_m_cmd_rw_pos 0
+#define	i2c_m_cmd_rw_len 1
+#define	i2c_m_cmd_rw_lsb 0
+#define xd_I2C_i2c_m_cmd_rwlen	0xA40C
+#define	i2c_m_cmd_rwlen_pos 3
+#define	i2c_m_cmd_rwlen_len 4
+#define	i2c_m_cmd_rwlen_lsb 0
+#define xd_I2C_i2c_m_status_cmd_exe	0xA40D
+#define	i2c_m_status_cmd_exe_pos 0
+#define	i2c_m_status_cmd_exe_len 1
+#define	i2c_m_status_cmd_exe_lsb 0
+#define xd_I2C_i2c_m_status_wdat_done	0xA40D
+#define	i2c_m_status_wdat_done_pos 1
+#define	i2c_m_status_wdat_done_len 1
+#define	i2c_m_status_wdat_done_lsb 0
+#define xd_I2C_i2c_m_status_wdat_fail	0xA40D
+#define	i2c_m_status_wdat_fail_pos 2
+#define	i2c_m_status_wdat_fail_len 1
+#define	i2c_m_status_wdat_fail_lsb 0
+#define xd_I2C_i2c_m_period	0xA40E
+#define	i2c_m_period_pos 0
+#define	i2c_m_period_len 8
+#define	i2c_m_period_lsb 0
+#define xd_I2C_i2c_m_reg_msb_lsb	0xA40F
+#define	i2c_m_reg_msb_lsb_pos 0
+#define	i2c_m_reg_msb_lsb_len 1
+#define	i2c_m_reg_msb_lsb_lsb 0
+#define xd_I2C_reg_ofdm_rst	0xA40F
+#define	reg_ofdm_rst_pos 1
+#define	reg_ofdm_rst_len 1
+#define	reg_ofdm_rst_lsb 0
+#define xd_I2C_reg_sample_period_on_tuner	0xA40F
+#define	reg_sample_period_on_tuner_pos 2
+#define	reg_sample_period_on_tuner_len 1
+#define	reg_sample_period_on_tuner_lsb 0
+#define xd_I2C_reg_rst_i2c	0xA40F
+#define	reg_rst_i2c_pos 3
+#define	reg_rst_i2c_len 1
+#define	reg_rst_i2c_lsb 0
+#define xd_I2C_reg_ofdm_rst_en	0xA40F
+#define	reg_ofdm_rst_en_pos 4
+#define	reg_ofdm_rst_en_len 1
+#define	reg_ofdm_rst_en_lsb 0
+#define xd_I2C_reg_tuner_sda_sync_on	0xA40F
+#define	reg_tuner_sda_sync_on_pos 5
+#define	reg_tuner_sda_sync_on_len 1
+#define	reg_tuner_sda_sync_on_lsb 0
+#define xd_p_mp2if_data_access_disable_ofsm	0xA500
+#define	mp2if_data_access_disable_ofsm_pos 0
+#define	mp2if_data_access_disable_ofsm_len 1
+#define	mp2if_data_access_disable_ofsm_lsb 0
+#define xd_p_reg_mp2_sw_rst_ofsm	0xA500
+#define	reg_mp2_sw_rst_ofsm_pos 1
+#define	reg_mp2_sw_rst_ofsm_len 1
+#define	reg_mp2_sw_rst_ofsm_lsb 0
+#define xd_p_reg_mp2if_clk_en_ofsm	0xA500
+#define	reg_mp2if_clk_en_ofsm_pos 2
+#define	reg_mp2if_clk_en_ofsm_len 1
+#define	reg_mp2if_clk_en_ofsm_lsb 0
+#define xd_r_mp2if_sync_byte_locked	0xA500
+#define	mp2if_sync_byte_locked_pos 3
+#define	mp2if_sync_byte_locked_len 1
+#define	mp2if_sync_byte_locked_lsb 0
+#define xd_r_mp2if_ts_not_188	0xA500
+#define	mp2if_ts_not_188_pos 4
+#define	mp2if_ts_not_188_len 1
+#define	mp2if_ts_not_188_lsb 0
+#define xd_r_mp2if_psb_empty	0xA500
+#define	mp2if_psb_empty_pos 5
+#define	mp2if_psb_empty_len 1
+#define	mp2if_psb_empty_lsb 0
+#define xd_r_mp2if_psb_overflow	0xA500
+#define	mp2if_psb_overflow_pos 6
+#define	mp2if_psb_overflow_len 1
+#define	mp2if_psb_overflow_lsb 0
+#define xd_p_mp2if_keep_sf_sync_byte_ofsm	0xA500
+#define	mp2if_keep_sf_sync_byte_ofsm_pos 7
+#define	mp2if_keep_sf_sync_byte_ofsm_len 1
+#define	mp2if_keep_sf_sync_byte_ofsm_lsb 0
+#define xd_r_mp2if_psb_mp2if_num_pkt	0xA501
+#define	mp2if_psb_mp2if_num_pkt_pos 0
+#define	mp2if_psb_mp2if_num_pkt_len 6
+#define	mp2if_psb_mp2if_num_pkt_lsb 0
+#define xd_p_reg_mpeg_full_speed_ofsm	0xA501
+#define	reg_mpeg_full_speed_ofsm_pos 6
+#define	reg_mpeg_full_speed_ofsm_len 1
+#define	reg_mpeg_full_speed_ofsm_lsb 0
+#define xd_p_mp2if_mpeg_ser_mode_ofsm	0xA501
+#define	mp2if_mpeg_ser_mode_ofsm_pos 7
+#define	mp2if_mpeg_ser_mode_ofsm_len 1
+#define	mp2if_mpeg_ser_mode_ofsm_lsb 0
+#define xd_p_reg_sw_mon51	0xA600
+#define	reg_sw_mon51_pos 0
+#define	reg_sw_mon51_len 8
+#define	reg_sw_mon51_lsb 0
+#define xd_p_reg_top_pcsel	0xA601
+#define	reg_top_pcsel_pos 0
+#define	reg_top_pcsel_len 1
+#define	reg_top_pcsel_lsb 0
+#define xd_p_reg_top_rs232	0xA601
+#define	reg_top_rs232_pos 1
+#define	reg_top_rs232_len 1
+#define	reg_top_rs232_lsb 0
+#define xd_p_reg_top_pcout	0xA601
+#define	reg_top_pcout_pos 2
+#define	reg_top_pcout_len 1
+#define	reg_top_pcout_lsb 0
+#define xd_p_reg_top_debug	0xA601
+#define	reg_top_debug_pos 3
+#define	reg_top_debug_len 1
+#define	reg_top_debug_lsb 0
+#define xd_p_reg_top_adcdly	0xA601
+#define	reg_top_adcdly_pos 4
+#define	reg_top_adcdly_len 2
+#define	reg_top_adcdly_lsb 0
+#define xd_p_reg_top_pwrdw	0xA601
+#define	reg_top_pwrdw_pos 6
+#define	reg_top_pwrdw_len 1
+#define	reg_top_pwrdw_lsb 0
+#define xd_p_reg_top_pwrdw_inv	0xA601
+#define	reg_top_pwrdw_inv_pos 7
+#define	reg_top_pwrdw_inv_len 1
+#define	reg_top_pwrdw_inv_lsb 0
+#define xd_p_reg_top_int_inv	0xA602
+#define	reg_top_int_inv_pos 0
+#define	reg_top_int_inv_len 1
+#define	reg_top_int_inv_lsb 0
+#define xd_p_reg_top_dio_sel	0xA602
+#define	reg_top_dio_sel_pos 1
+#define	reg_top_dio_sel_len 1
+#define	reg_top_dio_sel_lsb 0
+#define xd_p_reg_top_gpioon0	0xA603
+#define	reg_top_gpioon0_pos 0
+#define	reg_top_gpioon0_len 1
+#define	reg_top_gpioon0_lsb 0
+#define xd_p_reg_top_gpioon1	0xA603
+#define	reg_top_gpioon1_pos 1
+#define	reg_top_gpioon1_len 1
+#define	reg_top_gpioon1_lsb 0
+#define xd_p_reg_top_gpioon2	0xA603
+#define	reg_top_gpioon2_pos 2
+#define	reg_top_gpioon2_len 1
+#define	reg_top_gpioon2_lsb 0
+#define xd_p_reg_top_gpioon3	0xA603
+#define	reg_top_gpioon3_pos 3
+#define	reg_top_gpioon3_len 1
+#define	reg_top_gpioon3_lsb 0
+#define xd_p_reg_top_lockon1	0xA603
+#define	reg_top_lockon1_pos 4
+#define	reg_top_lockon1_len 1
+#define	reg_top_lockon1_lsb 0
+#define xd_p_reg_top_lockon2	0xA603
+#define	reg_top_lockon2_pos 5
+#define	reg_top_lockon2_len 1
+#define	reg_top_lockon2_lsb 0
+#define xd_p_reg_top_gpioo0	0xA604
+#define	reg_top_gpioo0_pos 0
+#define	reg_top_gpioo0_len 1
+#define	reg_top_gpioo0_lsb 0
+#define xd_p_reg_top_gpioo1	0xA604
+#define	reg_top_gpioo1_pos 1
+#define	reg_top_gpioo1_len 1
+#define	reg_top_gpioo1_lsb 0
+#define xd_p_reg_top_gpioo2	0xA604
+#define	reg_top_gpioo2_pos 2
+#define	reg_top_gpioo2_len 1
+#define	reg_top_gpioo2_lsb 0
+#define xd_p_reg_top_gpioo3	0xA604
+#define	reg_top_gpioo3_pos 3
+#define	reg_top_gpioo3_len 1
+#define	reg_top_gpioo3_lsb 0
+#define xd_p_reg_top_lock1	0xA604
+#define	reg_top_lock1_pos 4
+#define	reg_top_lock1_len 1
+#define	reg_top_lock1_lsb 0
+#define xd_p_reg_top_lock2	0xA604
+#define	reg_top_lock2_pos 5
+#define	reg_top_lock2_len 1
+#define	reg_top_lock2_lsb 0
+#define xd_p_reg_top_gpioen0	0xA605
+#define	reg_top_gpioen0_pos 0
+#define	reg_top_gpioen0_len 1
+#define	reg_top_gpioen0_lsb 0
+#define xd_p_reg_top_gpioen1	0xA605
+#define	reg_top_gpioen1_pos 1
+#define	reg_top_gpioen1_len 1
+#define	reg_top_gpioen1_lsb 0
+#define xd_p_reg_top_gpioen2	0xA605
+#define	reg_top_gpioen2_pos 2
+#define	reg_top_gpioen2_len 1
+#define	reg_top_gpioen2_lsb 0
+#define xd_p_reg_top_gpioen3	0xA605
+#define	reg_top_gpioen3_pos 3
+#define	reg_top_gpioen3_len 1
+#define	reg_top_gpioen3_lsb 0
+#define xd_p_reg_top_locken1	0xA605
+#define	reg_top_locken1_pos 4
+#define	reg_top_locken1_len 1
+#define	reg_top_locken1_lsb 0
+#define xd_p_reg_top_locken2	0xA605
+#define	reg_top_locken2_pos 5
+#define	reg_top_locken2_len 1
+#define	reg_top_locken2_lsb 0
+#define xd_r_reg_top_gpioi0	0xA606
+#define	reg_top_gpioi0_pos 0
+#define	reg_top_gpioi0_len 1
+#define	reg_top_gpioi0_lsb 0
+#define xd_r_reg_top_gpioi1	0xA606
+#define	reg_top_gpioi1_pos 1
+#define	reg_top_gpioi1_len 1
+#define	reg_top_gpioi1_lsb 0
+#define xd_r_reg_top_gpioi2	0xA606
+#define	reg_top_gpioi2_pos 2
+#define	reg_top_gpioi2_len 1
+#define	reg_top_gpioi2_lsb 0
+#define xd_r_reg_top_gpioi3	0xA606
+#define	reg_top_gpioi3_pos 3
+#define	reg_top_gpioi3_len 1
+#define	reg_top_gpioi3_lsb 0
+#define xd_r_reg_top_locki1	0xA606
+#define	reg_top_locki1_pos 4
+#define	reg_top_locki1_len 1
+#define	reg_top_locki1_lsb 0
+#define xd_r_* Common head2	0xA606 of the /driver for the_pos 5h 9005
+ * USB1.1 DVB-T rlen 1er.
+ *
+ * Copyright (C) 2fileh 9005
+ Linup drivdummy_7_0 Afate8er.
+ *
+ * Copo who kchreceiorg)
+ *
+ vided informati2007indly pros program is froso.org)a OliveThanks t infor15_8 who k9nd/or misre; gram iundeionca Oliveof the GNU General ee software; you can redhed bysb* the Freeor modify
+ * it 23_16 who kAc License as publis Licl Public License as publis) anyby
+ * the Free Software Fthe GNUsb 1cer.
+ *
+ *  modify
+ * it 31_24 who kBc License as publist WIT Public License as publis evenby
+ * the Free Software F * MERCsb 24it will be useful,
+ * but9_3e who kCABILITY or FITNESS F GNU005
+ implied warranty of
+  moreCHANTl Public License ford havesb 32 it and/or modify
+ * it 47_4h who kDmplied warranty of
+ with Public License as publistey
+ *y
+ * the Free Software Fndstrinsb 4e it and/or modify
+ * it 55_4er005
+ Ec License as publisocuml Public License as publis for my
+ * the Free Software Fdef _DVe, M; either version 2h 9005
+63_5ense, oFc License as publis_LOG_ Public License as publisdvb-usy
+ * the Free Software F_af.
+ *sb 5ut eR PURPOSE.  See the
+ 71_6THOUT 1ic License as publissug,0 Public License as publissargs.y
+ * the Free Software Fi5_debusb 6CULAR PURPOSE.  See005
+
+ 79_7U Gene1 Luca Olivettibo(args._al Public License as publissreg(aug,0x02,args)
+#define deb(args...)7l Public) anynse
+ * along87_8h this1args...) of the Ldene deb Public License as publishefiney
+ * the Free Software Fb_usb_aion;e it and/or modify
+ * it 95_8entati13g,0x10,5_de) of thefirmw Public License as publisSIZE 2y
+ * the Free Software FW_CONFI intF9005_H_
+
+#define DVB_USB103_9_PREFI1.)   dpri S the Fr FoEG  0rgs...)  dprint as ps...sh
+ of ty
+ * 05
+ Free_TUNER_REG 1  0x20
+sb 96
+ it and/or modify
+unplug_flag of thvLuca Olivetti_OFDM_REG b_fw(args...)   dpriMD_TUNER    ee s04,args)
+#defi5_CMD_BURST  that04 of the LAFeb_reCMDapi_dca_stes_request   0e of the LAF9 AF9005__READRST  0xne AFion.
+04,args)
+WRITE
+/* af91
+
+/* (args. r   0x02
+#defiF9005_CMPONER _RESET	_TUN0xso.or it and/or modify
+back_to 0x01R   f9005 
+#define AF900O_REG_I2C_RI2C_Rion.
+argsfine FW_BU/* afF001ILICON_T   0x02
+#define AFILICONCMD_BURST   INC    0x20define AF9005_    retrain_RW_SILICONdefine AF9005__define AP*********0xFFFFion.
+ILICON_TU */G_RE******************xAEFF_REG_TRIGGEG_I2C_*******************************0ne AF900Dyn_Top_TrydefinW_Sfor OFSM */
+#defi**********************************/
+#define xd_p_reg   0x02
+#define AFof the Linup_* Coae APO7SI					       *
+ **APIollo Regifreeze*************************LICON_T/* Coaagc_invertion.
+efine AF90MD_Bgc_inverted_agc_nfo(gc_l   0x02
+#define AFc_invertesign_only Afa000e APO8SI					       *
+ **MD_TUNE11_10O_RE,arefine AF9005_C	reg_aagc_invfine AF9005_REGISTER_RW   #define
+#define AF9005_REGISTER_e of thee APO0xly_pos 1
+#_2007 ILICON_T	9_11eb_REG_ it will beUSBnw_adc_en_len_sign_onlylow_adc_endefine	e of taagc_inverte_reg_aagc_s_po_scale	INC ne	regine 0
+#define xD_TUNE27_12b_reg(bdebufine xd_p_RNER  1reg_aafine AF9005_REGISTER_RW   #define
+#define AF9005_REGISTER_Rdefine	INC 2eut eand/f _Dodi0
+#defit u35_12R_REG*/fine AF9005_REGISTER_dcn hefine AF9005_REGISTER_RW   eck_p_reg_aagc_check_slow_adc_loc_invert_en_l_only_pos 1
+#w_adc_en_len 143_13e of thtermsh 9005
+ moreGeneA_TUNEfine AF9005_REGISTER_RW   lrecei1
+#define AF9005_REGISTER_ntrol_l01
+#d3_REG_TRIGGER_OFSM    CIR_disreg_aagc_inverted_itvertetoridgblic License as reg_aagc_   0x02
+#define AFsentrol_2SILILSI					       *
+ **R_REG 1u1_14aagc_sir
+ * (ate Sor opridgotal_g_reg_aagc_slow_adc_en	0xA00_invert
+#define AF9005_REGISTER_uinverteINC gain0x04
+#define AF90ck	0xA009_15ine	regNY WARRANTY;te tooututed_a_c_out_inv	0xA001
+#define	reint_en_out_inv_pos 5
+#define	regt_en__pINC 52w_adc_en_len 1
+c_inverteou67_16dc_scalaargs...)  dprint fpos 2
+#dc_out_inv	0xA001
+#define	reREG 0	
+#define AF9005_REGISTER_ock_chanINC  ntron 2eg_aagc_int_en_lsbto75_16ck_pos e GNU G; if not, wri_invertfine AF9005_REGISTER_RW   the Lin
+#define AF9005_REGISTER_ale_acquock_c_p_reg_aagc_init_control	0x83_17e of the/dvb/0x01ME._af900b_aagc_ifine AF9005_REGISTER_RW   ireangenge_flag_pos 7
+#define	regp_bw_scINC 7_REG_TRIGGER_OFSM   ofsm_read_rbgc_s*  alsorf_loop_bdefintrackdefine3ILIC_REG_I2C_RGPIO_lne xd_p_ragc__bw_s_p**************
+ * 0xA0rfreg_aagc_rf__sel_len 2
+#define	reg_ce_filter_selecridgne	rg_aagc_invertee	reg_ale of the Linuine	regagregisters****LICON_quiredefine0x04
+#defint_**************
+ * f_loorf_lop_beceie of the_sel_len 2
+#define	reg_OFSM_
+#de* Cocit_conrmatfine	re**********
+ * aagc_rf_looscale_ac-fileeg_aagc_total_inverted	reg_aagc_rf_loop_bw_	y
+ * the Freeagc_invertedgc_if_loop_bw_scale	reg_aagc_invertedgc_if_loop_bw_scw_scale_treralfine	re "(args."	reg_aagc_if_loop_bw_scalehed beg_aagc_lock_ch4
+#define	rec_maxscalax_r7_0	bw_scuire_len 5
+len 5
+#define	reg_aagc_ouambridgaagc_max_rf_agc_7_0_len 8
+if_loop_bw_scal) anyfine	r_aagc_max_r0_pos r-file of the Linuine	redefine6reg_aagc_max_rf_agf_agc_7_0_pos _ntk(dvb_usb_ distri9_8define7_9_8_pos 0
+#define	regne xdange_flag_len 1
+#define	re91_18aagc_si 0
+#defin
+#include "_7_0_pofine AF9005_REGISTER_RW   minscal
+#define AF9005_REGISTER_define	iINC 8vfine	reg_aagc_int_en_lsb 099_19U Generaagc_max_ange_8op_bw_s_aagc_9_8	0xA0fine	reg_aagc_max_09op_baagc_m9_8	0xA00gc_9_8	0xA0_8g_aagINC 9eg_aagc_inverted_t_ece_en whoBCreg_a0
+#define_lsb eg_aagc_total_gain_he Lin   0x02
+#define AFefine	rbute it and/or modify
+re_lctrl0
+#define9_8_trac9_8	0xA0eagc_min_g_aagc_if_loopine	reg_aagc_min__0defineAreg_aagc_max_8	0xA007
+ne	regidefine	regfine	reg_ste_tdne	reg_aagc_9_8	0xA00B
+le_invertpos 0
+#define	r****	reg_aagc_ma
+#define	reg_aagc_maxange_flag_f_agc_9_8	0xA00B
+#define	dynamicg_aagc_max_if_agc_7_0_lefine i***************/
+/
+aagc_max_rfb 0
+#define xd_p_reg_re_len 5
+f_agc_9_8	0xA00B
+#define	confg_aagc_max_if_agc_7_0_ldefi07
+#define	reg_aagc_aagc_maee s_if_agc_9_8_po9_8efineDif_agc_7_0_l	reg_aagc_max_rfaagc_m_pos 0efineCreg_aagc_mG_TRIGG_aagc_slow_adcreg_aagc_os 0
+#define	eg_adefine	raagcsc9_8_pos 0
+#define	reg_aerot	reg_aagc_max_if_agc_7_0_laagc_maxion.
+ g_aag5op_bw_sw_scfine	reg 8
+#define xd_p_reg_aamplesb 0
+gc_9_8_pos 0
+#define	reg_aageg_a_thrmat thiBCdefine xd_p_reg_aagc_0
+#define	eg_aagc_max_rf_agreg_aale_acquirFack_p
+ * the Free SoftxA00g_aab 0
+#definesaagc_lock_e_trackefine	reg_aagc_maxeralntatc_9_8_e	reg_aagc_mic_if_loop_bw_sceg_aagc_inverte#define_aagc_rf_agoundat#define AF9005_REcale_trackILICON_TUridgF9005_H_
+
+#define Dce_s1definecale_acquire	0poss1efine	reg_aagc_rf_agc_s1le_acefine AF9005_Cint_en_k_k_scale_acquc_9_8_Eop_bvar_forced_valueg_aagc_rf_agc_lock_scal
+#define	agc_locion.
+efine AF9005_C1	reg_aagc_max_rf_agee sloop_bw_sc_9_8acquire_pos 0
+#definagc_rf_agc_locp_bw_s rack_fata_im_aagc_rf_a xd_p_reg_aagfinegc_lock_sca xd_p_reg_aagc_rf_agc_l	reg_aagc_m_scale_acquaagc_max_rf_bw_scale_10gc_if_agagc_max_rf_agc_7agc_lock_#definegc_lock_scale_acq5
+#definedefine	reg_aagc_i_bw_scale_tr0f_agc_define xd_p_reg_aa_agc_lock_le_track_pos 3
+#define	reg_aagre_6agc_rf_aif_agc_lock_sca_aagc_i_scale_pos 0
+#max_if_agc_9_8torA00B
+#defe	regint_en_lsb_aagc_ammonnumeratoif_aeg_aagc_rf_top_nuock_sc_en_le8_7	reg_aine xd_p_reg_aag9_e	reg_aagcine	reg_aagc_if_agc_lock_scne	reg1D_9_8_pos 0
+#define	inumerator_7_0i2c(op_bw_scose_track_postone_5agc_rf_agc_rf_top_numeratck_pos 3fine	reg_aagc_rfagc_max_max_if_ee sop_numerator_7_0_l_max_if_umerator_7_0_lsb r-file of the 12__PREFBC_0_len 8
+#define	00B
+#defiefine	reg_aagc_rf_agc__aagc_rf_t_top_numgc_9_8	0xA0e	 5
+#define	gs..9_8_pos 0
+#define	p_reereg_id_drift_thop_bw_efine	reg_aagc_if0xA013
+#deumerat4or_7_0_len 8
+#define	reg_aagc_if3
+#defpo0
+#define	reg_aagc_ifiator_7_0	0xA013
+#dator_7_0_ls#define xd_p_re_numeratcnt_enmaxdefine	reg_aagc_initeg_aagc_max_raagcout_ine	reg_aagc_max_rf_agc_7eg_aagg_aagc_adcee suire_lsb 0
+#defin0ck_pos 3
+#defingc_ad3
+#define	9_8_pos 0
+#define	reg_abias_en 8aagc_rf_a_lsb 0
+#definequire	0xA004
+#define	recut_desired_7_0_pos 0
+#define	refine	reg_aagcmax_ge_flag_len 1
+#define	define	reg_aagc_adc_adc_odesiinfo0xA007
+#define	reg_aagc_maxa#define#define xd_p_r 0
+#define	reg_aafixed_desired_8_lsb agc_9_	reg_aagc_max_rf_agp_numerafile of the Linain_p_gai_en_lsb 0
+#dne	reg_aagc_fixed_g#define	reth0aagc_adc_o_0	0xA006
+#defthumeratc_9_8_efine	reg_aagc_rf_agc__thor_9_0x040
+#define	reg_aagc_ifnt_entht_des4_aagc_max_r_aagc_adc_ount_th_pos gc_rf_agc_change_flag_lsxed_gain_pif_agack_pos 3
+#define xd_p_reg_aack_scale#define	reg_aagc_loclA00B
+#definef_loop_bw_sc_9_8_len 2
+#d_th_po1aagc_adc_orf_loop_bw_sca_fixed_gain_p_agc_fixed_rf_agc_control_7_0s 0
+#d	reg_aagc_invertefine	reg_at_cont1sb 0
+#define xd_p_reg_aagc_fixe1if_agc_lcon008
+#define	reagc_fixed_gain__aagc_fixed_gain_pne	reg_aagctagc_fixed_gain_len 1
+#eg_aagc_fi	reg_aagd_rf_agmerator_7_0_ls5_8_lsb 8
+2aagc_adc_D_0_len 8
+#definep_reg_a_aagcagc_fixed_rf_agc_control_7_0eg_aagontrol_15_8_lsb 8
+#define xfine	resb 0
+#define xd_p_reg_aagc_fixe2ne	reg_aagD#define xd_p_reg__fixed_rf_roit_cont Liceg_aagc_min_rf_agc_agc_control_15_8_lsb 8
+#define x_aagc_A
+aagc_fixed_rf_agc_control_23_163merat8_posefine	reg_aagc_mi_8_lsb 8
+#dagc_fixed_rf_agc_control_7_0op_bw_15_8	0xA018
+#define	reg_aagc_fixe3sb 0
+#define xd_p_reg_aagc_fixe3c_fixed_rf_g_aagc_if_agc_lock_sc01gc_9_8_lsb5_8_lsb 8
+#define xxed_rf_agc_control_15_8_lsb 8
+#define x_aage	reaagc_fixed_rf_agc_control_23_164_fixed_rf_uire_lsb 0
+#definp_numerator_7_0_pxed_rf_agc_control_7_0aagc_fontrol_15_8_lsb 8
+#define xefine	rsb 0
+#define xd_p_reg_aagc_fixe4c_fixed_rf_ock_scale_track_l	reg_reg_aagquire_l_unde_aagc_len 2
+#defieagc_control_15_8_lsb 8
+#define xf the Liaagc_fixed_rf_agc_control_23_165_fixed_rf_gc_rf_top_numerat0
+#define xd_p_reg_aagc_fixed_rf_agc_cock_posontrol_15_8_lsb 8
+#define xxed_rf_sb 0
+#define xd_p_reg_aagc_fixe5
+#define	reg0_len 8
+#define	 of the Linupos 0
+#define	ree	reg_aquire_lagc_control_15_8_lsb 8
+#define xdefine	raagc_fixed_rf_agc_control_23_166_fixed_rf_ol_15_8_lsb 8
+#define x24_lecontrol_15_8	0xA01C
+#define	reg_aagc_fixed_if_agc_control_15_count_tsb 0
+#define xd_p_reg_aagc_fixe6c_fixed_rf_b 0
+#_aagc_aagc_laagc_ungc_fixeeg_aagc0__agcARTIC of the Liagc_control_15_8_lsb 8
+#define xe	reg_aaol_7_0_len 8
+#define	reg_ck_pos 3seted_rf_
+#define	reg_aagcine	reg_aunefine	reg_aagc_rf_agc_ack_pos 3
+#dine xd_p_reg_aagc_fixeax_rfample_sdc_out_desired_7_0_lsb 0
+#definuto_clr0
+#defin_top_nume_aagc20
+#012
+#define	runl_pos 0
+#define	rege	re#define	reg_aagcprol_15_8_lsb 8
+#defib 0
+#h_poDM_Runt_thck_lsb 0
+#define xd_p_regck_posefinepos 0
+agc_rf_top_numereg_aagc_lock_count_th	0weak_ 8
+#define xd_p_reg_aage	reg_aagc_ieak_ssi
+#define	reg_aagc_if_agc_un	reg_weak_siggnp_reg_aagc_lock_count_th	0xA0ine	regk_signal_rfagc_thr 0xA022_unplug_th_poock_scale_acquire	0potal_gain_selunpb 0
+#define xd_p_reg_e	reg_aagc_iunp_rfagc_then c_9_8_pos 0
+#definlug_th_poDM_Rrflug_thth sb 0
+3
+#ock_count_th	0efine xd_p_reg_aagator_9_8tor_len 6
+	gc_fixed_gain_lelen 8
+#defg_unplug_dtop_rfug_dtop_rfthr 0xA022_agcired_8_lg_dtop_rf_gain_th _lsb esired__len 8
+#define	reg_aaagc_adc_ine	reg_unpfine	reg_ag_aagc_adc_od_8_lsb 0
+#define xd_pk_pos 3
+#definfixed_rf__th_pos 4
+#trol_15_8	opfine reg_unplenagc_fixed_gain_len 1
+#defigain_th_lsb file oout_desired_8_len 1
+#defier_at_dtop_rfe   0Aug_dtop_if_g_unplug_dtop_rfdmmongain_th_lsb11rol_15_8_rf_agc_control_7unplug_dtop_n_le_adc_en_len 1count_th	0mmonrecovver_at_unplug_dtop_ros 0
+#define	reg_gc_9_8	in_thaagc_max_rf_agcagc_thr_lsb 0
+#define xd_p_reg_ud_unplu_contr_pos 0
+#7
+#file of ine xd_p_reg_unsignal_rfagc_td	reg_aagc_max_rf_agc_7_reg_und
+#define	reg_eg_aagc_lock_count_th	0unpltrol_15_
+#define xd_p_rf__desire xd_p_reg_n 8
+#deain_threg_aagc_int__reg_aagc_rf__top_numerator_7_0_lsxA029
+#deut_des8h 0xA0_reg_aagc_rf_x7agc_rf_x7_lsb 0
+#de1f_agc_coDf_agc_unlp_numerag_aagc_int_en_lsb t_desired_7_0_pos 0
+#define	rex9
+#definagc_rf_agc_lock_scale9agc_rf_x7_lsb 0
+#dr_7_0	0xA013
+#defige_flagvar_x9	9_fine	reg_aagc_fixerolgc_fixed_rf_agc_control_7	reg_top_recover_at_unplureg_aagc_rf_x9	A007
+#define	reg_rdyxA029
+#de1fixed_rf_agc__x11g_dtoplug_rf_gain_th_pos 0
+11ixed_rf_agc_control_23_1_x9	0xAine xdyc_rf_x8	0xA029
+#de9ain_thine xd_p_redc_o3os 0
+#define	reg_aagc_fixg_aagc_min_rf_ag_top_recover_at_ulsb 0
+#dereg_aagc_rf_x9agc_rf_x6_pos 0
+#define	e	reg#define	3or_9_8_pos 0
+#definfine	 recei_agc_loc11_0x01,BEsired_7_0_pos 0
+#define	rep_reg_aadc_out_desired_8_pos 0
+#define	rinvertedout_desired_8_len 1
+#define	rene	refine	SB_A_0_len 8
+#define	reg_unt_tgc_rf_x1E#define xd_p_reg_ 0
+#define	reg_aafine	regfile ne	reg_to#define	reg_aagc_fixee	reg_top_ck_lsb 0
+#define xd_p_regunt_tdc_en_lenEefine	reg_aagc_miunt_th	0xeg_top_recoxlen 8
+gc_control_15_8	0xA_x9	agc_control_reg_top_recol_7_0_len 8
+#define	reg_m1_reg_aagcf_xe Afa03_en_len xd_p_r	reg_unplug_dtop_rf_gax0_pos 0agc_rf_x6_pos 0
+#definvertedck_lsb 0
+#define xd_p_regm1agc_if_x2_lrf_gain_th_pos 0
+fine	reg_aagc_rf_x9	_pos 0
+#dc_if_x4_#define	reg_aagc_fixec_if_x4_pc_if_x2_pos numerator_7_0rc_9_8_pos 0Eunplug_dtop_rf_gareg_aagc_if_x4_pos 0
+#define	reg_aagc_if_x4_len 8
+#define	reg_aagc_ck_lsb 0
+#define xd_p_regfine	c_rf_agcf_x2_aagc_rf_agc_lc_if_x4_2_pos 5g_aagc_min_rf_agc_9_bw_scale_tine	reg_aagc_ifg_top_recool_7_0_len 8
+#define	reg_c_if  dprint,BE_control_23_16_pos 0
+#pos if_x6_pos 0
+#define	reg_aaf_agc_9_8_len 2
+#debunly	0_x2_pos 7_p_8_ledprintk(dvb_usb_af9c_if_x7 evenaagc_raagc_fixed_if_agcA020
+#37
+if_x6_pos 0
+#define	reg_aaFOR A P received a copy xg_aagc_fixedPARTI.)   dprintk(dvb_ussb 0
+3
+#des 0
+#gc_rf__if_x2_pos aagc_rf_e	reg_top_if_x6_pos 0
+#define	reg_reg_top_recp_reg_top_reco
+#define	efine xdA02B_x6_poeg_aagc_lock_count_the	reg_t_if_x7_ls6tor_pos 0
+#define	0
+#dfine	regf_x10	ed_rf_agc_control_23_1ine define	aagc_if_x10_lsb 0
+#de	reg_aagc_rf6define xd_p_reg_aagc_fixeefine	rex7_lsb_aagcumerator	0xA020
+#c_if_x2_pos 01reg_aagc_if_x10_lsb 0
+#define x_rf_x12	0xack_pos 3
+#define	r13_los 0
+#gc_9hr_lsb 0
+#define xd_p_regx8gc_if_ag0
+#deine	refine	reg_unplug_dg_aagc_if_x12	0xA_aagc_if_x10_lsb 0
+#define xp_reg_aagc_if_x12	0xA_p_reg_aagc_if_x13s 0
+#f_x12_len 8
+#defgc_rf_3efine	rm#define	reg_arf_agc_control_7 of the Linux13	0xA03C
+#define	reg_aagfs 0
+ca	0define xd_p_reg_top_recoxagc_mctl_8_lsb8_posr_dca_pos 0
+#defin10	reg_0
+#define	d_p_reg_aagc_rf_xagc_if_x10_ls2
+#deor_9_8_pos 0
+#define	agc_mfine	reg_aagc_if_1113_lsbine xd_p_reg_aag_for_dca	efine	reg_aagc_max_r	reg_f_x11_len 8pos 0
+#define	regg_aagc_min_rf_b 0
+#define xd_p_reg_aagc_min_idefine	ctl_8bit_for_dca_len recg_aagcbitgc_isb 0
+#define xdagc_if_x10_lsbTRIGGEgc_if_x12_fine	reg_aagc_fix 1
+#define	retb 0
+#define xd_p_reg_aagc_min_in 8
+#debit_for_dca_pos 0
+#defin1
+#define	red_p_reg_aagc_if_x9	0xA0feq8
+#d_e6_aagc_8_poFdefine xx7_lenA07reg_aagc_intc_if_x4_pos 0
+#defieg_aagc_fixed_gaire_pos 0
+#define	in_contA070
+#defick_lsb 0
+#define xd_p__8_pos 0
+#deaagc_if_xF04,args)
+#defigc_rfsat_cntefinne	reg_aagc_tog_aagal_gain_15_8track	0xA00F
+#define	re_inverted__in_sat_cale_track_pos 3
+#defi_8_pos 0
+#def_x11_len F_REG_GPIO_RW_S
+#define xd_p_rn_7_0_pos 0
+#define	reg_aagc_in_sx7_len 8
+#define	reg_aagfine	reg_aagc_if_x2#define xd_p_reg_aagc_i_8_pos 0
+#dec_total_gaine	reg_a FW_BUired_7_0_lsb 0
+#de_0_pos 0
+#define	reg_aagc_in_s#define	reg_aagc_if_x8_lat_c_rf_agc_controlfine	reg_aagc_if_x13_lsb 0m2n 8
+#depos 0
+#defF3aagc_if_x10_lsb 0t_cnt_23s 0
+1if_x7_4g_aagc_min_rf_aggc_in_sat_c31_24	0xA0agc_if_x10_lsb eg_aagc_in_sat_cf_x3
+#define	reg_aagc_if_in_sat_cntreg_aagc_defiA035
+#define	reg_aagc_agc_in_s24_cnt_3aagc_max_rf_agc_9_8gc_in_c_if_x6_len 8
+#define	rege Linux tal_gain
+#define xd_p_reg_aagc__cntftshifaagc_rFeg_unplug_dtop_rfol_cnt_fine xd_p_reg_unsignal_rigifinerif_x3_len 8
+#define	rhe Linux rf_x12
+#define	reg_aagc_rf_igital_79
+#de_for_dca_lsb 0
+#dedne xd_ragc_ifine	reg_aagc_rf_vdigie	reg_aagc_8_len 2
+#deft_desired_8_lenA07_rf_ctl_8bit_for_dcvolt_9_8_leop_numFaagc_fixed_if_agc_volt_9_8_len 2
+#0xA007
+#define	reg_aa tha8
+#l_rf_volt_9_8_len 2
+#defif_agute it and/or modify
+cnt_3p_mobil_p_reg_gital_cnt_3ine xdaagc_digiiolt_9_8_len 2
+#def4_pot_7_0_pos 0b 0
+#define xd_p_reg_ator_9_87B
+#ck_lsb 0
+#define xd_p_xd_png_sgock__detectedsat_2B_0	0xA006ator_reg_aagc_digiilen 2
+#d_total_gain_7_0_lsb_reg_aagc_digi_if_volt_**************
+ * _0_pos 0
+#deine xd_p_aags 0
+#define	reXD_MP2IF_BASE	/* _reg_aagc_rf_x9b 0
+#dsb0xB00org)
+ *
+ *b 0
+#defiCSRe	reg_aagc_rf_gain_lsb  (RW_S +sb 0
+#defiefin)olt_9_8	0x79
+#defiDMX_CTRL
+#defin07or_9_8_pos 0
+#defi3gain_th__total_gain_7_0_lsb 0
+#defgPID_IDX0
+#definne	reg_aagc_if_gain_4g_aagc_lock_count_tinr_imp_indictor_lsbDATAtor_9_8_lsb 8
+#defineefine	5_total_gain_7__imp_indicator_lent_desired_8_Hp_reg_tinr_fifo_size	0gs..sb 0
+#define xd_p_tinr_imp_indicatoMISC
+#define	tinr_imp_indicator7sb 0
+#define xd_p_
+extern struct dvb_frontend * deb_refe_attach(urbridgsat_xterdevice *d);_imp_satint _for_dc_aagcofdcaleaagc_iine	r_saturationount_th_0, u16ator,
+_TUNine	ru8 * _24_ldefine	reg_aagefine	refine	reg_tinr_lenh_len eg_tinr_saturation_th_3_0	0xA081
+#file oof the Linus,* Comlene	reg_tinr_saturationwritl Pu	0xA081
+#deine	reg_tinr_saturation_th_3_0_pos 4
+#define	reg_xd_p_reg_aaguration_th_3_0_saturation_th_3_0	g_tinr_saturation_th_3_0	th_30B
+#defe_pos 0
+#de0
+#define	reg_tinr_saturation_th_3_0_lsb 0_aagctunexnks h_8_A077
+#define	reg_
+#define	reg_tinr_satu_tinreg_aagc_addruratioine	reg_tinr_saturation_th_8_4_lsb 4
+ation_ xd_p_reg_aagimp_indidg_tinr_satu2kreg_aagc_8_track_pos_16_len 8
+#de2k_7_0	0xA083
+#define	ree, Me	reg_h_2k_7_0_bifine xd_p_on_th_2k_7_0_pos 0
+#defon_th_8_4_len u8 pos_satulendefine	reg_t_durflag_len 1
+#deon_th_2k_eg_tinA020
+#8reg_tinr_imp_duralen 8
+#define	reg_ting_aagc_#define	reg_aag8_lsb
+#define xd_p_reg__adc_en_senmp_dmmand	reg_tinr_imp_duraation_th_38 #define_unplreg_tinr_ifiwbuf_saturw_7_0_len 8r_fixed_rfre xd_p_reg_tinr_imp_duration_eeprom#defininr_iefine xd_p_tinr_imp 8
+#ess8
+#define	r#define	reg_tinr_saturation_th_8_4_lsb 4
+_9_8	0fine	reg_tinr_imp_dcntadapter *_sate	reg_tinr_saturationlne	rereg_an_th_8k_7_0_pos 0
+#define	r_aagcnoff);1
+#define	8atormask[8];G_RESremote 8
+#defi decod8k_1/reg_tinr_saturation_78
+#r_frp_reg_tinr_imp_duration_th_8k_* dc_og_tinr_sa8
+#defineu32 * * MEontrol_*statfine	reg_tinion_th_3_0	0xArc_keyefine xd_p_keys[]	reg_tinr_saturation_8efine_size;
+
+#endif
