@@ -1,11 +1,11 @@
 #!/bin/sh
-#since 2015/6/16
-DIR="01-mini2440_tgz"
+#modify on 2015/10/20
+SOURCE_CODE="1-mini2440.tgz"
 
-TOOLCHAIN="./${DIR}/arm-linux-gcc-4.4.3.tar.gz"
-SAMPLECODE="./${DIR}/examples-20100108.tar.gz"
-KERNEL="./${DIR}/linux-2.6.32.2-mini2440-20100921.tar.gz"
-ROOTFS="./${DIR}/rootfs_qtopia_qt4-20100816.tar.gz"
+TOOLCHAIN="./${SOURCE_CODE}/arm-linux-gcc-4.4.3.tar.gz"
+SAMPLECODE="./${SOURCE_CODE}/examples-20100108.tar.gz"
+KERNEL="./${SOURCE_CODE}/linux-2.6.32.2-mini2440-20100921.tar.gz"
+ROOTFS="./${SOURCE_CODE}/rootfs_qtopia_qt4-20100816.tar.gz"
 
 setup_toolchain()
 {
@@ -32,7 +32,6 @@ setup_kernel()
 	} || {
 		tar zxvf ${KERNEL} -C /opt/FriendlyARM/mini2440/
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/samples/
-		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/firmware
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/REPORTING-BUGS
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/COPYING
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/CREDITS
@@ -53,10 +52,10 @@ setup_rootfs()
 
 [ -d /opt/FriendlyARM ] && {
 	echo "start install to /opt/FriendlyARM"
-	setup_toolchain
-	setup_samplecode
+	#setup_toolchain
+	#setup_samplecode
 	setup_kernel
-	setup_rootfs
+	#setup_rootfs
 } || {
 	echo "pls create dir :/opt/FriendlyARM"
 }
