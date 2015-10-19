@@ -31,7 +31,6 @@ setup_kernel()
 		echo "/opt/FriendlyARM/mini2440/linux-2.6.32.2/ already exist"
 	} || {
 		tar zxvf ${KERNEL} -C /opt/FriendlyARM/mini2440/
-		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/samples/
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/REPORTING-BUGS
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/COPYING
 		rm -rf /opt/FriendlyARM/mini2440/linux-2.6.32.2/CREDITS
